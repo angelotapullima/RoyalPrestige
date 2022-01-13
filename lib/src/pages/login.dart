@@ -210,6 +210,7 @@ class _LoginState extends State<Login> {
                                 // } else {
                                 //   showToast2(res.message, Colors.black);
                                 // }
+                                Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
                                 _controller.changeLoadding(false);
                               } else {
                                 showToast2('Ingrese su contraseña', Colors.black);
