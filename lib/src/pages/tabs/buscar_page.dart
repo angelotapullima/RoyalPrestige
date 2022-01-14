@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_prestige/src/pages/detalle_producto.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 
 class BuscarPage extends StatefulWidget {
@@ -106,74 +107,100 @@ class _BuscarPageState extends State<BuscarPage> {
   }
 
   Widget itemProduct() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(10), horizontal: ScreenUtil().setWidth(4)),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: ScreenUtil().setWidth(16),
-          vertical: ScreenUtil().setHeight(16),
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(1, 0), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: ScreenUtil().setHeight(125),
-              child: Image.asset('assets/img/picture.jpg'),
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(10),
-            ),
-            Text(
-              'SET DE 15 C4672',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: ScreenUtil().setSp(15),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return DetalleProducto();
+            },
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              var begin = Offset(0.0, 1.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween = Tween(begin: begin, end: end).chain(
+                CurveTween(curve: curve),
+              );
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(10), horizontal: ScreenUtil().setWidth(4)),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(16),
+            vertical: ScreenUtil().setHeight(16),
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: const Offset(1, 0), // changes position of shadow
               ),
-            ),
-            Text(
-              'Sarten Gourmet de 20 cm + Tapa mediana',
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-                fontSize: ScreenUtil().setSp(11),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: ScreenUtil().setHeight(125),
+                child: Image.asset('assets/img/picture.jpg'),
               ),
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(5),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: colorPrimary,
-                  ),
-                  padding: EdgeInsets.all(8),
-                  child: Text(
-                    'S/ 14 940,00',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: ScreenUtil().setSp(11),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              Text(
+                'SET DE 15 C4672',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: ScreenUtil().setSp(15),
+                ),
+              ),
+              Text(
+                'Sarten Gourmet de 20 cm + Tapa mediana',
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: ScreenUtil().setSp(11),
+                ),
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(5),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: colorPrimary,
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      'S/ 14 940,00',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: ScreenUtil().setSp(11),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
