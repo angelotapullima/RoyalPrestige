@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                             )
                           : SvgPicture.asset(
-                              'assets/svg/scan_qr.svg',
+                              'assets/svg/search.svg',
                               color: Colors.white,
                             ),
                     ),
