@@ -1,7 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_prestige/src/bloc/productos_bloc.dart';
+import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/model/categoria_model.dart';
+import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
+import 'package:royal_prestige/src/utils/constants.dart';
+import 'package:royal_prestige/src/widget/show_loading.dart';
+import 'dart:math' as math;
 
 class BuscarPage extends StatefulWidget {
   const BuscarPage({Key? key}) : super(key: key);
@@ -14,6 +23,8 @@ class _BuscarPageState extends State<BuscarPage> {
   final _controller = Controller();
   @override
   Widget build(BuildContext context) {
+    final categoriasBloc = ProviderBloc.productos(context);
+    categoriasBloc.obtenerCategorias();
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
@@ -55,21 +66,65 @@ class _BuscarPageState extends State<BuscarPage> {
               height: ScreenUtil().setHeight(24),
             ),
             Container(
-              height: ScreenUtil().setHeight(50),
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 6,
-                  itemBuilder: (_, index) {
-                    return itemChoice(index);
+              height: ScreenUtil().setHeight(60),
+              child: StreamBuilder(
+                  stream: categoriasBloc.categoriaStream,
+                  builder: (context, AsyncSnapshot<List<CategoriaModel>> snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.length > 0) {
+                        var categorias = snapshot.data!;
+                        categoriasBloc.obtenerProductosByIdCategoria(categorias[0].idCategoria.toString());
+                        return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categorias.length,
+                            itemBuilder: (_, index) {
+                              return itemChoice(categorias[index], index, categoriasBloc);
+                            });
+                      } else {
+                        return Center(
+                          child: Text('Sin categorías'),
+                        );
+                      }
+                    } else {
+                      return ShowLoadding(
+                        active: true,
+                        h: ScreenUtil().setHeight(50),
+                        w: ScreenUtil().setWidth(100),
+                        fondo: Colors.transparent,
+                        colorText: Colors.black,
+                      );
+                    }
                   }),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (_, index) {
-                  return itemProduct();
-                },
-              ),
+              child: StreamBuilder(
+                  stream: categoriasBloc.productosStream,
+                  builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.length > 0) {
+                        var producto = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: producto.length,
+                          itemBuilder: (_, index) {
+                            var valorHero = math.Random().nextDouble() * index;
+                            return itemProduct(producto[index], valorHero);
+                          },
+                        );
+                      } else {
+                        return Center(
+                          child: Text('Sin productos para esta categoría'),
+                        );
+                      }
+                    } else {
+                      return ShowLoadding(
+                        active: true,
+                        h: double.infinity,
+                        w: double.infinity,
+                        fondo: Colors.transparent,
+                        colorText: Colors.black,
+                      );
+                    }
+                  }),
             ),
           ],
         ),
@@ -77,12 +132,13 @@ class _BuscarPageState extends State<BuscarPage> {
     );
   }
 
-  Widget itemChoice(int index) {
+  Widget itemChoice(CategoriaModel categoria, int index, ProductosBloc bloc) {
     return AnimatedBuilder(
         animation: _controller,
         builder: (_, s) {
           return InkWell(
             onTap: () {
+              bloc.obtenerProductosByIdCategoria(categoria.idCategoria.toString());
               _controller.changeIndex(index);
             },
             child: Container(
@@ -91,10 +147,16 @@ class _BuscarPageState extends State<BuscarPage> {
                 borderRadius: BorderRadius.circular(10),
                 color: (_controller.index == index) ? colorPrimary : Colors.transparent,
               ),
-              margin: EdgeInsets.all(8),
-              padding: EdgeInsets.all(8),
+              margin: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(8),
+                vertical: ScreenUtil().setHeight(12),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(8),
+                vertical: ScreenUtil().setHeight(10),
+              ),
               child: Text(
-                'Especiales',
+                '${categoria.nombreCategoria}',
                 style: TextStyle(
                   color: (_controller.index == index) ? Colors.white : Colors.black,
                   fontWeight: FontWeight.w500,
@@ -106,7 +168,7 @@ class _BuscarPageState extends State<BuscarPage> {
         });
   }
 
-  Widget itemProduct() {
+  Widget itemProduct(ProductoModel producto, var valorHero) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -157,20 +219,50 @@ class _BuscarPageState extends State<BuscarPage> {
             children: [
               SizedBox(
                 height: ScreenUtil().setHeight(125),
-                child: Image.asset('assets/img/picture.jpg'),
+                child: Hero(
+                  tag: '$valorHero',
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: Icon(Icons.error),
+                        ),
+                      ),
+                      imageUrl: '$apiBaseURL/${producto.fotoProducto}',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(
                 height: ScreenUtil().setHeight(10),
               ),
               Text(
-                'SET DE 15 C4672',
+                '${producto.nombreProducto}',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: ScreenUtil().setSp(15),
                 ),
               ),
               Text(
-                'Sarten Gourmet de 20 cm + Tapa mediana',
+                '${producto.regaloProducto}',
                 style: TextStyle(
                   fontWeight: FontWeight.w300,
                   fontSize: ScreenUtil().setSp(11),
@@ -189,7 +281,7 @@ class _BuscarPageState extends State<BuscarPage> {
                     ),
                     padding: EdgeInsets.all(8),
                     child: Text(
-                      'S/ 14 940,00',
+                      'S/ ${producto.precioProducto}',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,

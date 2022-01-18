@@ -19,9 +19,6 @@ class ShowLoadding extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const CircularProgressIndicator(),
-                SizedBox(
-                  height: ScreenUtil().setHeight(10),
-                ),
                 Text(
                   'Cargando...',
                   style: TextStyle(

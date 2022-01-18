@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:royal_prestige/src/api/login_api.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
@@ -202,15 +203,15 @@ class _LoginState extends State<Login> {
                             if (_cargoController.text.length > 0) {
                               if (_passwdController.text.length > 0) {
                                 _controller.changeLoadding(true);
-                                // final _login = LoginApi();
-                                // final res = await _login.login(_usuarioController.text, _passwdController.text);
+                                final _login = LoginApi();
+                                final res = await _login.login(_usuarioController.text, _passwdController.text);
 
-                                // if (res.code == 1) {
-                                //   Navigator.pushNamed(context, HOME_ROUTE);
-                                // } else {
-                                //   showToast2(res.message, Colors.black);
-                                // }
-                                Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+                                if (res.code == '1') {
+                                  Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+                                } else {
+                                  showToast2(res.message.toString(), Colors.black);
+                                }
+
                                 _controller.changeLoadding(false);
                               } else {
                                 showToast2('Ingrese su contraseña', Colors.black);
