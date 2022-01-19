@@ -175,7 +175,9 @@ class _BuscarPageState extends State<BuscarPage> {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
-              return DetalleProducto();
+              return DetalleProducto(
+                idProducto: producto.idProducto.toString(),
+              );
             },
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               var begin = Offset(0.0, 1.0);

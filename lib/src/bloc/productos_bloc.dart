@@ -9,12 +9,16 @@ class ProductosBloc {
   final _productosController = BehaviorSubject<List<ProductoModel>>();
   Stream<List<ProductoModel>> get productosStream => _productosController.stream;
 
+  final _productoidController = BehaviorSubject<List<ProductoModel>>();
+  Stream<List<ProductoModel>> get productoIdStream => _productoidController.stream;
+
   final _categoriasController = BehaviorSubject<List<CategoriaModel>>();
   Stream<List<CategoriaModel>> get categoriaStream => _categoriasController.stream;
 
   dispose() {
     _productosController.close();
     _categoriasController.close();
+    _productoidController.close();
   }
 
   void obtenerCategorias() async {
@@ -25,5 +29,9 @@ class ProductosBloc {
 
   void obtenerProductosByIdCategoria(String idCategoria) async {
     _productosController.sink.add(await productoApi.productoDatabase.getProductosByIdCategoria(idCategoria));
+  }
+
+  void obtenerProductoByIdProducto(String idProducto) async {
+    _productoidController.sink.add(await productoApi.productoDatabase.getProductosByIdProducto(idProducto));
   }
 }

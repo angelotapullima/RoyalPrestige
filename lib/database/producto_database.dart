@@ -47,4 +47,18 @@ class ProductoDatabase {
       return [];
     }
   }
+
+  Future<List<ProductoModel>> getProductosByIdProducto(String idProducto) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<ProductoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM Producto WHERE idProducto = '$idProducto'");
+
+      if (maps.length > 0) list = ProductoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      print(" $e Error en la  tabla Producto");
+      return [];
+    }
+  }
 }
