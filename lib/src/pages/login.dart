@@ -15,7 +15,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final TextEditingController _usuarioController = TextEditingController();
-  final TextEditingController _cargoController = TextEditingController();
   final TextEditingController _passwdController = TextEditingController();
 
   final _controller = ControllerLogin();
@@ -24,7 +23,6 @@ class _LoginState extends State<Login> {
   void dispose() {
     _usuarioController.dispose();
     _passwdController.dispose();
-    _cargoController.dispose();
     super.dispose();
   }
 
@@ -101,50 +99,7 @@ class _LoginState extends State<Login> {
                     SizedBox(
                       height: ScreenUtil().setHeight(16),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(24)),
-                      child: TextField(
-                        maxLines: 1,
-                        controller: _cargoController,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          labelText: 'Cargo',
-                          prefixIcon: Icon(
-                            Icons.settings_outlined,
-                            color: colorPrimary,
-                          ),
-                          labelStyle: TextStyle(
-                            color: colorgray,
-                            fontWeight: FontWeight.w400,
-                            fontSize: ScreenUtil().setSp(15),
-                          ),
-                          filled: true,
-                          fillColor: Color(0XFFEEEEEE),
-                          contentPadding:
-                              EdgeInsets.only(left: ScreenUtil().setWidth(10), top: ScreenUtil().setHeight(5), bottom: ScreenUtil().setHeight(1)),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Color(0XFFEEEEEE), width: ScreenUtil().setWidth(1)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Color(0XFFEEEEEE), width: ScreenUtil().setWidth(1)),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Color(0XFFEEEEEE), width: ScreenUtil().setWidth(1)),
-                          ),
-                        ),
-                        style: TextStyle(
-                          color: colorPrimary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: ScreenUtil().setSp(15),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(16),
-                    ),
+                     
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(24)),
                       child: TextField(
@@ -200,7 +155,7 @@ class _LoginState extends State<Login> {
                         elevation: 0,
                         onPressed: () async {
                           if (_usuarioController.text.length > 0) {
-                            if (_cargoController.text.length > 0) {
+                             
                               if (_passwdController.text.length > 0) {
                                 _controller.changeLoadding(true);
                                 final _login = LoginApi();
@@ -216,9 +171,7 @@ class _LoginState extends State<Login> {
                               } else {
                                 showToast2('Ingrese su contraseña', Colors.black);
                               }
-                            } else {
-                              showToast2('Ingrese su cargo', Colors.black);
-                            }
+                            
                           } else {
                             showToast2('Ingrese su usuario', Colors.black);
                           }

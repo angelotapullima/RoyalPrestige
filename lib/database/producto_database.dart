@@ -61,4 +61,22 @@ class ProductoDatabase {
       return [];
     }
   }
+
+
+
+  Future<List<ProductoModel>> getProductoQuery(String value) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<ProductoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM Producto where nombreProducto like '%$value%' AND estadoProducto='1'");
+
+      if (maps.length > 0) list = ProductoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      print(" $e Error en la base de datos");
+      return [];
+    }
+  }
+
+
 }

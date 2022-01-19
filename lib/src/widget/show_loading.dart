@@ -15,20 +15,22 @@ class ShowLoadding extends StatelessWidget {
             height: h,
             width: w,
             color: fondo,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                Text(
-                  'Cargando...',
-                  style: TextStyle(
-                    color: colorText,
-                    fontWeight: FontWeight.w400,
-                    fontSize: ScreenUtil().setSp(14),
-                    fontStyle: FontStyle.normal,
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  Text(
+                    'Cargando...',
+                    style: TextStyle(
+                      color: colorText,
+                      fontWeight: FontWeight.w400,
+                      fontSize: ScreenUtil().setSp(14),
+                      fontStyle: FontStyle.normal,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )
         : Container();
