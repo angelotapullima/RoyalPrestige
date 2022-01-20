@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     final bottomBloc = ProviderBloc.botton(context);
     final bloc = HomeBloc();
 
-    bottomBloc.changePage(0);
+    bottomBloc.changePage(3);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(
@@ -49,15 +49,27 @@ class _HomePageState extends State<HomePage> {
             return Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.only(
-                    top: kBottomNavigationBarHeight + ScreenUtil().setHeight(20),
-                  ),
-                  child: IndexedStack(
-                    index: bottomBloc.page,
-                    children: pageList,
+                  color: colorPrimary,
+                  height: double.infinity,
+                  width: double.infinity,
+                ),
+                SafeArea(
+                  bottom: false,
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: kBottomNavigationBarHeight + ScreenUtil().setHeight(20),
+                        ),
+                        child: IndexedStack(
+                          index: bottomBloc.page,
+                          children: pageList,
+                        ),
+                      ),
+                      posi3(bottomBloc, context, bloc),
+                    ],
                   ),
                 ),
-                posi3(bottomBloc, context, bloc),
                 AnimatedBuilder(
                   animation: bloc,
                   builder: (_, s) {
@@ -261,118 +273,115 @@ class _HomePageState extends State<HomePage> {
       top: 0,
       left: 0,
       right: 0,
-      child: SafeArea(
-        child: Container(
-          padding: EdgeInsets.only(
-            left: ScreenUtil().setWidth(10),
-            right: ScreenUtil().setWidth(10),
-            bottom: ScreenUtil().setHeight(10),
+      child: Container(
+        padding: EdgeInsets.only(
+          left: ScreenUtil().setWidth(10),
+          right: ScreenUtil().setWidth(10),
+        ),
+        height: kBottomNavigationBarHeight + ScreenUtil().setHeight(20),
+        decoration: BoxDecoration(
+          color: colorPrimary,
+          borderRadius: const BorderRadiusDirectional.only(
+            bottomEnd: Radius.circular(0),
+            bottomStart: Radius.circular(0),
           ),
-          height: kBottomNavigationBarHeight + ScreenUtil().setHeight(20),
-          decoration: BoxDecoration(
-            color: colorPrimary,
-            borderRadius: const BorderRadiusDirectional.only(
-              bottomEnd: Radius.circular(0),
-              bottomStart: Radius.circular(0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () {
+                bloc.changeToOpen();
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: ScreenUtil().setSp(30),
+                    width: ScreenUtil().setSp(30),
+                    child: (bottomBloc.page == 0)
+                        ? SvgPicture.asset(
+                            'assets/svg/menu.svg',
+                            color: Colors.white,
+                          )
+                        : SvgPicture.asset(
+                            'assets/svg/menu.svg',
+                            color: Colors.white,
+                          ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  bloc.changeToOpen();
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: ScreenUtil().setSp(30),
-                      width: ScreenUtil().setSp(30),
-                      child: (bottomBloc.page == 0)
-                          ? SvgPicture.asset(
-                              'assets/svg/menu.svg',
-                              color: Colors.white,
-                            )
-                          : SvgPicture.asset(
-                              'assets/svg/menu.svg',
-                              color: Colors.white,
-                            ),
-                    ),
-                  ],
-                ),
+            ),
+            InkWell(
+              onTap: () {
+                bottomBloc.changePage(0);
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: ScreenUtil().setSp(30),
+                    width: ScreenUtil().setSp(30),
+                    child: (bottomBloc.page == 0)
+                        ? SvgPicture.asset(
+                            'assets/svg/search.svg',
+                            color: Colors.white,
+                          )
+                        : SvgPicture.asset(
+                            'assets/svg/search.svg',
+                            color: Colors.white,
+                          ),
+                  ),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(2),
+                  ),
+                  CircleAvatar(
+                    radius: ScreenUtil().setHeight(3),
+                    backgroundColor: (bottomBloc.page == 0) ? Colors.white : Colors.transparent,
+                  )
+                ],
               ),
-              InkWell(
-                onTap: () {
-                  bottomBloc.changePage(0);
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: ScreenUtil().setSp(30),
-                      width: ScreenUtil().setSp(30),
-                      child: (bottomBloc.page == 0)
-                          ? SvgPicture.asset(
-                              'assets/svg/search.svg',
-                              color: Colors.white,
-                            )
-                          : SvgPicture.asset(
-                              'assets/svg/search.svg',
-                              color: Colors.white,
-                            ),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(2),
-                    ),
-                    CircleAvatar(
-                      radius: ScreenUtil().setHeight(3),
-                      backgroundColor: (bottomBloc.page == 0) ? Colors.white : Colors.transparent,
-                    )
-                  ],
-                ),
+            ),
+            InkWell(
+              onTap: () {
+                bottomBloc.changePage(1);
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: ScreenUtil().setSp(30),
+                    width: ScreenUtil().setSp(30),
+                    child: (bottomBloc.page == 1)
+                        ? SvgPicture.asset(
+                            'assets/svg/cal.svg',
+                            color: Colors.white,
+                          )
+                        : SvgPicture.asset(
+                            'assets/svg/cal.svg',
+                            color: Colors.white,
+                          ),
+                  ),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(2),
+                  ),
+                  CircleAvatar(
+                    radius: ScreenUtil().setHeight(3),
+                    backgroundColor: (bottomBloc.page == 1) ? Colors.white : Colors.transparent,
+                  )
+                ],
               ),
-              InkWell(
-                onTap: () {
-                  bottomBloc.changePage(1);
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: ScreenUtil().setSp(30),
-                      width: ScreenUtil().setSp(30),
-                      child: (bottomBloc.page == 1)
-                          ? SvgPicture.asset(
-                              'assets/svg/cal.svg',
-                              color: Colors.white,
-                            )
-                          : SvgPicture.asset(
-                              'assets/svg/cal.svg',
-                              color: Colors.white,
-                            ),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(2),
-                    ),
-                    CircleAvatar(
-                      radius: ScreenUtil().setHeight(3),
-                      backgroundColor: (bottomBloc.page == 1) ? Colors.white : Colors.transparent,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

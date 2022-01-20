@@ -27,139 +27,138 @@ class _BuscarPageState extends State<BuscarPage> {
     final categoriasBloc = ProviderBloc.productos(context);
     categoriasBloc.obtenerCategorias();
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      return BusquedaProducto();
-                    },
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      var begin = Offset(0.0, 1.0);
-                      var end = Offset.zero;
-                      var curve = Curves.ease;
+      body: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return BusquedaProducto();
+                  },
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    var begin = Offset(0.0, 1.0);
+                    var end = Offset.zero;
+                    var curve = Curves.ease;
 
-                      var tween = Tween(begin: begin, end: end).chain(
-                        CurveTween(curve: curve),
-                      );
+                    var tween = Tween(begin: begin, end: end).chain(
+                      CurveTween(curve: curve),
+                    );
 
-                      return SlideTransition(
-                        position: animation.drive(tween),
-                        child: child,
-                      );
-                    },
-                  ),
-                );
-              },
-              child: Container(
-                margin: EdgeInsets.only(
-                  top: kBottomNavigationBarHeight ,
-                  left: ScreenUtil().setWidth(21),
-                  right: ScreenUtil().setWidth(21),
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
                 ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorPrimary),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(30),
-                  vertical: ScreenUtil().setHeight(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Buscar...',
-                      style: TextStyle(
-                        color: colorOffText,
-                        fontWeight: FontWeight.w300,
-                        fontSize: ScreenUtil().setSp(15),
-                      ),
+              );
+            },
+            child: Container(
+              height: ScreenUtil().setHeight(50),
+              margin: EdgeInsets.only(
+                top:ScreenUtil().setHeight(10),
+                left: ScreenUtil().setWidth(21),
+                right: ScreenUtil().setWidth(21),
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(color: colorPrimary),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(30),
+                vertical: ScreenUtil().setHeight(16),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Buscar...',
+                    style: TextStyle(
+                      color: colorOffText,
+                      fontWeight: FontWeight.w300,
+                      fontSize: ScreenUtil().setSp(15),
                     ),
-                    Icon(
-                      Icons.search,
-                      color: colorPrimary,
-                      size: ScreenUtil().setHeight(20),
-                    )
-                  ],
-                ),
+                  ),
+                  Icon(
+                    Icons.search,
+                    color: colorPrimary,
+                    size: ScreenUtil().setHeight(20),
+                  )
+                ],
               ),
             ),
-            SizedBox(
-              height: ScreenUtil().setHeight(24),
-            ),
-            StreamBuilder(
-                stream: categoriasBloc.categoriaStream,
-                builder: (context, AsyncSnapshot<List<CategoriaModel>> snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.length > 0) {
-                      var categorias = snapshot.data!;
-                      categoriasBloc.obtenerProductosByIdCategoria(categorias[0].idCategoria.toString());
-                      return Container(
-                        height: ScreenUtil().setHeight(60),
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: categorias.length,
-                            itemBuilder: (_, index) {
-                              return itemChoice(categorias[index], index, categoriasBloc);
-                            }),
-                      );
-                    } else {
-                      return Center(
-                        child: Text('Sin categorías'),
-                      );
-                    }
+          ),
+          SizedBox(
+            height: ScreenUtil().setHeight(24),
+          ),
+          StreamBuilder(
+              stream: categoriasBloc.categoriaStream,
+              builder: (context, AsyncSnapshot<List<CategoriaModel>> snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.length > 0) {
+                    var categorias = snapshot.data!;
+                    categoriasBloc.obtenerProductosByIdCategoria(categorias[0].idCategoria.toString());
+                    return Container(
+                      height: ScreenUtil().setHeight(60),
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: categorias.length,
+                          itemBuilder: (_, index) {
+                            return itemChoice(categorias[index], index, categoriasBloc);
+                          }),
+                    );
                   } else {
-                    return ShowLoadding(
-                      active: true,
-                      h: ScreenUtil().setHeight(100),
-                      w: ScreenUtil().setWidth(100),
-                      fondo: Colors.transparent,
-                      colorText: Colors.black,
+                    return Center(
+                      child: Text('Sin categorías'),
                     );
                   }
-                }),
+                } else {
+                  return ShowLoadding(
+                    active: true,
+                    h: ScreenUtil().setHeight(100),
+                    w: ScreenUtil().setWidth(100),
+                    fondo: Colors.transparent,
+                    colorText: Colors.black,
+                  );
+                }
+              }),
             Expanded(
-              child: Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(21),
-                ),
-                child: StreamBuilder(
-                    stream: categoriasBloc.productosStream,
-                    builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data!.length > 0) {
-                          var producto = snapshot.data!;
-                          return ListView.builder(
-                            itemCount: producto.length,
-                            itemBuilder: (_, index) {
-                              var valorHero = math.Random().nextDouble() * index;
-                              return itemProduct(producto[index], valorHero);
-                            },
-                          );
-                        } else {
-                          return Center(
-                            child: Text('Sin productos para esta categoría'),
-                          );
-                        }
+            child: Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(21),
+              ),
+              child: StreamBuilder(
+                  stream: categoriasBloc.productosStream,
+                  builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.length > 0) {
+                        var producto = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: producto.length,
+                          itemBuilder: (_, index) {
+                            var valorHero = math.Random().nextDouble() * index;
+                            return itemProduct(producto[index], valorHero);
+                          },
+                        );
                       } else {
-                        return ShowLoadding(
-                          active: true,
-                          h: double.infinity,
-                          w: double.infinity,
-                          fondo: Colors.transparent,
-                          colorText: Colors.black,
+                        return Center(
+                          child: Text('Sin productos para esta categoría'),
                         );
                       }
-                    }),
-              ),
+                    } else {
+                      return ShowLoadding(
+                        active: true,
+                        h: double.infinity,
+                        w: double.infinity,
+                        fondo: Colors.transparent,
+                        colorText: Colors.black,
+                      );
+                    }
+                  }),
             ),
+          ),
           ],
-        ),
       ),
     );
   }

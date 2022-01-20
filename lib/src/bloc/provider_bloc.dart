@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:royal_prestige/src/bloc/bottom_navigation_bloc.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
+import 'package:royal_prestige/src/bloc/document_bloc.dart';
 import 'package:royal_prestige/src/bloc/productos_bloc.dart';
 
 class ProviderBloc extends InheritedWidget {
   final bottonBloc = BottomNaviBloc();
   final productosBloc = ProductosBloc();
   final dataUserBloc = DataUserBloc();
+  final documentBloc = DocumentBloc();
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
   @override
@@ -23,6 +25,10 @@ class ProviderBloc extends InheritedWidget {
 
   static DataUserBloc data(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.dataUserBloc;
+  }
+
+  static DocumentBloc document(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.documentBloc;
   }
 
 }
