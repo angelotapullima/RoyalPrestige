@@ -118,7 +118,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'SET DE 15 C4672',
+                                  '${snapshot.data![0].nombreProducto}',
                                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
                                 ),
                                 InkWell(
@@ -168,7 +168,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                       ],
                                     ),
                                     child: Text(
-                                      'REGALO: SARTEN GOURMET DE 20CM + TAPA MEDIANA +4 CUCHILLOS DE CARNE + HACHA (S/. 3.870,00)',
+                                      '${snapshot.data![0].regaloProducto} \n S/.${snapshot.data![0].precioRegaloProducto}',
                                       style: TextStyle(fontWeight: FontWeight.w300, fontSize: ScreenUtil().setSp(11)),
                                     ),
                                   ),
@@ -194,7 +194,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                               horizontal: ScreenUtil().setWidth(24),
                             ),
                             child: Text(
-                              'Set de juego de 15 piezas Sistema de cocna profesional El sistema de cocina mas completa que Royal Prestigue ofrece ideal para pérfeccionar tu coleccion y complacer los gustos mas variados',
+                              '${snapshot.data![0].descripcionProducto}',
                               style: TextStyle(fontWeight: FontWeight.w300, fontSize: ScreenUtil().setSp(11)),
                             ),
                           ),
@@ -205,7 +205,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                             padding: EdgeInsets.symmetric(
                               horizontal: ScreenUtil().setWidth(24),
                             ),
-                            child: _expandedContainer('Precio S/. 14 940.00', _controller.expanded, _contenido()),
+                            child: _expandedContainer('Precio S/. ${snapshot.data![0].precioProducto}', _controller.expanded, _contenido()),
                           ),
                           Spacer(),
                           Padding(

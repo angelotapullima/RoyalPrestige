@@ -3,6 +3,7 @@ class ProductoModel {
   String? idCategoria;
   String? codigoProducto;
   String? nombreProducto;
+  String? descripcionProducto;
   String? precioProducto;
   String? regaloProducto;
   String? precioRegaloProducto;
@@ -14,6 +15,7 @@ class ProductoModel {
     this.idCategoria,
     this.codigoProducto,
     this.nombreProducto,
+    this.descripcionProducto,
     this.precioProducto,
     this.regaloProducto,
     this.precioRegaloProducto,
@@ -28,6 +30,7 @@ class ProductoModel {
         'idCategoria': idCategoria,
         'codigoProducto': codigoProducto,
         'nombreProducto': nombreProducto,
+        'descripcionProducto': descripcionProducto,
         'precioProducto': precioProducto,
         'regaloProducto': regaloProducto,
         'precioRegaloProducto': precioRegaloProducto,
@@ -40,6 +43,7 @@ class ProductoModel {
         idCategoria: json["idCategoria"],
         codigoProducto: json["codigoProducto"],
         nombreProducto: json["nombreProducto"],
+        descripcionProducto: json["descripcionProducto"],
         precioProducto: json["precioProducto"],
         regaloProducto: json["regaloProducto"],
         precioRegaloProducto: json["precioRegaloProducto"],

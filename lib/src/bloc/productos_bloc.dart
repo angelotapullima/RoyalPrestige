@@ -20,11 +20,17 @@ class ProductosBloc {
   final _categoriasController = BehaviorSubject<List<CategoriaModel>>();
   Stream<List<CategoriaModel>> get categoriaStream => _categoriasController.stream;
 
+  final _cantidadSubidaImagen = BehaviorSubject<double>();
+  Stream<double> get subidaImagenStream => _cantidadSubidaImagen.stream;
+
+  Function(double) get changeSubidaImagen => _cantidadSubidaImagen.sink.add;
+
   dispose() {
     _productosController.close();
     _productosQueryController.close();
     _categoriasController.close();
     _productoidController.close();
+    _cantidadSubidaImagen.close();
   }
 
   void obtenerCategorias() async {

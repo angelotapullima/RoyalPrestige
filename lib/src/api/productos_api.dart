@@ -43,6 +43,7 @@ class ProductosApi {
           producto.regaloProducto = productos["producto_regalo"];
           producto.precioRegaloProducto = productos["producto_regalo_precio"];
           producto.fotoProducto = productos["producto_foto"];
+          producto.descripcionProducto = productos["producto_descripcion"];
           producto.estadoProducto = productos["producto_estado"];
 
           await productoDatabase.insertarProducto(producto);

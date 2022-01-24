@@ -8,7 +8,7 @@ import 'package:royal_prestige/src/bloc/inicio_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/tabs/buscar_page.dart';
 import 'package:royal_prestige/src/pages/tabs/calcular_page.dart';
-import 'package:royal_prestige/src/pages/tabs/productos_page.dart';
+import 'package:royal_prestige/src/pages/tabs/agregar_productos_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 
 import 'tabs/documentosPage.dart';
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     pageList.add(const BuscarPage());
     pageList.add(const CalcularPage());
-    pageList.add(const ProductosPage());
+    pageList.add(const AgregarProductosPage());
     pageList.add(const DocumentosPage());
 
     super.initState();
@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     final bottomBloc = ProviderBloc.botton(context);
     final bloc = HomeBloc();
 
-    bottomBloc.changePage(3);
+    bottomBloc.changePage(2);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(
@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                                                 bloc.changeToClosed();
                                                 bottomBloc.changePage(2);
                                               },
-                                              child: itemOption('Productos'),
+                                              child: itemOption('Agregar producto'),
                                             ),
                                             Divider(
                                               color: Colors.white,
