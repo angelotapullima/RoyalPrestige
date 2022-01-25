@@ -9,6 +9,7 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/tabs/buscar_page.dart';
 import 'package:royal_prestige/src/pages/tabs/calcular_page.dart';
 import 'package:royal_prestige/src/pages/tabs/agregar_productos_page.dart';
+import 'package:royal_prestige/src/pages/tabs/cliente_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 
 import 'tabs/documentosPage.dart';
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
     pageList.add(const CalcularPage());
     pageList.add(const AgregarProductosPage());
     pageList.add(const DocumentosPage());
+    pageList.add(const ClientePage());
 
     super.initState();
   }
@@ -37,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     final bottomBloc = ProviderBloc.botton(context);
     final bloc = HomeBloc();
 
-    bottomBloc.changePage(2);
+    bottomBloc.changePage(4);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(
@@ -198,6 +200,16 @@ class _HomePageState extends State<HomePage> {
                                                 bottomBloc.changePage(3);
                                               },
                                               child: itemOption('Documentos'),
+                                            ),
+                                            Divider(
+                                              color: Colors.white,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                bloc.changeToClosed();
+                                                bottomBloc.changePage(4);
+                                              },
+                                              child: itemOption('Clientes'),
                                             ),
                                             Divider(
                                               color: Colors.white,

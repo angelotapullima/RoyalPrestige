@@ -57,7 +57,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
                     Text(
                       'Documentos',
                       style: TextStyle(
-                        fontSize: ScreenUtil().setSp(19),
+                        fontSize: ScreenUtil().setSp(24),
                         fontWeight: FontWeight.w600,
                       ),
                     ),

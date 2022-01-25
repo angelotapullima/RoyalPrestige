@@ -14,6 +14,7 @@ class DatabaseHelper {
       db.execute(tableCategoriaSql);
       db.execute(tableProductoSql);
       db.execute(tableDocumentSql);
+      db.execute(tableClientSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 
@@ -34,11 +35,23 @@ class DatabaseHelper {
       ' fotoProducto TEXT,'
       ' estadoProducto TEXT)';
 
-
   static const String tableDocumentSql = 'CREATE TABLE Document('
       ' idDocument TEXT PRIMARY KEY,'
       ' documentTitulo TEXT,'
       ' documentDescripcion TEXT,'
-      ' documentFile TEXT,' 
+      ' documentFile TEXT,'
       ' documentEstado TEXT)';
+
+  static const String tableClientSql = 'CREATE TABLE Cliente('
+      ' idCliente TEXT PRIMARY KEY,'
+      ' idUsuario TEXT,'
+      ' nombreCliente TEXT,'
+      ' tipoDocCliente TEXT,'
+      ' nroDocCliente TEXT,'
+      ' sexoCliente TEXT,'
+      ' nacimientoCLiente TEXT,'
+      ' telefonoCliente TEXT,'
+      ' estadoCliente TEXT,'
+      ' direccionCliente TEXT)';
 }
+ 

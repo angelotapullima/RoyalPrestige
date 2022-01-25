@@ -117,9 +117,11 @@ class _DetalleProductoState extends State<DetalleProducto> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  '${snapshot.data![0].nombreProducto}',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
+                                Expanded(
+                                  child: Text(
+                                    '${snapshot.data![0].nombreProducto}',
+                                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
+                                  ),
                                 ),
                                 InkWell(
                                   onTap: () {
