@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     final bottomBloc = ProviderBloc.botton(context);
     final bloc = HomeBloc();
 
-    bottomBloc.changePage(4);
+    bottomBloc.changePage(3);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(

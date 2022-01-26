@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:royal_prestige/src/bloc/alert_bloc.dart';
 import 'package:royal_prestige/src/bloc/bottom_navigation_bloc.dart';
 import 'package:royal_prestige/src/bloc/clientes_bloc.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
@@ -11,6 +12,7 @@ class ProviderBloc extends InheritedWidget {
   final dataUserBloc = DataUserBloc();
   final documentBloc = DocumentBloc();
   final clientesBloc = ClientesBloc();
+  final alertBloc = AlertBloc();
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
   @override
@@ -35,6 +37,10 @@ class ProviderBloc extends InheritedWidget {
 
   static ClientesBloc cliente(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.clientesBloc;
+  }
+
+  static AlertBloc alert(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.alertBloc;
   }
 
 }

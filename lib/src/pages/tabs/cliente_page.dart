@@ -6,8 +6,8 @@ import 'package:focused_menu/modals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
-import 'package:royal_prestige/src/pages/agregar_cliente.dart';
-import 'package:royal_prestige/src/pages/editar_cliente.dart';
+import 'package:royal_prestige/src/pages/Clientes/agregar_cliente.dart';
+import 'package:royal_prestige/src/pages/Clientes/editar_cliente.dart';
 
 class ClientePage extends StatelessWidget {
   const ClientePage({Key? key}) : super(key: key);

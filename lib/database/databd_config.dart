@@ -9,12 +9,13 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await getDatabase();
 
   Future<Database> getDatabase() async {
-    final String path = join(await getDatabasesPath(), 'royalv3.db');
+    final String path = join(await getDatabasesPath(), 'royalv2.db');
     return openDatabase(path, onCreate: (db, version) {
       db.execute(tableCategoriaSql);
       db.execute(tableProductoSql);
       db.execute(tableDocumentSql);
       db.execute(tableClientSql);
+      db.execute(tableAlertSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 
@@ -53,5 +54,14 @@ class DatabaseHelper {
       ' telefonoCliente TEXT,'
       ' estadoCliente TEXT,'
       ' direccionCliente TEXT)';
+
+  static const String tableAlertSql = 'CREATE TABLE Alert('
+      ' idAlert TEXT PRIMARY KEY,'
+      ' idUsuario TEXT,'
+      ' idClient TEXT,'
+      ' alertTitle TEXT,'
+      ' alertDetail TEXT,'
+      ' alertDate TEXT,'
+      ' alertHour TEXT,'
+      ' alertStatus TEXT)';
 }
- 

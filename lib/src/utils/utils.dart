@@ -24,3 +24,16 @@ obtenerHora() {
   final DateFormat fech = DateFormat('HH:mm:ss');
   return fech.format(fecha);
 }
+
+
+obtenerFechaString(String date) {
+  if (date == 'null' || date == '') {
+    return '';
+  }
+
+  var fecha = DateTime.parse(date);
+
+  final DateFormat fech = new DateFormat('dd MMM yyyy', 'es');
+
+  return fech.format(fecha);
+}

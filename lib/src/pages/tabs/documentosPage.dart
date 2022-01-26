@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flowder/flowder.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,10 +13,14 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/document_model.dart';
+import 'package:royal_prestige/src/pages/Alertas/add_alertas.dart';
 import 'package:royal_prestige/src/pages/documento/nuevo_documento.dart';
+import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
+import 'package:royal_prestige/src/utils/utils.dart';
 
 class DocumentosPage extends StatefulWidget {
   const DocumentosPage({Key? key}) : super(key: key);
@@ -33,6 +38,9 @@ class _DocumentosPageState extends State<DocumentosPage> {
   Widget build(BuildContext context) {
     final documentBloc = ProviderBloc.document(context);
     documentBloc.getDocument();
+
+    final alertBloc = ProviderBloc.alert(context);
+    alertBloc.getAlerts();
 
     final responsive = Responsive.of(context);
     final provider = Provider.of<DocumentsBloc>(context, listen: false);
@@ -139,7 +147,135 @@ class _DocumentosPageState extends State<DocumentosPage> {
                     return CircularProgressIndicator();
                   }
                 },
-              )
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              Container(
+                height: ScreenUtil().setHeight(60),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenUtil().setWidth(10),
+                  vertical: ScreenUtil().setHeight(5),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      'Alertas',
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(24),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) {
+                              return AddAlertas();
+                            },
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              var begin = Offset(0.0, 1.0);
+                              var end = Offset.zero;
+                              var curve = Curves.ease;
+
+                              var tween = Tween(begin: begin, end: end).chain(
+                                CurveTween(curve: curve),
+                              );
+
+                              return SlideTransition(
+                                position: animation.drive(tween),
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue[600],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10), vertical: ScreenUtil().setHeight(5)),
+                        child: Text(
+                          'Agregar',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              StreamBuilder(
+                stream: alertBloc.alertsStream,
+                builder: (BuildContext context, AsyncSnapshot<List<AlertModel>> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.length > 0) {
+                      return Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(
+                            top: ScreenUtil().setHeight(10),
+                          ),
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setWidth(16),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${snapshot.data![index].alertTitle}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: ScreenUtil().setSp(20),
+                                              ),
+                                            ),
+                                            Text('${snapshot.data![index].alertDetail}'),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: ScreenUtil().setWidth(10),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${obtenerFechaString('${snapshot.data![index].alertDate}')}',
+                                            style: TextStyle(color: colorPrimary),
+                                          ),
+                                          Text('${snapshot.data![index].alertHour}'),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Divider()
+                              ],
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return Center(
+                        child: Text('No tiene Alertas'),
+                      );
+                    }
+                  } else {
+                    return CupertinoActivityIndicator();
+                  }
+                },
+              ),
             ],
           ),
           Positioned(
@@ -299,8 +435,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
               ].request();
               var checkResult = await Permission.manageExternalStorage.status;
 
-              if (!checkResult.isGranted) { 
-
+              if (!checkResult.isGranted) {
                 options = DownloaderUtils(
                   progressCallback: (current, total) {
                     provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
@@ -328,7 +463,6 @@ class _DocumentosPageState extends State<DocumentosPage> {
                 ].request();
                 print(statuses[Permission.location]);
               }
- 
             },
           ),
           FocusedMenuItem(
