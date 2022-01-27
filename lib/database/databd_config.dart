@@ -16,6 +16,7 @@ class DatabaseHelper {
       db.execute(tableDocumentSql);
       db.execute(tableClientSql);
       db.execute(tableAlertSql);
+      db.execute(tableCartSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 
@@ -64,4 +65,9 @@ class DatabaseHelper {
       ' alertDate TEXT,'
       ' alertHour TEXT,'
       ' alertStatus TEXT)';
+
+  static const String tableCartSql = 'CREATE TABLE Cart('
+      ' idProduct TEXT PRIMARY KEY,'
+      ' amount TEXT,'
+      ' subtotal TEXT)';
 }

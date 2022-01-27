@@ -9,6 +9,7 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/tabs/buscar_page.dart';
 import 'package:royal_prestige/src/pages/tabs/calcular_page.dart';
 import 'package:royal_prestige/src/pages/tabs/agregar_productos_page.dart';
+import 'package:royal_prestige/src/pages/tabs/carrito_tab.dart';
 import 'package:royal_prestige/src/pages/tabs/cliente_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
     pageList.add(const AgregarProductosPage());
     pageList.add(const DocumentosPage());
     pageList.add(const ClientePage());
+    pageList.add(const CarritoTab());
 
     super.initState();
   }
@@ -39,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     final bottomBloc = ProviderBloc.botton(context);
     final bloc = HomeBloc();
 
-    bottomBloc.changePage(3);
+    bottomBloc.changePage(5);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(
@@ -210,6 +212,15 @@ class _HomePageState extends State<HomePage> {
                                                 bottomBloc.changePage(4);
                                               },
                                               child: itemOption('Clientes'),
+                                            ),
+                                            Divider(
+                                              color: Colors.white,
+                                            ), InkWell(
+                                              onTap: () {
+                                                bloc.changeToClosed();
+                                                bottomBloc.changePage(5);
+                                              },
+                                              child: itemOption('Carrito'),
                                             ),
                                             Divider(
                                               color: Colors.white,

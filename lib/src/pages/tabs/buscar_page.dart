@@ -55,7 +55,7 @@ class _BuscarPageState extends State<BuscarPage> {
               );
             },
             child: Container(
-              height: ScreenUtil().setHeight(50),
+              height: ScreenUtil().setHeight(60),
               margin: EdgeInsets.only(
                 top:ScreenUtil().setHeight(10),
                 left: ScreenUtil().setWidth(21),

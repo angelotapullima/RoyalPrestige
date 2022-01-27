@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -49,18 +50,18 @@ class MyApp extends StatelessWidget {
               child: child!,
             );
           },
-          // localizationsDelegates: const [
-          //   GlobalMaterialLocalizations.delegate,
-          //   GlobalWidgetsLocalizations.delegate,
-          //   GlobalCupertinoLocalizations.delegate,
-          // ],
-          // supportedLocales: const [
-          //   Locale('es'),
-          //   Locale('es', 'ES'),
-          // ],
-          // localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
-          //   return locale;
-          // },
+           localizationsDelegates: const [
+             GlobalMaterialLocalizations.delegate,
+             GlobalWidgetsLocalizations.delegate,
+             GlobalCupertinoLocalizations.delegate,
+           ],
+           supportedLocales: const [
+             Locale('es'),
+             Locale('es', 'ES'),
+           ],
+           localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
+             return locale;
+           },
           initialRoute: 'splash',
           routes: {
             'splash': (BuildContext context) => const Splash(),
