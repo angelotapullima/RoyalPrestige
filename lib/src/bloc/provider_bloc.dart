@@ -5,6 +5,7 @@ import 'package:royal_prestige/src/bloc/cart_bloc.dart';
 import 'package:royal_prestige/src/bloc/clientes_bloc.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/document_bloc.dart';
+import 'package:royal_prestige/src/bloc/galeria_producto_bloc.dart';
 import 'package:royal_prestige/src/bloc/productos_bloc.dart';
 
 class ProviderBloc extends InheritedWidget {
@@ -15,6 +16,7 @@ class ProviderBloc extends InheritedWidget {
   final clientesBloc = ClientesBloc();
   final alertBloc = AlertBloc();
   final cartBloc = CartBloc();
+  final galeryBloc = GaleryBloc();
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
   @override
@@ -46,5 +48,8 @@ class ProviderBloc extends InheritedWidget {
 
   static CartBloc cart(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.cartBloc;
+  }
+  static GaleryBloc galery(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.galeryBloc;
   }
 }

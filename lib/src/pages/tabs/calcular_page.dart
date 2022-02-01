@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 
 class CalcularPage extends StatefulWidget {
@@ -372,126 +373,36 @@ class _CalcularPageState extends State<CalcularPage> {
         SizedBox(
           height: ScreenUtil().setHeight(24),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '12 CUOTAS (10%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota12}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 12,
+          title: '12 CUOTAS (10%)',
+          precio: '${_controller.cuota12}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '14 CUOTAS (9%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota14}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 14,
+          title: '14 CUOTAS (9%)',
+          precio: '${_controller.cuota14}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '16 CUOTAS (8%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota16}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 16,
+          title: '16 CUOTAS (8%)',
+          precio: '${_controller.cuota16}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '19 CUOTAS (7%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota19}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 19,
+          title: '19 CUOTAS (7%)',
+          precio: '${_controller.cuota19}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '23 CUOTAS (6%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota23}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 23,
+          title: '23 CUOTAS (6%)',
+          precio: '${_controller.cuota23}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '28 CUOTAS (5%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota28}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 28,
+          title: '28 CUOTAS (5%)',
+          precio: '${_controller.cuota23}.00',
         ),
-        Divider(),
       ],
     );
   }

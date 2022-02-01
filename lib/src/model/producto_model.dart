@@ -1,3 +1,5 @@
+import 'package:royal_prestige/src/model/galery_model.dart';
+
 class ProductoModel {
   String? idProducto;
   String? idCategoria;
@@ -12,6 +14,8 @@ class ProductoModel {
   String? cantidad;
   String? subtotal;
 
+  List<GaleryModel>? galery;
+
   ProductoModel({
     this.idProducto,
     this.idCategoria,
@@ -25,6 +29,7 @@ class ProductoModel {
     this.estadoProducto,
     this.cantidad,
     this.subtotal,
+    this.galery,
   });
 
   static List<ProductoModel> fromJsonList(List<dynamic> json) => json.map((i) => ProductoModel.fromJson(i)).toList();

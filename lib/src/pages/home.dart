@@ -6,6 +6,7 @@ import 'package:royal_prestige/src/bloc/bottom_navigation_bloc.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/inicio_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/pages/logout.dart';
 import 'package:royal_prestige/src/pages/tabs/buscar_page.dart';
 import 'package:royal_prestige/src/pages/tabs/calcular_page.dart';
 import 'package:royal_prestige/src/pages/tabs/agregar_productos_page.dart';
@@ -41,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     final bottomBloc = ProviderBloc.botton(context);
     final bloc = HomeBloc();
 
-    bottomBloc.changePage(5);
+    bottomBloc.changePage(0);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(
@@ -215,7 +216,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                             Divider(
                                               color: Colors.white,
-                                            ), InkWell(
+                                            ),
+                                            InkWell(
                                               onTap: () {
                                                 bloc.changeToClosed();
                                                 bottomBloc.changePage(5);
@@ -236,6 +238,31 @@ class _HomePageState extends State<HomePage> {
                                               color: Colors.white,
                                             ),
                                             InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    opaque: false,
+                                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                                      return Logout();
+                                                    },
+                                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                                      var begin = Offset(0.0, 1.0);
+                                                      var end = Offset.zero;
+                                                      var curve = Curves.ease;
+
+                                                      var tween = Tween(begin: begin, end: end).chain(
+                                                        CurveTween(curve: curve),
+                                                      );
+
+                                                      return SlideTransition(
+                                                        position: animation.drive(tween),
+                                                        child: child,
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              },
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
                                                   horizontal: ScreenUtil().setWidth(24),

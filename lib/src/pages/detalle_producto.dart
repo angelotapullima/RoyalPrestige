@@ -1,11 +1,22 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:royal_prestige/database/cart_database.dart';
+import 'package:royal_prestige/src/api/productos_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cart_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
+import 'package:royal_prestige/src/pages/detalle_foto.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
+import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
@@ -52,9 +63,124 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                     bottomLeft: Radius.circular(30),
                                   ),
                                 ),
-                                child: Image.asset('assets/img/picture2.jpg'),
+                                child: (snapshot.data![0].galery!.length > 0)
+                                    ? CarouselSlider.builder(
+                                        itemCount: snapshot.data![0].galery!.length,
+                                        itemBuilder: (context, x, y) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                                    return DetailPicture(
+                                                      index: x.toString(),
+                                                      idProducto: snapshot.data![0].galery![x].idProduct.toString(),
+                                                    );
+                                                  },
+                                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                                    var begin = Offset(0.0, 1.0);
+                                                    var end = Offset.zero;
+                                                    var curve = Curves.ease;
+
+                                                    var tween = Tween(begin: begin, end: end).chain(
+                                                      CurveTween(curve: curve),
+                                                    );
+
+                                                    return SlideTransition(
+                                                      position: animation.drive(tween),
+                                                      child: child,
+                                                    );
+                                                  },
+                                                ),
+                                              );
+//DetailPicture
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: ScreenUtil().setWidth(0),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                                child: Stack(
+                                                  children: [
+                                                    CachedNetworkImage(
+                                                      placeholder: (context, url) => Container(
+                                                          width: double.infinity, height: double.infinity, child: CupertinoActivityIndicator()),
+                                                      errorWidget: (context, url, error) => Container(
+                                                        width: double.infinity,
+                                                        height: double.infinity,
+                                                        child: Center(
+                                                          child: Icon(Icons.error),
+                                                        ),
+                                                      ),
+                                                      imageUrl: '$apiBaseURL/${snapshot.data![0].galery![x].file}',
+                                                      imageBuilder: (context, imageProvider) => Container(
+                                                        decoration: BoxDecoration(
+                                                          image: DecorationImage(
+                                                            image: imageProvider,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        options: CarouselOptions(
+                                            height: ScreenUtil().setHeight(552),
+                                            onPageChanged: (index, page) {},
+                                            enlargeCenterPage: true,
+                                            autoPlay: true,
+                                            autoPlayCurve: Curves.fastOutSlowIn,
+                                            autoPlayInterval: Duration(seconds: 6),
+                                            autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                            viewportFraction: 1),
+                                      )
+                                    : Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: Center(
+                                          child: Icon(Icons.error),
+                                        ),
+                                      ),
                               ),
                               Positioned(
+                                top: 0,
+                                right: ScreenUtil().setWidth(25),
+                                child: SafeArea(
+                                  child: InkWell(
+                                    onTap: () {
+                                      agregarGaleria(context, snapshot.data![0]);
+                                    },
+                                    child: Align(
+                                      alignment: Alignment.topRight,
+                                      child: Container(
+                                        height: ScreenUtil().setHeight(40),
+                                        width: ScreenUtil().setWidth(40),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: Colors.white),
+                                          color: Colors.white,
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.photo_camera,
+                                            color: NewColors.green,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              /*  Positioned(
                                 bottom: 0,
                                 left: 0,
                                 right: 0,
@@ -96,6 +222,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                   ),
                                 ),
                               ),
+                              */
                               SafeArea(
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -456,6 +583,9 @@ class _DetalleProductoState extends State<DetalleProducto> {
                   InkWell(
                     onTap: () {
                       Navigator.pop(context);
+                      Navigator.pop(context);
+                      final bottomBloc = ProviderBloc.botton(context);
+                      bottomBloc.changePage(5);
                     },
                     child: Row(
                       children: [
@@ -486,6 +616,358 @@ class _DetalleProductoState extends State<DetalleProducto> {
           ),
         );
       },
+    );
+  }
+
+  void agregarGaleria(BuildContext context, ProductoModel producto) {
+    final _controller = ChangeEditController();
+
+    _controller.changeBoton(false);
+
+    final picker = ImagePicker();
+    Future<Null> _cropImage(filePath) async {
+      File? croppedImage = await ImageCropper.cropImage(
+          sourcePath: filePath,
+          aspectRatioPresets: Platform.isAndroid
+              ? [
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio16x9,
+                ]
+              : [
+                  CropAspectRatioPreset.original,
+                  CropAspectRatioPreset.ratio4x3,
+                  CropAspectRatioPreset.ratio16x9,
+                ],
+          androidUiSettings: AndroidUiSettings(
+              toolbarTitle: 'Cortar Imagen',
+              toolbarColor: Colors.green,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              showCropGrid: true,
+              lockAspectRatio: false),
+          iosUiSettings: IOSUiSettings(minimumAspectRatio: 1.0, title: 'Cortar Imagen'));
+      if (croppedImage != null) {
+        _controller.changeImage(croppedImage);
+      }
+    }
+
+    Future getImageCamera() async {
+      final pickedFile = await picker.pickImage(source: ImageSource.camera, imageQuality: 70);
+
+      if (pickedFile != null) {
+        _cropImage(pickedFile.path);
+      }
+    }
+
+    Future getImageGallery() async {
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+
+      if (pickedFile != null) {
+        _cropImage(pickedFile.path);
+      }
+      /**/
+    }
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return Stack(
+            children: [
+              GestureDetector(
+                child: Container(
+                  color: Color.fromRGBO(0, 0, 0, 0.001),
+                  child: DraggableScrollableSheet(
+                      initialChildSize: 0.93,
+                      minChildSize: 0.2,
+                      maxChildSize: 0.93,
+                      builder: (_, controller) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: const Radius.circular(25.0),
+                              topRight: const Radius.circular(25.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: ScreenUtil().setHeight(24),
+                              horizontal: ScreenUtil().setWidth(24),
+                            ),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.arrow_back_ios,
+                                          color: NewColors.black,
+                                        ),
+                                        iconSize: ScreenUtil().setSp(20),
+                                        onPressed: () => Navigator.of(context).pop(),
+                                      ),
+                                      SizedBox(width: ScreenUtil().setWidth(24)),
+                                      Text(
+                                        'Añadir galeria',
+                                        style: GoogleFonts.poppins(
+                                          fontStyle: FontStyle.normal,
+                                          fontWeight: FontWeight.w700,
+                                          color: NewColors.black,
+                                          fontSize: ScreenUtil().setSp(18),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: ScreenUtil().setHeight(16),
+                                  ),
+                                  AnimatedBuilder(
+                                    animation: _controller,
+                                    builder: (_, s) {
+                                      return Center(
+                                        child: (_controller.image != null)
+                                            ? Container(
+                                                height: ScreenUtil().setHeight(150),
+                                                width: ScreenUtil().setWidth(150),
+                                                child: ClipRRect(
+                                                  child: Image.file(_controller.image!),
+                                                ),
+                                              )
+                                            : Container(
+                                                height: ScreenUtil().setHeight(150),
+                                                width: ScreenUtil().setWidth(150),
+                                                color: NewColors.white,
+                                                child: SvgPicture.asset('assets/torneo/fondoCapitan.svg'),
+                                              ),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: ScreenUtil().setHeight(8),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        builder: (context) {
+                                          return GestureDetector(
+                                            child: Container(
+                                              color: Color.fromRGBO(0, 0, 0, 0.001),
+                                              child: GestureDetector(
+                                                onTap: () {},
+                                                child: DraggableScrollableSheet(
+                                                  initialChildSize: 0.2,
+                                                  minChildSize: 0.2,
+                                                  maxChildSize: 0.2,
+                                                  builder: (_, controller) {
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius: BorderRadius.only(
+                                                          topLeft: const Radius.circular(25.0),
+                                                          topRight: const Radius.circular(25.0),
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: ScreenUtil().setWidth(24),
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: ScreenUtil().setHeight(24),
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.pop(context);
+                                                                getImageGallery();
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  Text(
+                                                                    'Seleccionar foto',
+                                                                    style: GoogleFonts.poppins(
+                                                                      fontStyle: FontStyle.normal,
+                                                                      fontWeight: FontWeight.w400,
+                                                                      color: NewColors.black,
+                                                                      fontSize: ScreenUtil().setSp(16),
+                                                                      letterSpacing: ScreenUtil().setSp(0.016),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  SvgPicture.asset(
+                                                                    'assets/info/photo.svg',
+                                                                    fit: BoxFit.cover,
+                                                                    height: ScreenUtil().setHeight(24),
+                                                                    width: ScreenUtil().setWidth(24),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Divider(
+                                                              thickness: 1,
+                                                              color: NewColors.grayBackSpace,
+                                                            ),
+                                                            SizedBox(
+                                                              height: ScreenUtil().setHeight(10),
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.pop(context);
+                                                                getImageCamera();
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  Text(
+                                                                    'Tomar foto',
+                                                                    style: GoogleFonts.poppins(
+                                                                      fontStyle: FontStyle.normal,
+                                                                      fontWeight: FontWeight.w400,
+                                                                      color: NewColors.black,
+                                                                      fontSize: ScreenUtil().setSp(16),
+                                                                      letterSpacing: ScreenUtil().setSp(0.016),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  SvgPicture.asset(
+                                                                    'assets/info/camera.svg',
+                                                                    fit: BoxFit.cover,
+                                                                    height: ScreenUtil().setHeight(24),
+                                                                    width: ScreenUtil().setWidth(24),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Divider(
+                                                              thickness: 1,
+                                                              color: NewColors.grayBackSpace,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        'Añadir foto',
+                                        style: GoogleFonts.poppins(
+                                          fontStyle: FontStyle.normal,
+                                          fontWeight: FontWeight.w400,
+                                          color: NewColors.green,
+                                          fontSize: ScreenUtil().setSp(14),
+                                          letterSpacing: ScreenUtil().setSp(0.016),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: ScreenUtil().setHeight(48)),
+                                  InkWell(
+                                    onTap: () async {
+                                      _controller.changeCargando(true);
+
+                                      if (_controller.boton) {
+                                        final productosApi = ProductosApi();
+                                        final res = await productosApi.agregarGaleria(
+                                            _controller.image!, '${producto.idProducto}', '${producto.nombreProducto}');
+                                        if (res) {
+                                          /* final galeriaBloc = ProviderBloc.galeria(context);
+                                          galeriaBloc.obtenerGalerias(negocio.idEmpresa); */
+                                          Navigator.pop(context);
+                                        } else {
+                                          _controller.changeText('Ocurrió un error');
+                                        }
+                                      }
+
+                                      _controller.changeCargando(false);
+                                    },
+                                    child: AnimatedBuilder(
+                                        animation: _controller,
+                                        builder: (_, s) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(50),
+                                              color: (_controller.boton) ? NewColors.green : NewColors.green.withOpacity(0.6),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'Guardar',
+                                                style: GoogleFonts.poppins(
+                                                    color: NewColors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: ScreenUtil().setSp(18),
+                                                    fontStyle: FontStyle.normal),
+                                              ),
+                                            ),
+                                            height: ScreenUtil().setHeight(60),
+                                            width: ScreenUtil().setWidth(327),
+                                          );
+                                        }),
+                                  ),
+                                  SizedBox(height: ScreenUtil().setHeight(8)),
+                                  Center(
+                                    child: AnimatedBuilder(
+                                        animation: _controller,
+                                        builder: (_, s) {
+                                          return Text(
+                                            _controller.text,
+                                            style: GoogleFonts.poppins(
+                                              color: NewColors.orangeLight,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: ScreenUtil().setSp(14),
+                                              fontStyle: FontStyle.normal,
+                                              letterSpacing: ScreenUtil().setSp(0.016),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+              ),
+              AnimatedBuilder(
+                  animation: _controller,
+                  builder: (_, s) {
+                    if (_controller.cargando) {
+                      return _mostrarAlert();
+                    } else {
+                      return Container();
+                    }
+                  })
+            ],
+          );
+        });
+  }
+
+  Widget _mostrarAlert() {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      color: Color.fromRGBO(0, 0, 0, 0.5),
+      child: Center(
+        child: Container(
+          height: 150.0,
+          child: CupertinoActivityIndicator(),
+        ),
+      ),
     );
   }
 
@@ -622,6 +1104,58 @@ class Controller extends ChangeNotifier {
     } else {
       cantidad = 1;
     }
+    notifyListeners();
+  }
+}
+
+class ChangeEditController extends ChangeNotifier {
+  bool cargando = false;
+  String hora1 = '';
+  String hora2 = '';
+  String hora1D = '';
+  String hora2D = '';
+  String text = '';
+  bool boton = true;
+  File? image;
+
+  void changeImage(File i) {
+    image = i;
+    boton = true;
+    notifyListeners();
+  }
+
+  void changeBoton(bool b) {
+    boton = b;
+    notifyListeners();
+  }
+
+  void changeHora1(String h) {
+    hora1 = h;
+    notifyListeners();
+  }
+
+  void changeHora2(String p) {
+    hora2 = p;
+    notifyListeners();
+  }
+
+  void changeHora1D(String h) {
+    hora1D = h;
+    notifyListeners();
+  }
+
+  void changeHora2D(String p) {
+    hora2D = p;
+    notifyListeners();
+  }
+
+  void changeCargando(bool c) {
+    cargando = c;
+    notifyListeners();
+  }
+
+  void changeText(String t) {
+    text = t;
     notifyListeners();
   }
 }

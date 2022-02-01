@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
+import 'package:royal_prestige/src/utils/responsive.dart';
 
 class CalculaDoraPage extends StatefulWidget {
   final double monto;
@@ -22,9 +24,13 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = Responsive.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calcular',style: TextStyle(color: Colors.black),),
+        title: Text(
+          'Calcular',
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -32,7 +38,6 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(
-             
             left: ScreenUtil().setWidth(21),
             right: ScreenUtil().setWidth(21),
           ),
@@ -86,7 +91,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
                       ),
                     ),
                      */
-                     
+
                     _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(), 1),
                     SizedBox(
                       height: ScreenUtil().setHeight(14),
@@ -95,7 +100,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
                     SizedBox(
                       height: ScreenUtil().setHeight(14),
                     ),
-                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(), 3),
+                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(responsive), 3),
                     SizedBox(
                       height: ScreenUtil().setHeight(24),
                     ),
@@ -326,7 +331,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
     );
   }
 
-  Widget _contenido3() {
+  Widget _contenido3(Responsive responsive) {
     return Column(
       children: [
         Container(
@@ -335,8 +340,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
             controller: _depositoController,
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              
-                _controller.calcularCuotas(widget.monto.toString(), value); 
+              _controller.calcularCuotas(widget.monto.toString(), value);
             },
             decoration: InputDecoration(
               filled: true,
@@ -382,126 +386,37 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
         SizedBox(
           height: ScreenUtil().setHeight(24),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '12 CUOTAS (10%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota12}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 12,
+          title: '12 CUOTAS (10%)',
+          precio: '${_controller.cuota12}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '14 CUOTAS (9%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota14}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 14,
+          title: '14 CUOTAS (9%)',
+          precio: '${_controller.cuota14}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '16 CUOTAS (8%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota16}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 16,
+          title: '16 CUOTAS (8%)',
+          precio: '${_controller.cuota16}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '19 CUOTAS (7%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota19}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 19,
+          title: '19 CUOTAS (7%)',
+          precio: '${_controller.cuota19}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '23 CUOTAS (6%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota23}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 23,
+          title: '23 CUOTAS (6%)',
+          precio: '${_controller.cuota23}.00',
         ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '28 CUOTAS (5%)',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.cuota28}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
+        ExpansionPrueba(
+          cuotas: 28,
+          title: '28 CUOTAS (5%)',
+          precio: '${_controller.cuota23}.00',
         ),
-        Divider(),
+        
       ],
     );
   }

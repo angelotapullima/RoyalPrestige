@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,7 +58,7 @@ class _BuscarPageState extends State<BuscarPage> {
             child: Container(
               height: ScreenUtil().setHeight(60),
               margin: EdgeInsets.only(
-                top:ScreenUtil().setHeight(10),
+                top: ScreenUtil().setHeight(10),
                 left: ScreenUtil().setWidth(21),
                 right: ScreenUtil().setWidth(21),
               ),
@@ -123,7 +124,7 @@ class _BuscarPageState extends State<BuscarPage> {
                   );
                 }
               }),
-            Expanded(
+          Expanded(
             child: Container(
               margin: EdgeInsets.symmetric(
                 horizontal: ScreenUtil().setWidth(21),
@@ -158,7 +159,7 @@ class _BuscarPageState extends State<BuscarPage> {
                   }),
             ),
           ),
-          ],
+        ],
       ),
     );
   }
@@ -228,7 +229,10 @@ class _BuscarPageState extends State<BuscarPage> {
         );
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(10), horizontal: ScreenUtil().setWidth(4)),
+        padding: EdgeInsets.symmetric(
+          vertical: ScreenUtil().setHeight(10),
+          horizontal: ScreenUtil().setWidth(4),
+        ),
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: ScreenUtil().setWidth(16),
@@ -252,7 +256,92 @@ class _BuscarPageState extends State<BuscarPage> {
             children: [
               SizedBox(
                 height: ScreenUtil().setHeight(125),
-                child: Hero(
+                child: (producto.galery!.length > 0)
+                    ? CarouselSlider.builder(
+                        itemCount: producto.galery!.length,
+                        itemBuilder: (context, x, y) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                    return DetalleProducto(
+                                      idProducto: producto.idProducto.toString(),
+                                    );
+                                  },
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    var begin = Offset(0.0, 1.0);
+                                    var end = Offset.zero;
+                                    var curve = Curves.ease;
+
+                                    var tween = Tween(begin: begin, end: end).chain(
+                                      CurveTween(curve: curve),
+                                    );
+
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: ScreenUtil().setWidth(0),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      placeholder: (context, url) =>
+                                          Container(width: double.infinity, height: double.infinity, child: CupertinoActivityIndicator()),
+                                      errorWidget: (context, url, error) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: Center(
+                                          child: Icon(Icons.error),
+                                        ),
+                                      ),
+                                      imageUrl: '$apiBaseURL/${producto.galery![x].file}',
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        options: CarouselOptions(
+                            height: ScreenUtil().setHeight(552),
+                            onPageChanged: (index, page) {},
+                            enlargeCenterPage: true,
+                            autoPlay: true,
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            autoPlayInterval: Duration(seconds: 6),
+                            autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                            viewportFraction: 1),
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: Icon(Icons.error),
+                        ),
+                      ),
+                /*  Hero(
                   tag: '$valorHero',
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
@@ -283,6 +372,7 @@ class _BuscarPageState extends State<BuscarPage> {
                     ),
                   ),
                 ),
+               */
               ),
               SizedBox(
                 height: ScreenUtil().setHeight(10),
