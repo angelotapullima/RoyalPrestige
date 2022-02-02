@@ -1,18 +1,14 @@
-import 'package:flutter/cupertino.dart';
+
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:royal_prestige/src/bloc/bottom_navigation_bloc.dart';
-import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/inicio_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
-import 'package:royal_prestige/src/pages/logout.dart';
-import 'package:royal_prestige/src/pages/tabs/buscar_page.dart';
+import 'package:royal_prestige/src/pages/tabs/agenda_page.dart';
+import 'package:royal_prestige/src/pages/tabs/inicio_page.dart';
 import 'package:royal_prestige/src/pages/tabs/calcular_page.dart';
-import 'package:royal_prestige/src/pages/tabs/agregar_productos_page.dart';
-import 'package:royal_prestige/src/pages/tabs/carrito_tab.dart';
-import 'package:royal_prestige/src/pages/tabs/cliente_page.dart';
-import 'package:royal_prestige/src/utils/colors.dart';
+import 'package:royal_prestige/src/pages/tabs/cliente_y_prospectos_page.dart';
+import 'package:royal_prestige/src/pages/tabs/prueba_inicio.dart';
+import 'package:royal_prestige/src/utils/responsive.dart';
 
 import 'tabs/documentosPage.dart';
 
@@ -27,12 +23,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    pageList.add(const BuscarPage());
-    pageList.add(const CalcularPage());
-    pageList.add(const AgregarProductosPage());
+    pageList.add(const PruebaInicio());
     pageList.add(const DocumentosPage());
-    pageList.add(const ClientePage());
-    pageList.add(const CarritoTab());
+    pageList.add(const ClientesyProspectosPage());
+    pageList.add(const AgendaPage());
+    pageList.add(const CalcularPage());
 
     super.initState();
   }
@@ -42,414 +37,264 @@ class _HomePageState extends State<HomePage> {
     final bottomBloc = ProviderBloc.botton(context);
     final bloc = HomeBloc();
 
+    final responsive = Responsive.of(context);
+
+    final carritoBloc = ProviderBloc.cart(context);
+    carritoBloc.getCart();
+
     bottomBloc.changePage(0);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(
-      backgroundColor: colorPrimary,
       body: StreamBuilder(
         stream: bottomBloc.selectPageStream,
-        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-          if (snapshot.hasData) {
-            return Stack(
-              children: [
-                Container(
-                  color: colorPrimary,
-                  height: double.infinity,
-                  width: double.infinity,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.only(
+                  bottom: kBottomNavigationBarHeight * responsive.hp(.21),
                 ),
-                SafeArea(
-                  bottom: false,
-                  child: Stack(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: kBottomNavigationBarHeight + ScreenUtil().setHeight(20),
-                        ),
-                        child: IndexedStack(
-                          index: bottomBloc.page,
-                          children: pageList,
-                        ),
+                child: IndexedStack(
+                  index: snapshot.data,
+                  children: pageList,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: kBottomNavigationBarHeight * responsive.hp(.21),
+                  padding: EdgeInsets.only(
+                    bottom: responsive.hp(2),
+                    left: responsive.wp(2),
+                    right: responsive.wp(2),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(20),
+                      topEnd: Radius.circular(20),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
                       ),
-                      posi3(bottomBloc, context, bloc),
                     ],
                   ),
-                ),
-                AnimatedBuilder(
-                  animation: bloc,
-                  builder: (_, s) {
-                    return (bloc.menuState == MenuIniciostate.open)
-                        ? StreamBuilder(
-                            stream: dataBloc.userStream,
-                            builder: (context, AsyncSnapshot<UserModel> dataShot) {
-                              if (dataShot.hasData) {
-                                return Stack(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        bloc.changeToClosed();
-                                      },
-                                      child: Container(
-                                        height: double.infinity,
-                                        width: double.infinity,
-                                      ),
+                  child: StreamBuilder(
+                    stream: bottomBloc.selectPageStream,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: responsive.wp(2),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                bottomBloc.changePage(0);
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: responsive.hp(1),
+                                  ),
+                                  Icon(
+                                    Icons.home,
+                                    size: responsive.ip(3),
+                                    color: (bottomBloc.page == 0) ? Colors.red : Colors.grey,
+                                  ),
+                                  Text(
+                                    'Inicio\n',
+                                    style: TextStyle(
+                                      fontSize: responsive.ip(1.5),
+                                      color: (bottomBloc.page == 0) ? Colors.red : Colors.grey,
                                     ),
-                                    Container(
-                                      width: ScreenUtil().setWidth(260),
-                                      decoration: BoxDecoration(
-                                        color: colorPrimary,
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(25),
-                                          bottomRight: Radius.circular(25),
-                                        ),
-                                      ),
-                                      child: SafeArea(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                  )
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                bottomBloc.changePage(1);
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: responsive.hp(1),
+                                  ),
+                                  Icon(
+                                    Icons.file_copy,
+                                    size: responsive.ip(3),
+                                    color: (bottomBloc.page == 1) ? Colors.red : Colors.grey,
+                                  ),
+                                  Text(
+                                    'Documentos\n',
+                                    style: TextStyle(
+                                      fontSize: responsive.ip(1.5),
+                                      color: (bottomBloc.page == 1) ? Colors.red : Colors.grey,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                bottomBloc.changePage(2);
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: responsive.hp(1),
+                                  ),
+                                  Icon(
+                                    Icons.person,
+                                    size: responsive.ip(3.5),
+                                    color: (bottomBloc.page == 2) ? Colors.red : Colors.grey,
+                                  ),
+                                  Text(
+                                    'Clientes y\nprospectos',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: responsive.ip(1.6),
+                                      color: (bottomBloc.page == 2) ? Colors.red : Colors.grey,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                bottomBloc.changePage(3);
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: responsive.hp(1),
+                                  ),
+                                  Icon(
+                                    Icons.view_agenda,
+                                    size: responsive.ip(3),
+                                    color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
+                                  ),
+                                  Text(
+                                    'Agenda\n',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: responsive.ip(1.6),
+                                      color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
+                                    ),
+                                  )
+                                  /*  StreamBuilder(
+                                      stream: carritoBloc.cartStream,
+                                      builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+                                        int cantidad = 0;
+
+                                        if (snapshot.hasData) {
+                                          if (snapshot.data!.length > 0) {
+                                            for (int i = 0; i < snapshot.data!.length; i++) {
+                                              cantidad++;
+                                            }
+                                          } else {
+                                            cantidad = 0;
+                                          }
+                                        } else {
+                                          cantidad = 0;
+                                        }
+                                        return Stack(
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                left: ScreenUtil().setWidth(30),
-                                                top: ScreenUtil().setHeight(20),
-                                                bottom: ScreenUtil().setHeight(20),
-                                              ),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  bloc.changeToClosed();
-                                                },
-                                                child: SizedBox(
-                                                  height: ScreenUtil().setSp(30),
-                                                  width: ScreenUtil().setSp(30),
-                                                  child: (bottomBloc.page == 0)
-                                                      ? SvgPicture.asset(
-                                                          'assets/svg/menu.svg',
-                                                          color: Colors.white,
-                                                        )
-                                                      : SvgPicture.asset(
-                                                          'assets/svg/menu.svg',
-                                                          color: Colors.white,
-                                                        ),
-                                                ),
-                                              ),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: ScreenUtil().setWidth(24),
-                                                vertical: ScreenUtil().setHeight(8),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  SizedBox(
-                                                    height: ScreenUtil().setHeight(43),
-                                                    width: ScreenUtil().setWidth(43),
-                                                    child: Image.asset('assets/img/profile.png'),
-                                                  ),
-                                                  SizedBox(
-                                                    width: ScreenUtil().setWidth(12),
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        '${dataShot.data!.personName}',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight: FontWeight.w500,
-                                                          fontSize: ScreenUtil().setSp(15),
-                                                        ),
+                                            (cantidad != 0)
+                                                ? Stack(
+                                                    children: <Widget>[
+                                                      Icon(
+                                                        Icons.shopping_bag_rounded,
+                                                        size: responsive.ip(3),
+                                                        color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
                                                       ),
-                                                      Text(
-                                                        '${dataShot.data!.roleName}',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight: FontWeight.w500,
-                                                          fontSize: ScreenUtil().setSp(15),
+                                                      Positioned(
+                                                        top: 0,
+                                                        right: 0,
+                                                        child: Container(
+                                                          child: Text(
+                                                            cantidad.toString(),
+                                                            style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: responsive.ip(1),
+                                                            ),
+                                                          ),
+                                                          alignment: Alignment.center,
+                                                          width: responsive.ip(1.6),
+                                                          height: responsive.ip(1.6),
+                                                          decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle),
                                                         ),
-                                                      ),
+                                                        //child: Icon(Icons.brightness_1, size: 8,color: Colors.redAccent,  )
+                                                      )
                                                     ],
                                                   )
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                bloc.changeToClosed();
-                                                bottomBloc.changePage(0);
-                                              },
-                                              child: itemOption('Lista de precios'),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                bloc.changeToClosed();
-                                                bottomBloc.changePage(2);
-                                              },
-                                              child: itemOption('Agregar producto'),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                bloc.changeToClosed();
-                                                bottomBloc.changePage(3);
-                                              },
-                                              child: itemOption('Documentos'),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                bloc.changeToClosed();
-                                                bottomBloc.changePage(4);
-                                              },
-                                              child: itemOption('Clientes'),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                bloc.changeToClosed();
-                                                bottomBloc.changePage(5);
-                                              },
-                                              child: itemOption('Carrito'),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            InkWell(
-                                              child: itemOption('Royal Prestige'),
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            Spacer(),
-                                            Divider(
-                                              color: Colors.white,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  PageRouteBuilder(
-                                                    opaque: false,
-                                                    pageBuilder: (context, animation, secondaryAnimation) {
-                                                      return Logout();
-                                                    },
-                                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                                      var begin = Offset(0.0, 1.0);
-                                                      var end = Offset.zero;
-                                                      var curve = Curves.ease;
-
-                                                      var tween = Tween(begin: begin, end: end).chain(
-                                                        CurveTween(curve: curve),
-                                                      );
-
-                                                      return SlideTransition(
-                                                        position: animation.drive(tween),
-                                                        child: child,
-                                                      );
-                                                    },
+                                                : Icon(
+                                                    Icons.shopping_bag_rounded,
+                                                    size: responsive.ip(3),
+                                                    color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
                                                   ),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: ScreenUtil().setWidth(24),
-                                                  vertical: ScreenUtil().setHeight(8),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      'Salir',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.w500,
-                                                        fontSize: ScreenUtil().setSp(15),
-                                                      ),
-                                                    ),
-                                                    Icon(
-                                                      Icons.logout,
-                                                      color: Colors.white,
-                                                      size: ScreenUtil().setHeight(20),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: ScreenUtil().setHeight(10),
-                                            ),
                                           ],
-                                        ),
-                                      ),
+                                        );
+                                      }),
+                                  Text(
+                                    'Carrito\n',
+                                    style: TextStyle(
+                                      fontSize: responsive.ip(1.6),
+                                      color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
                                     ),
-                                  ],
-                                );
-                              } else {
-                                return Container();
-                              }
-                            })
-                        : Container();
-                  },
+                                  ) */
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                bottomBloc.changePage(4);
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: responsive.hp(1),
+                                  ),
+                                  Icon(
+                                    Icons.calculate,
+                                    size: responsive.ip(3),
+                                    color: (bottomBloc.page == 4) ? Colors.red : Colors.grey,
+                                  ),
+                                  Text(
+                                    'Calculadora\n',
+                                    style: TextStyle(
+                                      fontSize: responsive.ip(1.6),
+                                      color: (bottomBloc.page == 4) ? Colors.red : Colors.grey,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ],
-            );
-          } else {
-            final bottomBloc = ProviderBloc.botton(context);
-            bottomBloc.changePage(0);
-            return const Center(
-              child: CupertinoActivityIndicator(),
-            );
-          }
+              ),
+            ],
+          );
         },
-      ),
-    );
-  }
-
-  Widget posi3(BottomNaviBloc bottomBloc, BuildContext context, HomeBloc bloc) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        padding: EdgeInsets.only(
-          left: ScreenUtil().setWidth(10),
-          right: ScreenUtil().setWidth(10),
-        ),
-        height: kBottomNavigationBarHeight + ScreenUtil().setHeight(20),
-        decoration: BoxDecoration(
-          color: colorPrimary,
-          borderRadius: const BorderRadiusDirectional.only(
-            bottomEnd: Radius.circular(0),
-            bottomStart: Radius.circular(0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 7,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {
-                bloc.changeToOpen();
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: ScreenUtil().setSp(30),
-                    width: ScreenUtil().setSp(30),
-                    child: (bottomBloc.page == 0)
-                        ? SvgPicture.asset(
-                            'assets/svg/menu.svg',
-                            color: Colors.white,
-                          )
-                        : SvgPicture.asset(
-                            'assets/svg/menu.svg',
-                            color: Colors.white,
-                          ),
-                  ),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                bottomBloc.changePage(0);
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: ScreenUtil().setSp(30),
-                    width: ScreenUtil().setSp(30),
-                    child: (bottomBloc.page == 0)
-                        ? SvgPicture.asset(
-                            'assets/svg/search.svg',
-                            color: Colors.white,
-                          )
-                        : SvgPicture.asset(
-                            'assets/svg/search.svg',
-                            color: Colors.white,
-                          ),
-                  ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(2),
-                  ),
-                  CircleAvatar(
-                    radius: ScreenUtil().setHeight(3),
-                    backgroundColor: (bottomBloc.page == 0) ? Colors.white : Colors.transparent,
-                  )
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                bottomBloc.changePage(1);
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: ScreenUtil().setSp(30),
-                    width: ScreenUtil().setSp(30),
-                    child: (bottomBloc.page == 1)
-                        ? SvgPicture.asset(
-                            'assets/svg/cal.svg',
-                            color: Colors.white,
-                          )
-                        : SvgPicture.asset(
-                            'assets/svg/cal.svg',
-                            color: Colors.white,
-                          ),
-                  ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(2),
-                  ),
-                  CircleAvatar(
-                    radius: ScreenUtil().setHeight(3),
-                    backgroundColor: (bottomBloc.page == 1) ? Colors.white : Colors.transparent,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget itemOption(String text) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(24),
-        vertical: ScreenUtil().setHeight(8),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-          fontSize: ScreenUtil().setSp(16),
-        ),
       ),
     );
   }

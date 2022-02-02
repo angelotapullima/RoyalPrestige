@@ -14,14 +14,14 @@ import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
 import 'dart:math' as math;
 
-class BuscarPage extends StatefulWidget {
-  const BuscarPage({Key? key}) : super(key: key);
+class InicioPage extends StatefulWidget {
+  const InicioPage({Key? key}) : super(key: key);
 
   @override
-  State<BuscarPage> createState() => _BuscarPageState();
+  State<InicioPage> createState() => _InicioPageState();
 }
 
-class _BuscarPageState extends State<BuscarPage> {
+class _InicioPageState extends State<InicioPage> {
   final _controller = Controller();
   @override
   Widget build(BuildContext context) {
@@ -103,11 +103,16 @@ class _BuscarPageState extends State<BuscarPage> {
                     return Container(
                       height: ScreenUtil().setHeight(60),
                       child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categorias.length,
-                          itemBuilder: (_, index) {
-                            return itemChoice(categorias[index], index, categoriasBloc);
-                          }),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categorias.length,
+                        itemBuilder: (_, index) {
+                          return itemChoice(
+                            categorias[index],
+                            index,
+                            categoriasBloc,
+                          );
+                        },
+                      ),
                     );
                   } else {
                     return Center(
@@ -130,33 +135,34 @@ class _BuscarPageState extends State<BuscarPage> {
                 horizontal: ScreenUtil().setWidth(21),
               ),
               child: StreamBuilder(
-                  stream: categoriasBloc.productosStream,
-                  builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data!.length > 0) {
-                        var producto = snapshot.data!;
-                        return ListView.builder(
-                          itemCount: producto.length,
-                          itemBuilder: (_, index) {
-                            var valorHero = math.Random().nextDouble() * index;
-                            return itemProduct(producto[index], valorHero);
-                          },
-                        );
-                      } else {
-                        return Center(
-                          child: Text('Sin productos para esta categoría'),
-                        );
-                      }
+                stream: categoriasBloc.productosStream,
+                builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.length > 0) {
+                      var producto = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: producto.length,
+                        itemBuilder: (_, index) {
+                          var valorHero = math.Random().nextDouble() * index;
+                          return itemProduct(producto[index], valorHero);
+                        },
+                      );
                     } else {
-                      return ShowLoadding(
-                        active: true,
-                        h: double.infinity,
-                        w: double.infinity,
-                        fondo: Colors.transparent,
-                        colorText: Colors.black,
+                      return Center(
+                        child: Text('Sin productos para esta categoría'),
                       );
                     }
-                  }),
+                  } else {
+                    return ShowLoadding(
+                      active: true,
+                      h: double.infinity,
+                      w: double.infinity,
+                      fondo: Colors.transparent,
+                      colorText: Colors.black,
+                    );
+                  }
+                },
+              ),
             ),
           ),
         ],
@@ -341,38 +347,7 @@ class _BuscarPageState extends State<BuscarPage> {
                           child: Icon(Icons.error),
                         ),
                       ),
-                /*  Hero(
-                  tag: '$valorHero',
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: CachedNetworkImage(
-                      placeholder: (context, url) => Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Center(
-                          child: CupertinoActivityIndicator(),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Center(
-                          child: Icon(Icons.error),
-                        ),
-                      ),
-                      imageUrl: '$apiBaseURL/${producto.fotoProducto}',
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-               */
+                 
               ),
               SizedBox(
                 height: ScreenUtil().setHeight(10),

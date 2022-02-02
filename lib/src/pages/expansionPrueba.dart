@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:royal_prestige/src/utils/responsive.dart';
 
 class ExpansionPrueba extends StatefulWidget {
   final int cuotas;

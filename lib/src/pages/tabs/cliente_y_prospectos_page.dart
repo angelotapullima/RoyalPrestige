@@ -9,8 +9,8 @@ import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/agregar_cliente.dart';
 import 'package:royal_prestige/src/pages/Clientes/editar_cliente.dart';
 
-class ClientePage extends StatelessWidget {
-  const ClientePage({Key? key}) : super(key: key);
+class ClientesyProspectosPage extends StatelessWidget {
+  const ClientesyProspectosPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

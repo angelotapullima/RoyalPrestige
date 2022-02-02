@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:royal_prestige/database/cart_database.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
-import 'package:royal_prestige/src/model/cart_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/calculadora_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';

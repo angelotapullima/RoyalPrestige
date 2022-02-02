@@ -426,7 +426,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
               Icons.edit_outlined,
               color: Colors.grey,
               size: ScreenUtil().setHeight(20),
-            ),
+            ), 
             onPressed: () async {
               await new Future.delayed(new Duration(seconds: 1));
               await [
