@@ -7,6 +7,7 @@ import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/document_bloc.dart';
 import 'package:royal_prestige/src/bloc/galeria_producto_bloc.dart';
 import 'package:royal_prestige/src/bloc/productos_bloc.dart';
+import 'package:royal_prestige/src/bloc/promocion_bloc.dart';
 
 class ProviderBloc extends InheritedWidget {
   final bottonBloc = BottomNaviBloc();
@@ -17,6 +18,7 @@ class ProviderBloc extends InheritedWidget {
   final alertBloc = AlertBloc();
   final cartBloc = CartBloc();
   final galeryBloc = GaleryBloc();
+  final promoBloc = PromocionBloc();
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
   @override
@@ -49,7 +51,12 @@ class ProviderBloc extends InheritedWidget {
   static CartBloc cart(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.cartBloc;
   }
+
   static GaleryBloc galery(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.galeryBloc;
+  }
+
+  static PromocionBloc promocion(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.promoBloc;
   }
 }

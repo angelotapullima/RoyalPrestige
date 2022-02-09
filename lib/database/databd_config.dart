@@ -18,6 +18,7 @@ class DatabaseHelper {
       db.execute(tableAlertSql);
       db.execute(tableCartSql);
       db.execute(tableGaleriaSql);
+      db.execute(tablePromocionSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 
@@ -71,10 +72,21 @@ class DatabaseHelper {
       ' idProduct TEXT PRIMARY KEY,'
       ' amount TEXT,'
       ' subtotal TEXT)';
-       static const String tableGaleriaSql = 'CREATE TABLE Galery('
+
+  static const String tableGaleriaSql = 'CREATE TABLE Galery('
       ' idGalery TEXT PRIMARY KEY,'
       ' idProduct TEXT,'
       ' name TEXT,'
       ' file TEXT,'
       ' status TEXT)';
+
+  static const String tablePromocionSql = 'CREATE TABLE Promocion('
+      ' idPromo TEXT PRIMARY KEY,'
+      ' idProduct TEXT,'
+      ' idCategoria TEXT,'
+      ' precioPromo TEXT,'
+      ' detallePromo TEXT,'
+      ' fechaLimitePromo TEXT,'
+      ' imagenPromo TEXT,'
+      ' estadoPromo TEXT)';
 }

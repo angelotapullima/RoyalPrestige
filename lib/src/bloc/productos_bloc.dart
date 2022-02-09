@@ -23,6 +23,9 @@ class ProductosBloc {
   final _categoriasController = BehaviorSubject<List<CategoriaModel>>();
   Stream<List<CategoriaModel>> get categoriaStream => _categoriasController.stream;
 
+  final _categoriaIdController = BehaviorSubject<List<CategoriaModel>>();
+  Stream<List<CategoriaModel>> get categoriaIdStream => _categoriaIdController.stream;
+
   final _cantidadSubidaImagen = BehaviorSubject<double>();
   Stream<double> get subidaImagenStream => _cantidadSubidaImagen.stream;
 
@@ -34,12 +37,17 @@ class ProductosBloc {
     _categoriasController.close();
     _productoidController.close();
     _cantidadSubidaImagen.close();
+    _categoriaIdController.close();
   }
 
   void obtenerCategorias() async {
     _categoriasController.sink.add(await productoApi.categoriaDatabase.getCategorias());
     await productoApi.listarProductos();
     _categoriasController.sink.add(await productoApi.categoriaDatabase.getCategorias());
+  }
+
+  void obtenerCategoriasById(String idCategoria) async {
+    _categoriaIdController.sink.add(await productoApi.categoriaDatabase.getCategoriaById(idCategoria));
   }
 
   void obtenerProductosByIdCategoria(String idCategoria) async {

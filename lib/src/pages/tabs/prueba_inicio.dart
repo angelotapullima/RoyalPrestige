@@ -7,8 +7,10 @@ import 'package:royal_prestige/src/bloc/productos_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/categoria_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
+import 'package:royal_prestige/src/model/promocion_model.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
+import 'package:royal_prestige/src/pages/promo_categoria_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
@@ -26,6 +28,8 @@ class PruebaInicio extends StatelessWidget {
     final _controller = Controller();
     final categoriasBloc = ProviderBloc.productos(context);
     categoriasBloc.obtenerCategorias();
+    final promoBloc = ProviderBloc.promocion(context);
+    promoBloc.obtenerPromos();
 
     final responsive = Responsive.of(context);
     return Scaffold(
@@ -38,71 +42,93 @@ class PruebaInicio extends StatelessWidget {
               return CustomScrollView(
                 slivers: [
                   CustomHeaderPrincipal(),
-                  SliverToBoxAdapter(
-                    child: Container(
-                        height: ScreenUtil().setHeight(150),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            //horizontal: ScreenUtil().setWidth(10),
-                            vertical: ScreenUtil().setHeight(10),
-                          ),
-                          height: ScreenUtil().setHeight(150),
-                          child: CarouselSlider.builder(
-                            itemCount: 4,
-                            itemBuilder: (context, x, y) {
-                              return InkWell(
-                                onTap: () {
-                                  
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Stack(
-                                      children: [
-                                        CachedNetworkImage(
-                                          placeholder: (context, url) => Container(
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            child: CupertinoActivityIndicator(),
-                                          ),
-                                          errorWidget: (context, url, error) => Container(
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            child: Center(
-                                              child: Icon(Icons.error),
-                                            ),
-                                          ),
-                                          imageUrl: 'https://cdn2.hubspot.net/hubfs/3815039/Imagen_Blog_BIT_1600x478px_240119.jpg',
-                                          imageBuilder: (context, imageProvider) => Container(
+                  StreamBuilder(
+                      stream: promoBloc.promocionStream,
+                      builder: (context, AsyncSnapshot<List<PromocionModel>> promo) {
+                        if (promo.hasData) {
+                          if (promo.data!.length > 0) {
+                            var promos = promo.data!;
+                            return SliverToBoxAdapter(
+                              child: Container(
+                                  height: ScreenUtil().setHeight(150),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: ScreenUtil().setHeight(10),
+                                    ),
+                                    height: ScreenUtil().setHeight(150),
+                                    child: CarouselSlider.builder(
+                                      itemCount: promos.length,
+                                      itemBuilder: (context, x, y) {
+                                        return InkWell(
+                                          onTap: () {
+                                            _onTapPromo(context, promos[x]);
+                                          },
+                                          child: Container(
                                             decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
+                                              borderRadius: BorderRadius.circular(10.0),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              child: Stack(
+                                                children: [
+                                                  CachedNetworkImage(
+                                                    placeholder: (context, url) => Container(
+                                                      width: double.infinity,
+                                                      height: double.infinity,
+                                                      child: CupertinoActivityIndicator(),
+                                                    ),
+                                                    errorWidget: (context, url, error) => Container(
+                                                      width: double.infinity,
+                                                      height: double.infinity,
+                                                      child: Center(
+                                                        child: Icon(Icons.error),
+                                                      ),
+                                                    ),
+                                                    imageUrl: '${promos[x].imagenPromo}',
+                                                    imageBuilder: (context, imageProvider) => Container(
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        );
+                                      },
+                                      options: CarouselOptions(
+                                          height: ScreenUtil().setHeight(552),
+                                          onPageChanged: (index, page) {},
+                                          enlargeCenterPage: true,
+                                          autoPlay: true,
+                                          autoPlayCurve: Curves.fastOutSlowIn,
+                                          autoPlayInterval: Duration(seconds: 6),
+                                          autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                          viewportFraction: .8),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
-                            options: CarouselOptions(
-                                height: ScreenUtil().setHeight(552),
-                                onPageChanged: (index, page) {},
-                                enlargeCenterPage: true,
-                                autoPlay: true,
-                                autoPlayCurve: Curves.fastOutSlowIn,
-                                autoPlayInterval: Duration(seconds: 6),
-                                autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                                viewportFraction: .8),
-                          ),
-                        )),
-                  ),
+                                  )),
+                            );
+                          } else {
+                            return SliverToBoxAdapter(
+                              child: Container(
+                                height: ScreenUtil().setHeight(60),
+                                child: Center(child: Text('No existen promociones')),
+                              ),
+                            );
+                          }
+                        } else {
+                          return SliverToBoxAdapter(
+                            child: Container(
+                              height: ScreenUtil().setHeight(60),
+                              child: CupertinoActivityIndicator(),
+                            ),
+                          );
+                        }
+                      }),
                   SliverToBoxAdapter(
                     child: Container(
                       height: ScreenUtil().setHeight(60),
@@ -226,6 +252,61 @@ class PruebaInicio extends StatelessWidget {
             ),
           );
         });
+  }
+
+  _onTapPromo(BuildContext context, PromocionModel promo) {
+    print(promo.idProduct);
+    if (promo.idProduct != '0') {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return DetalleProducto(
+              idProducto: promo.idProduct.toString(),
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(0.0, 1.0);
+            var end = Offset.zero;
+            var curve = Curves.ease;
+
+            var tween = Tween(begin: begin, end: end).chain(
+              CurveTween(curve: curve),
+            );
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return PromoCategoriaPage(
+              promoCategoria: promo,
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(0.0, 1.0);
+            var end = Offset.zero;
+            var curve = Curves.ease;
+
+            var tween = Tween(begin: begin, end: end).chain(
+              CurveTween(curve: curve),
+            );
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    }
   }
 
   Widget itemProduct(BuildContext context, ProductoModel producto, var valorHero, double height) {
@@ -559,7 +640,6 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                           }
                           return InkWell(
                             onTap: () {
-
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
@@ -582,32 +662,6 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                                   },
                                 ),
                               );
-
-
-
-
-
-
-
-
-
-
-
-
-
-                              
-
-
-
-
-
-
-
-
-
-
-
-
                             },
                             child: Stack(
                               children: [
