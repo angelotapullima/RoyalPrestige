@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:royal_prestige/src/bloc/inicio_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/tabs/agenda_page.dart';
-import 'package:royal_prestige/src/pages/tabs/inicio_page.dart';
 import 'package:royal_prestige/src/pages/tabs/calcular_page.dart';
 import 'package:royal_prestige/src/pages/tabs/cliente_y_prospectos_page.dart';
 import 'package:royal_prestige/src/pages/tabs/prueba_inicio.dart';

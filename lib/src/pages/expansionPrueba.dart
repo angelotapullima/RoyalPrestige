@@ -24,40 +24,8 @@ class _ExpansionPruebaState extends State<ExpansionPrueba> {
   }
 
   bool change = false;
-  String cuota34 = '';
-  List<Widget> chilo = [];
   @override
   Widget build(BuildContext context) {
-    chilo.clear();
-    int ii = 0;
-    /* for (var i = 0; i < widget.cuotas; i++) {
-      ii++;
-      chilo.add(
-        Container(
-          padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Cuota  N°${ii + 1}',
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(14),
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Text(
-                'S/._controller.cuota11}',
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(14),
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    } */
-
     return Container(
       child: ExpansionTile(
           tilePadding: EdgeInsets.zero,

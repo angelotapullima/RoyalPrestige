@@ -469,18 +469,19 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
     return Container(
       height: cart.length * ScreenUtil().setHeight(80),
       child: ListView.builder(
-          itemCount: cart.length,
-          itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5)),
-              child: Row(
-                children: [
-                  Expanded(child: Text('${cart[index].regaloProducto}')),
-                  Text('S/.${cart[index].precioRegaloProducto}'),
-                ],
-              ),
-            );
-          }),
+        itemCount: cart.length,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5)),
+            child: Row(
+              children: [
+                Expanded(child: Text('${cart[index].regaloProducto}')),
+                Text('S/.${cart[index].precioRegaloProducto}'),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
