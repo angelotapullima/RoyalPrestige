@@ -17,6 +17,8 @@ import 'package:royal_prestige/src/utils/sliver_header_delegate.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
 import 'dart:math' as math;
 
+import '../carrito_tab.dart';
+
 class PruebaInicio extends StatelessWidget {
   const PruebaInicio({Key? key}) : super(key: key);
 
@@ -558,9 +560,55 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                           }
                           return InkWell(
                             onTap: () {
-                              /* final bottomBloc = ProviderBloc.bottom(context);
 
-                                bottomBloc.changePage(3); */
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                    return CarritoTab();
+                                  },
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    var begin = Offset(0.0, 1.0);
+                                    var end = Offset.zero;
+                                    var curve = Curves.ease;
+
+                                    var tween = Tween(begin: begin, end: end).chain(
+                                      CurveTween(curve: curve),
+                                    );
+
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+
+
+
+
+
+
+
+
+
+
+
+
+
+                              
+
+
+
+
+
+
+
+
+
+
+
+
                             },
                             child: Stack(
                               children: [

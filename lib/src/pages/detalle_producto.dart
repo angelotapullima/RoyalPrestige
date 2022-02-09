@@ -14,6 +14,7 @@ import 'package:royal_prestige/src/api/productos_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cart_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
+import 'package:royal_prestige/src/pages/carrito_tab.dart';
 import 'package:royal_prestige/src/pages/detalle_foto.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
@@ -584,8 +585,30 @@ class _DetalleProductoState extends State<DetalleProducto> {
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      final bottomBloc = ProviderBloc.botton(context);
-                      bottomBloc.changePage(5);
+
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) {
+                            return CarritoTab();
+                          },
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            var begin = Offset(0.0, 1.0);
+                            var end = Offset.zero;
+                            var curve = Curves.ease;
+
+                            var tween = Tween(begin: begin, end: end).chain(
+                              CurveTween(curve: curve),
+                            );
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                      //CarritoTab
                     },
                     child: Row(
                       children: [

@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/documento/nuevo_documento.dart';
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<DocumentsBloc>(
           create: (_) => DocumentsBloc(),
+        ),
+        ChangeNotifierProvider<ControllerCalculo>(
+          create: (_) => ControllerCalculo(),
         ),
       ],
       child: ProviderBloc(

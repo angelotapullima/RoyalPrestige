@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
+import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 
 class CalculaDoraPage extends StatefulWidget {
   final double monto;
-  const CalculaDoraPage({Key? key, required this.monto}) : super(key: key);
+  final List<ProductoModel> cart;
+  const CalculaDoraPage({Key? key, required this.monto, required this.cart}) : super(key: key);
 
   @override
   State<CalculaDoraPage> createState() => _CalculaDoraPageState();
@@ -14,10 +18,12 @@ class CalculaDoraPage extends StatefulWidget {
 
 class _CalculaDoraPageState extends State<CalculaDoraPage> {
   final TextEditingController _depositoController = TextEditingController();
-  final _controller = ControllerCalculo();
 
+  late ControllerCalculo _controller;
   @override
   void initState() {
+    _controller = Provider.of<ControllerCalculo>(context, listen: false);
+    _controller.limpiar();
     _controller.calcularProducto(widget.monto.toString());
     super.initState();
   }
@@ -42,11 +48,11 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
             right: ScreenUtil().setWidth(21),
           ),
           child: AnimatedBuilder(
-              animation: _controller,
-              builder: (_, c) {
-                return Column(
-                  children: [
-                    /*  Container(
+            animation: _controller,
+            builder: (_, c) {
+              return Column(
+                children: [
+                  /*  Container(
                       child: TextField(
                         maxLines: 1,
                         controller: _precioProductoController,
@@ -92,21 +98,26 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
                     ),
                      */
 
-                    _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(), 1),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(14),
-                    ),
-                    _expandedContainer('PRODUCTO', _controller.expanded2, _contenido2(), 2),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(14),
-                    ),
-                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(responsive), 3),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(24),
-                    ),
-                  ],
-                );
-              }),
+                  _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(), 1),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(14),
+                  ),
+                  _expandedContainer('PRODUCTO', _controller.expanded2, _contenido2(), 2),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(14),
+                  ),
+                  _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(responsive), 3),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(24),
+                  ),
+                  _expandedContainer('INFORMACIÓN ADICIONAL', _controller.expanded4, _contenido4(_controller, widget.cart), 4),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(24),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -184,26 +195,6 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '5%',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.fivepercent}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
               '10%',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
@@ -232,6 +223,26 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
             ),
             Text(
               'S/. ${_controller.fifteenpercent}.00',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(14),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '20%',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(14),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Text(
+              'S/. ${_controller.twentyPercent}.00',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.w400,
@@ -321,19 +332,14 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
               'S/. ${_controller.total.toStringAsFixed(2)}',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
         ),
-        Divider(),
-      ],
-    );
-  }
-
-  Widget _contenido3(Responsive responsive) {
-    return Column(
-      children: [
+        Divider(
+          thickness: 2,
+        ),
         Container(
           child: TextField(
             maxLines: 1,
@@ -372,6 +378,33 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
             ),
           ),
         ),
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'SALDO A FINANCIAR',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(14),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Text(
+              'S/. ${_controller.saldoFinancio.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(14),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _contenido3(Responsive responsive) {
+    return Column(
+      children: [
         SizedBox(
           height: ScreenUtil().setHeight(16),
         ),
@@ -384,107 +417,70 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
           ),
         ),
         SizedBox(
+          height: ScreenUtil().setHeight(10),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('12 CUOTAS    --->'),
+            Text(
+              'S/. ${_controller.cuota12}.00',
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('14 CUOTAS    --->'),
+            Text(
+              'S/. ${_controller.cuota14}.00',
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('16 CUOTAS    --->'),
+            Text(
+              'S/. ${_controller.cuota16}.00',
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('19 CUOTAS    --->'),
+            Text(
+              'S/. ${_controller.cuota19}.00',
+            ),
+          ],
+        ),
+        ExpansionPrueba(
+          title: 'Mostrar todas las cuotas',
+        ),
+        SizedBox(
           height: ScreenUtil().setHeight(24),
         ),
-        ExpansionPrueba(
-          cuotas: 12,
-          title: '12 CUOTAS (10%)',
-          precio: '${_controller.cuota12}.00',
-        ),
-        ExpansionPrueba(
-          cuotas: 14,
-          title: '14 CUOTAS (9%)',
-          precio: '${_controller.cuota14}.00',
-        ),
-        ExpansionPrueba(
-          cuotas: 16,
-          title: '16 CUOTAS (8%)',
-          precio: '${_controller.cuota16}.00',
-        ),
-        ExpansionPrueba(
-          cuotas: 19,
-          title: '19 CUOTAS (7%)',
-          precio: '${_controller.cuota19}.00',
-        ),
-        ExpansionPrueba(
-          cuotas: 23,
-          title: '23 CUOTAS (6%)',
-          precio: '${_controller.cuota23}.00',
-        ),
-        ExpansionPrueba(
-          cuotas: 28,
-          title: '28 CUOTAS (5%)',
-          precio: '${_controller.cuota23}.00',
-        ),
-        
       ],
     );
   }
-}
 
-class ControllerCalculo extends ChangeNotifier {
-  int fivepercent = 0, tenpercent = 0, fifteenpercent = 0;
-  int cuota12 = 0, cuota14 = 0, cuota16 = 0, cuota19 = 0, cuota23 = 0, cuota28 = 0;
-  bool expanded1 = true, expanded2 = true, expanded3 = true;
-  double precioCompra = 0, igv = 0, total = 0, saldoFinancio = 0;
-  String despacho = '0.00';
-
-  void changeExpanded(bool e, int lugar) {
-    if (lugar == 1) {
-      expanded1 = e;
-    } else if (lugar == 2) {
-      expanded2 = e;
-    } else if (lugar == 3) {
-      expanded3 = e;
-    }
-
-    notifyListeners();
-  }
-
-  void calcularProducto(String precio) {
-    double precioProduct = double.parse(precio);
-
-    fivepercent = (precioProduct * .05).round();
-    tenpercent = (precioProduct * .1).round();
-    fifteenpercent = (precioProduct * .15).round();
-
-    igv = precioProduct * 0.1525416;
-    precioCompra = precioProduct - igv;
-    total = precioCompra + igv;
-    despacho = '-';
-
-    notifyListeners();
-  }
-
-  void calcularCuotas(String precioProducto, String pagoIncial) {
-    double saldofinanciar = double.parse(precioProducto) - double.parse(pagoIncial);
-
-    cuota12 = (saldofinanciar * 0.1).round();
-    cuota14 = (saldofinanciar * .09).round();
-    cuota16 = (saldofinanciar * .08).round();
-    cuota19 = (saldofinanciar * .07).round();
-    cuota23 = (saldofinanciar * .06).round();
-    cuota28 = (saldofinanciar * .05).round();
-    saldoFinancio = saldofinanciar;
-
-    notifyListeners();
-  }
-
-  void lipiar() {
-    fivepercent = 0;
-    tenpercent = 0;
-    fifteenpercent = 0;
-    igv = 0;
-    precioCompra = 0;
-    total = 0;
-    despacho = '0.00';
-    cuota12 = 0;
-    cuota14 = 0;
-    cuota16 = 0;
-    cuota19 = 0;
-    cuota23 = 0;
-    cuota28 = 0;
-    saldoFinancio = 0;
-    notifyListeners();
+  Widget _contenido4(ControllerCalculo _controller, List<ProductoModel> cart) {
+    return Container(
+      height: cart.length * ScreenUtil().setHeight(80),
+      child: ListView.builder(
+          itemCount: cart.length,
+          itemBuilder: (context, index) {
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5)),
+              child: Row(
+                children: [
+                  Expanded(child: Text('${cart[index].regaloProducto}')),
+                  Text('S/.${cart[index].precioRegaloProducto}'),
+                ],
+              ),
+            );
+          }),
+    );
   }
 }

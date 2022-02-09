@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:royal_prestige/src/bloc/inicio_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
@@ -35,14 +33,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final bottomBloc = ProviderBloc.botton(context);
-    final bloc = HomeBloc();
 
     final responsive = Responsive.of(context);
 
     final carritoBloc = ProviderBloc.cart(context);
     carritoBloc.getCart();
 
-    bottomBloc.changePage(0);
+    bottomBloc.changePage(4);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(

@@ -27,6 +27,9 @@ class _InicioPageState extends State<InicioPage> {
   Widget build(BuildContext context) {
     final categoriasBloc = ProviderBloc.productos(context);
     categoriasBloc.obtenerCategorias();
+
+
+
     return Scaffold(
       body: Column(
         children: [
