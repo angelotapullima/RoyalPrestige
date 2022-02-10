@@ -15,7 +15,7 @@ class PromocionBloc {
 
   void obtenerPromos() async {
     _promocionController.sink.add(await promoApi.promoDatabase.getPromocion());
-    promoApi.listarPromociones();
+    await promoApi.listarPromociones();
     _promocionController.sink.add(await promoApi.promoDatabase.getPromocion());
   }
 }

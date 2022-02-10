@@ -255,7 +255,6 @@ class PruebaInicio extends StatelessWidget {
   }
 
   _onTapPromo(BuildContext context, PromocionModel promo) {
-    print(promo.idProduct);
     if (promo.idProduct != '0') {
       Navigator.push(
         context,
