@@ -19,6 +19,7 @@ class DatabaseHelper {
       db.execute(tableCartSql);
       db.execute(tableGaleriaSql);
       db.execute(tablePromocionSql);
+      db.execute(tableComprasSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 
@@ -56,6 +57,8 @@ class DatabaseHelper {
       ' nacimientoCLiente TEXT,'
       ' telefonoCliente TEXT,'
       ' estadoCliente TEXT,'
+      ' observacionesCliente TEXT,'
+      ' tipo TEXT,'
       ' direccionCliente TEXT)';
 
   static const String tableAlertSql = 'CREATE TABLE Alert('
@@ -89,4 +92,15 @@ class DatabaseHelper {
       ' fechaLimitePromo TEXT,'
       ' imagenPromo TEXT,'
       ' estadoPromo TEXT)';
+
+  static const String tableComprasSql = 'CREATE TABLE Compras('
+      ' idCompra TEXT PRIMARY KEY,'
+      ' idUsuario TEXT,'
+      ' idCliente TEXT,'
+      ' idProducto TEXT,'
+      ' montoCuotaCompra TEXT,'
+      ' fechaPagoCompra TEXT,'
+      ' fechaCompra TEXT,'
+      ' observacionCompra TEXT,'
+      ' estadoCompra TEXT)';
 }

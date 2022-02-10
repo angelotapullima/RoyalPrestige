@@ -2,12 +2,16 @@ import 'dart:convert';
 
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
 import 'package:royal_prestige/database/cliente_database.dart';
+import 'package:royal_prestige/database/compras_database.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
+import 'package:royal_prestige/src/model/compras_model.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
 class ClienteApi {
   final clienteDatabase = ClienteDatabase();
+  final comprasDatabase = ComprasDatabase();
+
   Future<bool> saveClient(ClienteModel clienteModel) async {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/guardar_cliente');
@@ -40,7 +44,8 @@ class ClienteApi {
       return false;
     }
   }
-Future<bool> editCLient(ClienteModel clienteModel) async {
+
+  Future<bool> editCLient(ClienteModel clienteModel) async {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/guardar_cliente');
       String? token = await StorageManager.readData('token');
@@ -74,7 +79,6 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
     }
   }
 
-  
   Future<void> getClientForUser() async {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/listar_clientes_por_usuario');
@@ -99,7 +103,33 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
         clienteModel.sexoCliente = decodedData[i]['cliente_sexo'];
         clienteModel.direccionCliente = decodedData[i]['cliente_direccion'];
         clienteModel.telefonoCliente = decodedData[i]['cliente_telefono'];
+        clienteModel.observacionesCliente = decodedData[i]['cliente_observaciones'];
         clienteModel.estadoCliente = decodedData[i]['cliente_estado'];
+
+        if (decodedData[i]['compras'].length > 0) {
+          //Tipo 1, es Cliente
+          clienteModel.tipo = '1';
+
+          for (var x = 0; x < decodedData[i]['compras'].length; x++) {
+            var compras = decodedData[i]['compras'][x];
+
+            ComprasModel compra = ComprasModel();
+            compra.idCompra = compras["id_compra"];
+            compra.idUsuario = compras["id_usuario"];
+            compra.idCliente = compras["id_cliente"];
+            compra.idProducto = compras["id_producto"];
+            compra.montoCuotaCompra = compras["compra_monto_cuota"];
+            compra.fechaPagoCompra = compras["compra_fecha_pago"];
+            compra.fechaCompra = compras["compra_fecha"];
+            compra.observacionCompra = compras["compra_observacion"];
+            compra.estadoCompra = compras["compra_estado"];
+
+            await comprasDatabase.insertCompra(compra);
+          }
+        } else {
+          //Tipo 2, es Prospecto
+          clienteModel.tipo = '2';
+        }
 
         await clienteDatabase.insertCliente(clienteModel);
       }
