@@ -161,7 +161,7 @@ class PruebaInicio extends StatelessWidget {
                                       horizontal: ScreenUtil().setWidth(5),
                                     ),
                                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: .75,
+                                      childAspectRatio: .7,
                                       crossAxisCount: 2,
                                       mainAxisSpacing: responsive.hp(2),
                                       crossAxisSpacing: responsive.wp(3),
