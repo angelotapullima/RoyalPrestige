@@ -27,81 +27,99 @@ class _CalcularPageState extends State<CalcularPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: kBottomNavigationBarHeight + ScreenUtil().setHeight(10),
-            left: ScreenUtil().setWidth(21),
-            right: ScreenUtil().setWidth(21),
-          ),
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (_, c) {
-              return Column(
-                children: [
-                  Container(
-                    child: TextField(
-                      maxLines: 1,
-                      controller: _precioProductoController,
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        if (value.isNotEmpty) {
-                          _controller.calcularProducto(value);
-                        } else {
-                          _controller.limpiar();
-                          _depositoController.text = '';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: 'Precio producto',
-                        labelStyle: TextStyle(
-                          color: colorgray,
-                          fontWeight: FontWeight.w400,
-                          fontSize: ScreenUtil().setSp(12),
-                        ),
-                        fillColor: Colors.white,
-                        contentPadding:
-                            EdgeInsets.only(left: ScreenUtil().setWidth(10), top: ScreenUtil().setHeight(5), bottom: ScreenUtil().setHeight(1)),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
-                        ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: ScreenUtil().setWidth(21),
+              right: ScreenUtil().setWidth(21),
+            ),
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (_, c) {
+                return Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil().setWidth(10),
+                        vertical: ScreenUtil().setHeight(5),
                       ),
-                      style: TextStyle(
-                        color: colorPrimary,
-                        fontWeight: FontWeight.w700,
-                        fontSize: ScreenUtil().setSp(15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Calculadora',
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(20),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(24),
-                  ),
-                  _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(_controller), 1, _controller),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(14),
-                  ),
-                  _expandedContainer('PRODUCTO', _controller.expanded2, _contenido2(_controller), 2, _controller),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(14),
-                  ),
-                  _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(_controller), 3, _controller),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(14),
-                  ),
-                 
-                ],
-              );
-            },
+                    Container(
+                      child: TextField(
+                        maxLines: 1,
+                        controller: _precioProductoController,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            _controller.calcularProducto(value);
+                          } else {
+                            _controller.limpiar();
+                            _depositoController.text = '';
+                          }
+                        },
+                        decoration: InputDecoration(
+                          filled: true,
+                          labelText: 'Precio producto',
+                          labelStyle: TextStyle(
+                            color: colorgray,
+                            fontWeight: FontWeight.w400,
+                            fontSize: ScreenUtil().setSp(12),
+                          ),
+                          fillColor: Colors.white,
+                          contentPadding:
+                              EdgeInsets.only(left: ScreenUtil().setWidth(10), top: ScreenUtil().setHeight(5), bottom: ScreenUtil().setHeight(1)),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
+                          ),
+                        ),
+                        style: TextStyle(
+                          color: colorPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: ScreenUtil().setSp(15),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(24),
+                    ),
+                    _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(_controller), 1, _controller),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(14),
+                    ),
+                    _expandedContainer('PRODUCTO', _controller.expanded2, _contenido2(_controller), 2, _controller),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(14),
+                    ),
+                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(_controller), 3, _controller),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(14),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

@@ -6,9 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
 import 'package:royal_prestige/database/categoria_database.dart';
 import 'package:royal_prestige/database/galery_database.dart';
+import 'package:royal_prestige/database/info_product_database.dart';
 import 'package:royal_prestige/database/producto_database.dart';
 import 'package:royal_prestige/src/model/categoria_model.dart';
 import 'package:royal_prestige/src/model/galery_model.dart';
+import 'package:royal_prestige/src/model/info_product_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:path/path.dart';
@@ -17,6 +19,7 @@ class ProductosApi {
   final productoDatabase = ProductoDatabase();
   final categoriaDatabase = CategoriaDatabase();
   final galeryDatabase = GaleryDatabase();
+  final infoProductoDatabase = InfoProductoDatabase();
   Future<Null> listarProductos() async {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/listar_productos');
@@ -63,6 +66,21 @@ class ProductosApi {
               galeryModel.file = productos['galeria'][y]['galeria_file'];
               galeryModel.status = productos['galeria'][y]['galeria_estado'];
               await galeryDatabase.insertGalery(galeryModel);
+            }
+          }
+
+          if (productos['docs'].length > 0) {
+            for (var y = 0; y < productos['docs'].length; y++) {
+              InfoProductoModel infoProductoModel = InfoProductoModel();
+
+              infoProductoModel.idProDoc = productos['docs'][y]['id_producto_doc'];
+              infoProductoModel.idProducto = productos['docs'][y]['id_producto'];
+              infoProductoModel.proTipo = productos['docs'][y]['producto_doc_tipo'];
+              infoProductoModel.proTitulo = productos['docs'][y]['producto_doc_titulo'];
+              infoProductoModel.proDetalle = productos['docs'][y]['producto_doc_detalle'];
+              infoProductoModel.proUrl = productos['docs'][y]['producto_doc_url'];
+              infoProductoModel.proEstado = productos['docs'][y]['producto_doc_estado'];
+              await infoProductoDatabase.insertarInfoProducto(infoProductoModel);
             }
           }
         }
