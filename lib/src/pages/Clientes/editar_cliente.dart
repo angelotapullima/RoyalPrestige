@@ -68,7 +68,7 @@ class _EditarClienteState extends State<EditarCliente> {
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          'Nuevo Cliente',
+          'Editar Cliente',
           style: TextStyle(
             color: Colors.black,
           ),

@@ -2,6 +2,7 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
+import 'package:royal_prestige/src/pages/Clientes/detalle_cliente.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 
 class SearchClientePage extends StatefulWidget {
@@ -336,24 +337,30 @@ class ClientesWidget extends StatelessWidget {
               itemBuilder: (context, i) {
                 return InkWell(
                   onTap: () {
-                    /* Navigator.push(
+                    Navigator.push(
                       context,
                       PageRouteBuilder(
-                        transitionDuration: const Duration(milliseconds: 400),
                         pageBuilder: (context, animation, secondaryAnimation) {
-                          return DetalleProductitoss2(
-                            productosData: snapshot.data[i],
-                            mostrarback: true,
+                          return DetalleCliente(
+                            clienteModel: snapshot.data![i],
                           );
                         },
                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
+                          var begin = Offset(0.0, 1.0);
+                          var end = Offset.zero;
+                          var curve = Curves.ease;
+
+                          var tween = Tween(begin: begin, end: end).chain(
+                            CurveTween(curve: curve),
+                          );
+
+                          return SlideTransition(
+                            position: animation.drive(tween),
                             child: child,
                           );
                         },
                       ),
-                    ); */
+                    );
                   },
                   child: Container(
                     child: Column(

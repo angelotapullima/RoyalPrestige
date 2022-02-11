@@ -9,8 +9,12 @@ class ClientesBloc {
   final _clientesController = BehaviorSubject<List<ClienteModel>>();
   Stream<List<ClienteModel>> get clienteStream => _clientesController.stream;
 
+  final _clienteIdController = BehaviorSubject<List<ClienteModel>>();
+  Stream<List<ClienteModel>> get clienteIdStream => _clienteIdController.stream;
+
   dispose() {
     _clientesController.close();
+    _clienteIdController.close();
   }
 
   void getClientForTipo(String type) async {
@@ -22,5 +26,11 @@ class ClientesBloc {
     _clientesController.sink.add(
       await clienteApi.clienteDatabase.getClientPorTipo(idUsuario, type),
     );
+  }
+
+  void obtenerClienteById(String idCliente) async {
+    _clienteIdController.sink.add(await clienteApi.clienteDatabase.getClientPorIdCliente(idCliente));
+    await clienteApi.getClientForUser();
+    _clienteIdController.sink.add(await clienteApi.clienteDatabase.getClientPorIdCliente(idCliente));
   }
 }

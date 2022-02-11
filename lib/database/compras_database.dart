@@ -20,11 +20,11 @@ class ComprasDatabase {
     }
   }
 
-  Future<List<ComprasModel>> getComprasByIdUsuario(String idUsuario) async {
+  Future<List<ComprasModel>> getComprasByIdCliente(String idCliente) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<ComprasModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM Compras WHERE estadoCompra = '1' and idUsuario = '$idUsuario'");
+      List<Map> maps = await db.rawQuery("SELECT * FROM Compras WHERE estadoCompra = '1' and idCliente = '$idCliente'");
 
       if (maps.length > 0) list = ComprasModel.fromJsonList(maps);
       return list;
