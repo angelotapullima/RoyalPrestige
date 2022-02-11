@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:focused_menu/focused_menu.dart';
-import 'package:focused_menu/modals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/agregar_cliente.dart';
-import 'package:royal_prestige/src/pages/Clientes/editar_cliente.dart';
+import 'package:royal_prestige/src/pages/Clientes/detalle_cliente.dart';
 import 'package:royal_prestige/src/pages/Clientes/search_client.dart';
 
 class ClientesyProspectosPage extends StatefulWidget {
@@ -18,7 +16,7 @@ class ClientesyProspectosPage extends StatefulWidget {
 }
 
 class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
-  final _controller = Controller();  
+  final _controller = Controller();
   @override
   Widget build(BuildContext context) {
     final clienteBloc = ProviderBloc.cliente(context);
@@ -166,48 +164,73 @@ class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
                           return ListView.builder(
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
-                              return focusGeneral(
-                                  context,
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: ScreenUtil().setWidth(10),
-                                          vertical: ScreenUtil().setHeight(5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '${index + 1}.',
-                                              style: TextStyle(
-                                                fontSize: ScreenUtil().setSp(20),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: ScreenUtil().setWidth(10),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '${snapshot.data![index].nombreCliente}',
-                                                  style: TextStyle(
-                                                    fontSize: ScreenUtil().setSp(18),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '${snapshot.data![index].nroDocCliente}',
-                                                  style: TextStyle(fontSize: ScreenUtil().setSp(16), fontWeight: FontWeight.bold),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) {
+                                        return DetalleCliente(
+                                          clienteModel: snapshot.data![index],
+                                        );
+                                      },
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        var begin = Offset(0.0, 1.0);
+                                        var end = Offset.zero;
+                                        var curve = Curves.ease;
+
+                                        var tween = Tween(begin: begin, end: end).chain(
+                                          CurveTween(curve: curve),
+                                        );
+
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: ScreenUtil().setWidth(10),
+                                        vertical: ScreenUtil().setHeight(5),
                                       ),
-                                      Divider(),
-                                    ],
-                                  ),
-                                  snapshot.data![index]);
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '${index + 1}.',
+                                            style: TextStyle(
+                                              fontSize: ScreenUtil().setSp(20),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: ScreenUtil().setWidth(10),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${snapshot.data![index].nombreCliente}',
+                                                style: TextStyle(
+                                                  fontSize: ScreenUtil().setSp(18),
+                                                ),
+                                              ),
+                                              Text(
+                                                '${snapshot.data![index].nroDocCliente}',
+                                                style: TextStyle(fontSize: ScreenUtil().setSp(16), fontWeight: FontWeight.bold),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(),
+                                  ],
+                                ),
+                              );
                             },
                           );
                         } else {
@@ -229,110 +252,110 @@ class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
     );
   }
 
-  FocusedMenuHolder focusGeneral(BuildContext context, Widget childs, ClienteModel cliente) {
-    return FocusedMenuHolder(
-        blurBackgroundColor: Colors.black.withOpacity(0.2),
-        blurSize: 0,
-        animateMenuItems: true,
-        onPressed: () {},
-        openWithTap: true,
-        menuWidth: ScreenUtil().setWidth(210),
-        menuItems: [
-          FocusedMenuItem(
-            title: Expanded(
-              child: Text(
-                "Editar",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w400,
-                  fontSize: ScreenUtil().setSp(18),
-                  letterSpacing: ScreenUtil().setSp(0.016),
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            trailingIcon: Icon(
-              Icons.edit_outlined,
-              color: Colors.grey,
-              size: ScreenUtil().setHeight(20),
-            ),
-            onPressed: () {
-              //DetailProveedor
+  // FocusedMenuHolder focusGeneral(BuildContext context, Widget childs, ClienteModel cliente) {
+  //   return FocusedMenuHolder(
+  //       blurBackgroundColor: Colors.black.withOpacity(0.2),
+  //       blurSize: 0,
+  //       animateMenuItems: true,
+  //       onPressed: () {},
+  //       openWithTap: true,
+  //       menuWidth: ScreenUtil().setWidth(210),
+  //       menuItems: [
+  //         FocusedMenuItem(
+  //           title: Expanded(
+  //             child: Text(
+  //               "Editar",
+  //               style: GoogleFonts.poppins(
+  //                 fontWeight: FontWeight.w400,
+  //                 fontSize: ScreenUtil().setSp(18),
+  //                 letterSpacing: ScreenUtil().setSp(0.016),
+  //                 color: Colors.black,
+  //               ),
+  //             ),
+  //           ),
+  //           trailingIcon: Icon(
+  //             Icons.edit_outlined,
+  //             color: Colors.grey,
+  //             size: ScreenUtil().setHeight(20),
+  //           ),
+  //           onPressed: () {
+  //             //DetailProveedor
 
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) {
-                    return EditarCliente(
-                      clienteModel: cliente,
-                    );
-                  },
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    var begin = Offset(0.0, 1.0);
-                    var end = Offset.zero;
-                    var curve = Curves.ease;
+  //             Navigator.push(
+  //               context,
+  //               PageRouteBuilder(
+  //                 pageBuilder: (context, animation, secondaryAnimation) {
+  //                   return EditarCliente(
+  //                     clienteModel: cliente,
+  //                   );
+  //                 },
+  //                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //                   var begin = Offset(0.0, 1.0);
+  //                   var end = Offset.zero;
+  //                   var curve = Curves.ease;
 
-                    var tween = Tween(begin: begin, end: end).chain(
-                      CurveTween(curve: curve),
-                    );
+  //                   var tween = Tween(begin: begin, end: end).chain(
+  //                     CurveTween(curve: curve),
+  //                   );
 
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-              );
-              //DocumentosProveedor
-            },
-          ),
-          FocusedMenuItem(
-            title: Expanded(
-              child: Text(
-                "Eliminar",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w400,
-                  fontSize: ScreenUtil().setSp(18),
-                  letterSpacing: ScreenUtil().setSp(0.016),
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            trailingIcon: Icon(
-              Icons.delete,
-              color: Colors.grey,
-              size: ScreenUtil().setHeight(20),
-            ),
-            onPressed: () async {
-              /*  Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) {
-                    return DetailProveedor(
-                      proveedor: proveedores[index],
-                    );
-                  },
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    var begin = Offset(0.0, 1.0);
-                    var end = Offset.zero;
-                    var curve = Curves.ease;
+  //                   return SlideTransition(
+  //                     position: animation.drive(tween),
+  //                     child: child,
+  //                   );
+  //                 },
+  //               ),
+  //             );
+  //             //DocumentosProveedor
+  //           },
+  //         ),
+  //         FocusedMenuItem(
+  //           title: Expanded(
+  //             child: Text(
+  //               "Eliminar",
+  //               style: GoogleFonts.poppins(
+  //                 fontWeight: FontWeight.w400,
+  //                 fontSize: ScreenUtil().setSp(18),
+  //                 letterSpacing: ScreenUtil().setSp(0.016),
+  //                 color: Colors.black,
+  //               ),
+  //             ),
+  //           ),
+  //           trailingIcon: Icon(
+  //             Icons.delete,
+  //             color: Colors.grey,
+  //             size: ScreenUtil().setHeight(20),
+  //           ),
+  //           onPressed: () async {
+  //             /*  Navigator.push(
+  //               context,
+  //               PageRouteBuilder(
+  //                 pageBuilder: (context, animation, secondaryAnimation) {
+  //                   return DetailProveedor(
+  //                     proveedor: proveedores[index],
+  //                   );
+  //                 },
+  //                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //                   var begin = Offset(0.0, 1.0);
+  //                   var end = Offset.zero;
+  //                   var curve = Curves.ease;
 
-                    var tween = Tween(begin: begin, end: end).chain(
-                      CurveTween(curve: curve),
-                    );
+  //                   var tween = Tween(begin: begin, end: end).chain(
+  //                     CurveTween(curve: curve),
+  //                   );
 
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ),
-              );
-             */
-            },
-          ),
-        ],
-        child: childs);
-  }
+  //                   return SlideTransition(
+  //                     position: animation.drive(tween),
+  //                     child: child,
+  //                   );
+  //                 },
+  //               ),
+  //             );
+  //            */
+  //           },
+  //         ),
+  //       ],
+  //       child: childs);
+  // }
 
   Container tabAnimated() {
     return Container(
@@ -360,9 +383,8 @@ class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
             child: InkWell(
               onTap: () {
                 _controller.changeValueBoton(1);
- final clienteBloc = ProviderBloc.cliente(context);
-    clienteBloc.getClientForTipo('1');
-                //ticketBloc.getTicketsForUser('0');
+                final clienteBloc = ProviderBloc.cliente(context);
+                clienteBloc.getClientForTipo('1');
               },
               child: Container(
                 padding: EdgeInsets.symmetric(
@@ -392,9 +414,9 @@ class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
           Expanded(
             child: InkWell(
               onTap: () {
-                _controller.changeValueBoton(2); final clienteBloc = ProviderBloc.cliente(context);
-    clienteBloc.getClientForTipo('2');
-                //ticketBloc.getTicketsForUser('2');
+                _controller.changeValueBoton(2);
+                final clienteBloc = ProviderBloc.cliente(context);
+                clienteBloc.getClientForTipo('2');
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

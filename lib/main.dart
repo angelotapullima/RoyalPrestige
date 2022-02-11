@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/documento/nuevo_documento.dart';
 import 'package:royal_prestige/src/pages/home.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<EstadoController>(
+          create: (_) => EstadoController(),
+        ),
         ChangeNotifierProvider<EstadoListener>(
           create: (_) => EstadoListener(),
         ),
@@ -54,18 +58,18 @@ class MyApp extends StatelessWidget {
               child: child!,
             );
           },
-           localizationsDelegates: const [
-             GlobalMaterialLocalizations.delegate,
-             GlobalWidgetsLocalizations.delegate,
-             GlobalCupertinoLocalizations.delegate,
-           ],
-           supportedLocales: const [
-             Locale('es'),
-             Locale('es', 'ES'),
-           ],
-           localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
-             return locale;
-           },
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('es'),
+            Locale('es', 'ES'),
+          ],
+          localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
+            return locale;
+          },
           initialRoute: 'splash',
           routes: {
             'splash': (BuildContext context) => const Splash(),

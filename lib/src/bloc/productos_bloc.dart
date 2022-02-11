@@ -17,6 +17,9 @@ class ProductosBloc {
   final _productosQueryController = BehaviorSubject<List<ProductoModel>>();
   Stream<List<ProductoModel>> get productosQueryStream => _productosQueryController.stream;
 
+  final _productosQuery2Controller = BehaviorSubject<List<ProductoModel>>();
+  Stream<List<ProductoModel>> get productosQuery2Stream => _productosQuery2Controller.stream;
+
   final _productoidController = BehaviorSubject<List<ProductoModel>>();
   Stream<List<ProductoModel>> get productoIdStream => _productoidController.stream;
 
@@ -34,6 +37,7 @@ class ProductosBloc {
   dispose() {
     _productosController.close();
     _productosQueryController.close();
+    _productosQuery2Controller.close();
     _categoriasController.close();
     _productoidController.close();
     _cantidadSubidaImagen.close();
@@ -137,5 +141,9 @@ class ProductosBloc {
 
   void obtenerProductoPorQuery(String query) async {
     _productosQueryController.sink.add(await productoDatabase.getProductoQuery(query));
+  }
+
+  void obtenerProductoPorQuery2(String query) async {
+    _productosQuery2Controller.sink.add(await productoDatabase.getProductoQuery(query));
   }
 }

@@ -20,7 +20,7 @@ class ClienteDatabase {
     }
   }
 
-  Future<List<ClienteModel>> getClientPorTipo(String idUsuario,String tipo) async {
+  Future<List<ClienteModel>> getClientPorTipo(String idUsuario, String tipo) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<ClienteModel> list = [];
@@ -34,12 +34,26 @@ class ClienteDatabase {
     }
   }
 
-
-  Future<List<ClienteModel>> getClientQueryPorTipo(String query,String idUsuario,String tipo) async {
+  Future<List<ClienteModel>> getClientPorIdCliente(String idCliente) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<ClienteModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM Cliente WHERE nombreCliente LIKE '%$query%' and  estadoCliente = '1' and idUsuario = '$idUsuario' and tipo = '$tipo'");
+      List<Map> maps = await db.rawQuery("SELECT * FROM Cliente WHERE estadoCliente = '1' and idCliente = '$idCliente'");
+
+      if (maps.length > 0) list = ClienteModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      print(" $e Error en la  tabla Cliente");
+      return [];
+    }
+  }
+
+  Future<List<ClienteModel>> getClientQueryPorTipo(String query, String idUsuario, String tipo) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<ClienteModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM Cliente WHERE nombreCliente LIKE '%$query%' and  estadoCliente = '1' and idUsuario = '$idUsuario' and tipo = '$tipo'");
 
       if (maps.length > 0) list = ClienteModel.fromJsonList(maps);
       return list;
