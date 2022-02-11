@@ -407,7 +407,8 @@ class _AgregarClienteState extends State<AgregarCliente> {
                                           if (res) {
                                             showToast2('Cliente agregado correctamente', Colors.green);
                                             final clienteBloc = ProviderBloc.cliente(context);
-                                            clienteBloc.getClient();
+                                            clienteBloc.getClientForTipo('1');
+                                            clienteBloc.getClientForTipo('2');
                                             Navigator.pop(context);
                                             _cargando.value = false;
                                           } else {

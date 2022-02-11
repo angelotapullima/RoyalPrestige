@@ -13,10 +13,14 @@ class ClientesBloc {
     _clientesController.close();
   }
 
-  void getClient() async {
+  void getClientForTipo(String type) async {
     String? idUsuario = await StorageManager.readData('idUser');
-    _clientesController.sink.add(await clienteApi.clienteDatabase.getClient(idUsuario!));
+    _clientesController.sink.add(
+      await clienteApi.clienteDatabase.getClientPorTipo(idUsuario!, type),
+    );
     await clienteApi.getClientForUser();
-    _clientesController.sink.add(await clienteApi.clienteDatabase.getClient(idUsuario));
+    _clientesController.sink.add(
+      await clienteApi.clienteDatabase.getClientPorTipo(idUsuario, type),
+    );
   }
 }

@@ -8,6 +8,7 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/agregar_cliente.dart';
 import 'package:royal_prestige/src/pages/Clientes/editar_cliente.dart';
+import 'package:royal_prestige/src/pages/Clientes/search_client.dart';
 
 class ClientesyProspectosPage extends StatefulWidget {
   const ClientesyProspectosPage({Key? key}) : super(key: key);
@@ -17,24 +18,23 @@ class ClientesyProspectosPage extends StatefulWidget {
 }
 
 class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
-  final _controller = Controller();
-  TextEditingController _busquedaController = TextEditingController();
-  final _currentPageNotifier = ValueNotifier<bool>(false);
+  final _controller = Controller();  
   @override
   Widget build(BuildContext context) {
     final clienteBloc = ProviderBloc.cliente(context);
-    clienteBloc.getClient();
+    clienteBloc.getClientForTipo('1');
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
-        toolbarHeight: ScreenUtil().setHeight(130),
+        toolbarHeight: ScreenUtil().setHeight(110),
         centerTitle: false,
         backgroundColor: Colors.transparent,
         flexibleSpace: SafeArea(
           child: Container(
             margin: EdgeInsets.only(
               left: ScreenUtil().setWidth(10),
+              right: ScreenUtil().setWidth(10),
               bottom: ScreenUtil().setHeight(1),
             ),
             child: Column(
@@ -99,108 +99,46 @@ class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                          toolbarOptions: ToolbarOptions(paste: true, cut: true, copy: true, selectAll: true),
-                          controller: _busquedaController,
-                          keyboardType: TextInputType.text,
-                          textAlign: TextAlign.start,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            labelStyle: TextStyle(color: Colors.white),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            hintText: 'Buscar...',
-                            hintStyle: TextStyle(color: Colors.black45),
-                          ),
-                          onChanged: (value) {
-                            if (value.length >= 0 && value != ' ' && value != '') {
-                              // final productosBloc = ProviderBloc.busquedaAngelo(context);
-                              // if (preferences.tipoCategoriaNumero == '3') {
-                              //   productosBloc.queryCafe('$value', '3', false);
-                              // } else if (preferences.tipoCategoriaNumero == '4') {
-                              //   productosBloc.queryVar('$value', '4', false);
-                              // } else if (preferences.tipoCategoriaNumero == '1') {
-                              //   productosBloc.queryCafe('$value', '3', false);
-                              //   productosBloc.queryEnchiladas('$value', '1', false);
-                              // } else {
-                              //   productosBloc.queryEnchiladasDelivery('$value', '5', false);
-                              //   productosBloc.queryCafeDelivery('$value', '6', false);
-                              //   productosBloc.queryVarDelivery('$value', '7', false);
-                              // }
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return SearchClientePage();
+                        },
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          var begin = Offset(0.0, 1.0);
+                          var end = Offset.zero;
+                          var curve = Curves.ease;
 
-                              // igual++;
-                              _currentPageNotifier.value = true;
-                              //agregarHistorial(context, value, 'pro');
-                            } else {
-                              //productosBloc.resetearCantidades();
-                            }
-                          },
-                          onSubmitted: (value) {
-                            if (value.length >= 0 && value != ' ' && value != '') {
-                              //igual++;
-                              _currentPageNotifier.value = true;
-                              // final productosBloc = ProviderBloc.busquedaAngelo(context);
-                              // if (preferences.tipoCategoriaNumero == '3') {
-                              //   productosBloc.queryCafe('$value', '3', false);
-                              // } else if (preferences.tipoCategoriaNumero == '4') {
-                              //   productosBloc.queryVar('$value', '4', false);
-                              // } else if (preferences.tipoCategoriaNumero == '1') {
-                              //   productosBloc.queryCafe('$value', '3', false);
-                              //   productosBloc.queryEnchiladas('$value', '1', false);
-                              // } else {
-                              //   productosBloc.queryEnchiladasDelivery('$value', '5', false);
-                              //   productosBloc.queryCafeDelivery('$value', '6', false);
-                              //   productosBloc.queryVarDelivery('$value', '7', false);
-                              // }
+                          var tween = Tween(begin: begin, end: end).chain(
+                            CurveTween(curve: curve),
+                          );
 
-                              //agregarHistorial(context, value, 'pro');
-                            } else {
-                              //productosBloc.resetearCantidades();
-                            }
-                          }),
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setWidth(10),
                     ),
-                    SizedBox(
-                      width: ScreenUtil().setWidth(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    ValueListenableBuilder(
-                      valueListenable: _currentPageNotifier,
-                      builder: (BuildContext context, bool data, Widget? child) {
-                        return (data)
-                            ? InkWell(
-                                onTap: () {
-                                  // igual++;
-
-                                  // productosBloc.resetearCantidades();
-                                  _busquedaController.text = '';
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.grey,
-                                  radius: ScreenUtil().radius(10),
-                                  child: Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                    size: ScreenUtil().setSp(15),
-                                  ),
-                                ),
-                              )
-                            : Container();
-                      },
+                    width: double.infinity,
+                    height: ScreenUtil().setHeight(40),
+                    child: Row(
+                      children: [Icon(Icons.search), Text('Búscar')],
                     ),
-                    SizedBox(
-                      width: ScreenUtil().setWidth(10),
-                    ),
-                  ],
-                ),
+                  ),
+                )
               ],
             ),
           ),
@@ -422,7 +360,8 @@ class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
             child: InkWell(
               onTap: () {
                 _controller.changeValueBoton(1);
-
+ final clienteBloc = ProviderBloc.cliente(context);
+    clienteBloc.getClientForTipo('1');
                 //ticketBloc.getTicketsForUser('0');
               },
               child: Container(
@@ -453,7 +392,8 @@ class _ClientesyProspectosPageState extends State<ClientesyProspectosPage> {
           Expanded(
             child: InkWell(
               onTap: () {
-                _controller.changeValueBoton(2);
+                _controller.changeValueBoton(2); final clienteBloc = ProviderBloc.cliente(context);
+    clienteBloc.getClientForTipo('2');
                 //ticketBloc.getTicketsForUser('2');
               },
               child: Container(

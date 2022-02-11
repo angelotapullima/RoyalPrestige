@@ -421,7 +421,8 @@ class _EditarClienteState extends State<EditarCliente> {
                                           if (res) {
                                             showToast2('Cliente editado correctamente', Colors.green);
                                             final clienteBloc = ProviderBloc.cliente(context);
-                                            clienteBloc.getClient();
+                                            clienteBloc.getClientForTipo('1');
+                                            clienteBloc.getClientForTipo('2');
                                             Navigator.pop(context);
                                             _cargando.value = false;
                                           } else {

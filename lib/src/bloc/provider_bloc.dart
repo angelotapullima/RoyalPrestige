@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:royal_prestige/src/bloc/alert_bloc.dart';
 import 'package:royal_prestige/src/bloc/bottom_navigation_bloc.dart';
+import 'package:royal_prestige/src/bloc/busqueda_bloc.dart';
 import 'package:royal_prestige/src/bloc/cart_bloc.dart';
 import 'package:royal_prestige/src/bloc/clientes_bloc.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
@@ -19,6 +20,7 @@ class ProviderBloc extends InheritedWidget {
   final cartBloc = CartBloc();
   final galeryBloc = GaleryBloc();
   final promoBloc = PromocionBloc();
+  final busquedaGeneralTab = BusquedaGeneralTab();
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
   @override
@@ -58,5 +60,10 @@ class ProviderBloc extends InheritedWidget {
 
   static PromocionBloc promocion(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.promoBloc;
+  }
+
+
+  static BusquedaGeneralTab busCliente(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.busquedaGeneralTab;
   }
 }

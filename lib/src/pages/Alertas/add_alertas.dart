@@ -39,7 +39,8 @@ class _AddAlertasState extends State<AddAlertas> {
   Widget build(BuildContext context) {
     final responsive = Responsive.of(context);
     final clienteBloc = ProviderBloc.cliente(context);
-    clienteBloc.getClient();
+    clienteBloc.getClientForTipo('1');
+    clienteBloc.getClientForTipo('2');
 
     return Scaffold(
       appBar: AppBar(
