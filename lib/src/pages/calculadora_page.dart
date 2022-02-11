@@ -469,16 +469,68 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
     return Container(
       height: cart.length * ScreenUtil().setHeight(80),
       child: ListView.builder(
-        itemCount: cart.length,
+        itemCount: cart.length + 1,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5)),
-            child: Row(
-              children: [
-                Expanded(child: Text('${cart[index].regaloProducto}')),
-                Text('S/.${cart[index].precioRegaloProducto}'),
-              ],
-            ),
+          double total = 0;
+          for (var i = 0; i < cart.length; i++) {
+            total = double.parse('${cart[i].precioRegaloProducto}') + total;
+          }
+          if (index == cart.length) {
+            return Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Total',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,color:Colors.red,
+                          fontSize: ScreenUtil().setSp(17),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: ScreenUtil().setWidth(10),
+                    ),
+                    Text(
+                      'S/.${total}0',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: ScreenUtil().setSp(15),
+                      ),
+                    ),
+                  ],
+                );
+          }
+
+          return Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(5)),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${cart[index].regaloProducto}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: ScreenUtil().setSp(13),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: ScreenUtil().setWidth(10),
+                    ),
+                    Text(
+                      'S/.${cart[index].precioRegaloProducto}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: ScreenUtil().setSp(15),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider()
+            ],
           );
         },
       ),

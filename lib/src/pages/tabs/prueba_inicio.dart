@@ -731,7 +731,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                   child: Row(
                     children: [
                       Text(
-                        '" Siempre firmes "',
+                        '" Caminando firme "',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: responsive.ip(2.1),
