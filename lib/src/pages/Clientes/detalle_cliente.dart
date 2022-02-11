@@ -3,11 +3,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/model/compras_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/editar_cliente.dart';
 import 'package:royal_prestige/src/pages/Compras/agregar_compra.dart';
+import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
@@ -364,6 +366,8 @@ class _DetalleClienteState extends State<DetalleCliente> {
                           ),
                           InkWell(
                             onTap: () {
+                              final provider = Provider.of<EstadoController>(context, listen: false);
+                              provider.changeProducto('', '');
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(

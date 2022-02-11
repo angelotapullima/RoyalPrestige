@@ -168,8 +168,8 @@ class _SearchProductoState extends State<SearchProducto> {
         ),
       ),
       onTap: () {
-        StorageManager.saveData('idProduct', '${productosData.idProducto}');
-        StorageManager.saveData('nameProduct', '${productosData.nombreProducto}');
+        final provider = Provider.of<EstadoController>(context, listen: false);
+        provider.changeProducto(productosData.idProducto.toString(), productosData.nombreProducto.toString());
         Navigator.pop(context);
       },
     );
@@ -184,7 +184,7 @@ class EstadoController with ChangeNotifier {
   ValueNotifier<String> get idProducto => this._idProducto;
 
   ValueNotifier<String> _nombreProducto = ValueNotifier('');
-  ValueNotifier<String> get nomreProducto => this._nombreProducto;
+  ValueNotifier<String> get nombreProducto => this._nombreProducto;
 
   void changeVacio() {
     _estado.value = EstadoBusqueda.vacio;

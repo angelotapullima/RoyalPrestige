@@ -1,8 +1,10 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/detalle_cliente.dart';
+import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 
 class SearchClientePage extends StatefulWidget {
@@ -337,6 +339,8 @@ class ClientesWidget extends StatelessWidget {
               itemBuilder: (context, i) {
                 return InkWell(
                   onTap: () {
+                    final provider = Provider.of<EstadoController>(context, listen: false);
+                    provider.changeProducto('', '');
                     Navigator.push(
                       context,
                       PageRouteBuilder(
