@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/api/alerta_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
+import 'package:royal_prestige/src/pages/Alertas/search_cliente.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
@@ -30,17 +32,14 @@ class _AddAlertasState extends State<AddAlertas> {
     super.dispose();
   }
 
-  int clienteInt = 0;
-  String dropClienteValue = 'Seleccionar';
-  String idCliente = '';
-  List<String> clienteList = [];
-
   @override
   Widget build(BuildContext context) {
     final responsive = Responsive.of(context);
     final clienteBloc = ProviderBloc.cliente(context);
     clienteBloc.getClientForTipo('1');
     clienteBloc.getClientForTipo('2');
+
+    final provider = Provider.of<BusquedaClienteController>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -82,31 +81,54 @@ class _AddAlertasState extends State<AddAlertas> {
                       SizedBox(
                         height: ScreenUtil().setHeight(6),
                       ),
-                      StreamBuilder(
-                        stream: clienteBloc.clienteStream,
-                        builder: (BuildContext context, AsyncSnapshot<List<ClienteModel>> snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data!.length > 0) {
-                              if (clienteInt == 0) {
-                                clienteList.clear();
+                      ValueListenableBuilder(
+                          valueListenable: provider.idCliente,
+                          builder: (context, String data, snapshot) {
+                            return InkWell(
+                              onTap: () {
+                                provider.changeCliente('', '');
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return SearchCliente2Page();
+                                    },
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
 
-                                clienteList.add('Seleccionar');
-                                for (int i = 0; i < snapshot.data!.length; i++) {
-                                  String nombreCanchas = snapshot.data![i].nombreCliente.toString();
-                                  clienteList.add(nombreCanchas);
-                                }
-                              }
+                                      var tween = Tween(begin: begin, end: end).chain(
+                                        CurveTween(curve: curve),
+                                      );
 
-                              final valorLista = clienteList.toSet().toList();
-                              return dropCliente(valorLista, snapshot.data!);
-                            } else {
-                              return Container();
-                            }
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(10),
+                                  vertical: ScreenUtil().setHeight(15),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.grey.shade300),
+                                ),
+                                width: double.infinity,
+                                height: ScreenUtil().setHeight(55),
+                                child: Text(
+                                  (data != '') ? provider.nombreCliente.value.toString() : 'Buscar cliente',
+                                  style: TextStyle(color: (data != '') ? Colors.black : Colors.grey.shade700),
+                                ),
+                              ),
+                            );
+                          }),
                       SizedBox(
                         height: ScreenUtil().setHeight(20),
                       ),
@@ -126,7 +148,7 @@ class _AddAlertasState extends State<AddAlertas> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Documento ',
+                          hintText: 'Título ',
                           hintStyle: TextStyle(
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.grey[600],
@@ -172,10 +194,11 @@ class _AddAlertasState extends State<AddAlertas> {
                       ),
                       TextField(
                         controller: _detalleController,
+                        keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: ' Teléfono',
+                          hintText: ' Detalle',
                           hintStyle: TextStyle(
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.grey[600],
@@ -338,7 +361,7 @@ class _AddAlertasState extends State<AddAlertas> {
                           onPressed: () async {
                             if (_tituloController.text.isNotEmpty) {
                               if (_detalleController.text.isNotEmpty) {
-                                if (idCliente.isNotEmpty) {
+                                if (provider.idCliente.value != '') {
                                   if (fechaDato != 'Seleccionar') {
                                     if (horaDato != 'Seleccionar') {
                                       _cargando.value = true;
@@ -347,7 +370,7 @@ class _AddAlertasState extends State<AddAlertas> {
                                       AlertModel alertModel = AlertModel();
                                       alertModel.alertTitle = _tituloController.text;
                                       alertModel.alertDetail = _detalleController.text;
-                                      alertModel.idClient = idCliente;
+                                      alertModel.idClient = provider.idCliente.value;
                                       alertModel.alertDate = fechaDato;
                                       alertModel.alertHour = horaDato;
 
@@ -355,6 +378,9 @@ class _AddAlertasState extends State<AddAlertas> {
 
                                       if (res) {
                                         _cargando.value = false;
+                                        final alertasBloc = ProviderBloc.alert(context);
+                                        alertasBloc.getAlerts();
+                                        provider.changeCliente('', '');
                                         Navigator.pop(context);
                                         showToast2('alerta guardada correctamente', Colors.green);
                                       } else {
@@ -362,7 +388,7 @@ class _AddAlertasState extends State<AddAlertas> {
                                         showToast2('ocurrio un error', Colors.red);
                                       }
                                     } else {
-                                      showToast2('Por favor ingrese una fecha', Colors.red);
+                                      showToast2('Por favor ingrese una hora', Colors.red);
                                     }
                                   } else {
                                     showToast2('Por favor ingrese una fecha', Colors.red);
@@ -425,97 +451,24 @@ class _AddAlertasState extends State<AddAlertas> {
     );
   }
 
-  Widget dropCliente(List<String> lista, List<ClienteModel> cliente) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(5),
-      ),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-        border: Border.all(
-          color: Colors.grey.shade300,
-        ),
-      ),
-      child: DropdownButton<String>(
-        dropdownColor: Colors.white,
-        value: dropClienteValue,
-        icon: Icon(Icons.arrow_drop_down),
-        iconSize: ScreenUtil().setSp(20),
-        elevation: 16,
-        isExpanded: true,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: ScreenUtil().setSp(16),
-        ),
-        underline: Container(),
-        onChanged: (String? data) {
-          setState(() {
-            dropClienteValue = data.toString();
-            clienteInt++;
-
-            obtenerIdCliente(data!, cliente);
-          });
-        },
-        items: lista.map((value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              maxLines: 3,
-              style: TextStyle(color: Colors.black),
-              overflow: TextOverflow.ellipsis,
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  void obtenerIdCliente(String dato, List<ClienteModel> list) {
-    if (dato == 'Seleccionar') {
-      idCliente = 'Seleccionar';
-    } else {
-      for (int i = 0; i < list.length; i++) {
-        if (dato == list[i].nombreCliente) {
-          idCliente = list[i].idCliente.toString();
-        }
-      }
-    }
-    print(idCliente);
-  }
-
   _selectdate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
       context: context,
-      firstDate: DateTime(DateTime.now().month - 1),
+      firstDate: DateTime.now(),
       initialDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 2),
     );
 
-    print('date $picked');
-
     setState(() {
       fechaDato = "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-      //inputfieldDateController.text = fechaDato;
-
-      print(fechaDato);
     });
   }
 
   _selecttime(BuildContext context) async {
     TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
-    print('date $picked');
-
     setState(() {
       horaDato = "${picked!.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
-      //inputfieldDateController.text = fechaDato;
-
-      print(horaDato);
     });
   }
 }

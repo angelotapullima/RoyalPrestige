@@ -30,7 +30,7 @@ class AlertApi {
       });
 
       if (resp.statusCode == 200) {
-        print(resp.toString());
+        print(resp.body.toString());
 
         return true;
       } else {
@@ -92,19 +92,18 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
       for (var i = 0; i < decodedData.length; i++) {
         AlertModel alertModel = AlertModel();
 
-        alertModel.idAlert = decodedData[i]['id_cliente'];
+        alertModel.idAlert = decodedData[i]['id_alerta'];
         alertModel.idUsuario = decodedData[i]['id_usuario'];
         alertModel.idClient = decodedData[i]['id_cliente'];
         alertModel.alertTitle = decodedData[i]['alerta_titulo'];
         alertModel.alertDetail = decodedData[i]['alerta_detalle'];
         alertModel.alertDate = decodedData[i]['alerta_fecha'];
-        alertModel.alertHour = decodedData[i]['alerta_hora']; 
-        alertModel.alertStatus = decodedData[i]['alerta_estado'];  
+        alertModel.alertHour = decodedData[i]['alerta_hora'];
+        alertModel.alertStatus = decodedData[i]['alerta_estado'];
 
         await alertDatabase.insertAlert(alertModel);
 
-
-         ClienteModel clienteModel = ClienteModel();
+        ClienteModel clienteModel = ClienteModel();
 
         clienteModel.idCliente = decodedData[i]['cliente']['id_cliente'];
         clienteModel.idUsuario = decodedData[i]['cliente']['id_usuario'];
