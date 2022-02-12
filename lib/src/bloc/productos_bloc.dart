@@ -1,8 +1,10 @@
 import 'package:royal_prestige/database/galery_database.dart';
+import 'package:royal_prestige/database/info_product_database.dart';
 import 'package:royal_prestige/database/producto_database.dart';
 import 'package:royal_prestige/src/api/productos_api.dart';
 import 'package:royal_prestige/src/model/categoria_model.dart';
 import 'package:royal_prestige/src/model/galery_model.dart';
+import 'package:royal_prestige/src/model/info_product_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -10,6 +12,7 @@ class ProductosBloc {
   final productoApi = ProductosApi();
   final productoDatabase = ProductoDatabase();
   final galeryDatabase = GaleryDatabase();
+  final infoProductoDatabase = InfoProductoDatabase();
 
   final _productosController = BehaviorSubject<List<ProductoModel>>();
   Stream<List<ProductoModel>> get productosStream => _productosController.stream;
@@ -32,6 +35,12 @@ class ProductosBloc {
   final _cantidadSubidaImagen = BehaviorSubject<double>();
   Stream<double> get subidaImagenStream => _cantidadSubidaImagen.stream;
 
+  final _infoProductoIDDocController = BehaviorSubject<List<InfoProductoModel>>();
+  Stream<List<InfoProductoModel>> get infoProductIDDocStream => _infoProductoIDDocController.stream;
+
+  final _infoProductoIDUrlController = BehaviorSubject<List<InfoProductoModel>>();
+  Stream<List<InfoProductoModel>> get infoProductIDUrlStream => _infoProductoIDUrlController.stream;
+
   Function(double) get changeSubidaImagen => _cantidadSubidaImagen.sink.add;
 
   dispose() {
@@ -42,6 +51,8 @@ class ProductosBloc {
     _productoidController.close();
     _cantidadSubidaImagen.close();
     _categoriaIdController.close();
+    _infoProductoIDDocController.close();
+    _infoProductoIDUrlController.close();
   }
 
   void obtenerCategorias() async {
@@ -145,5 +156,42 @@ class ProductosBloc {
 
   void obtenerProductoPorQuery2(String query) async {
     _productosQuery2Controller.sink.add(await productoDatabase.getProductoQuery(query));
+  }
+
+  void getInfoProductByID(String id) async {
+    final List<InfoProductoModel> docs = [];
+    final List<InfoProductoModel> urls = [];
+    final list = await infoProductoDatabase.getInfoProForIdProduct(id);
+
+    if (list.length > 0) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].proTipo == '0') {
+          //url
+          InfoProductoModel infoProductoModel = InfoProductoModel();
+          infoProductoModel.idProDoc = list[i].idProDoc;
+          infoProductoModel.idProducto = list[i].idProducto;
+          infoProductoModel.proTipo = list[i].proTipo;
+          infoProductoModel.proTitulo = list[i].proTitulo;
+          infoProductoModel.proDetalle = list[i].proDetalle;
+          infoProductoModel.proUrl = list[i].proUrl;
+          infoProductoModel.proEstado = list[i].proEstado;
+          urls.add(infoProductoModel);
+        } else {
+          //docu
+          InfoProductoModel infoProductoModel = InfoProductoModel();
+          infoProductoModel.idProDoc = list[i].idProDoc;
+          infoProductoModel.idProducto = list[i].idProducto;
+          infoProductoModel.proTipo = list[i].proTipo;
+          infoProductoModel.proTitulo = list[i].proTitulo;
+          infoProductoModel.proDetalle = list[i].proDetalle;
+          infoProductoModel.proUrl = list[i].proUrl;
+          infoProductoModel.proEstado = list[i].proEstado;
+          docs.add(infoProductoModel);
+        }
+      }
+    }
+
+    _infoProductoIDDocController.sink.add(docs);
+    _infoProductoIDUrlController.sink.add(urls);
   }
 }

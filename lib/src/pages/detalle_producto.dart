@@ -2,17 +2,23 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flowder/flowder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:royal_prestige/database/cart_database.dart';
 import 'package:royal_prestige/src/api/productos_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cart_model.dart';
+import 'package:royal_prestige/src/model/info_product_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/carrito_tab.dart';
 import 'package:royal_prestige/src/pages/detalle_foto.dart';
@@ -21,6 +27,7 @@ import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetalleProducto extends StatefulWidget {
   const DetalleProducto({Key? key, required this.idProducto}) : super(key: key);
@@ -31,14 +38,18 @@ class DetalleProducto extends StatefulWidget {
 }
 
 class _DetalleProductoState extends State<DetalleProducto> {
+  late DownloaderUtils options;
+  late DownloaderCore core;
   final _controller = Controller();
   @override
   Widget build(BuildContext context) {
     final productoBloc = ProviderBloc.productos(context);
     productoBloc.obtenerProductoByIdProducto(widget.idProducto);
+    productoBloc.getInfoProductByID(widget.idProducto);
 
     final responsive = Responsive.of(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: StreamBuilder(
         stream: productoBloc.productoIdStream,
         builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
@@ -47,380 +58,497 @@ class _DetalleProductoState extends State<DetalleProducto> {
               return AnimatedBuilder(
                   animation: _controller,
                   builder: (_, t) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    return Stack(
                       children: [
+                        SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
                         Container(
-                          height: ScreenUtil().setHeight(330),
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: ScreenUtil().setHeight(290),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: colorPrimary,
-                                  borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(30),
-                                    bottomLeft: Radius.circular(30),
-                                  ),
-                                ),
-                                child: (snapshot.data![0].galery!.length > 0)
-                                    ? CarouselSlider.builder(
-                                        itemCount: snapshot.data![0].galery!.length,
-                                        itemBuilder: (context, x, y) {
-                                          return InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                PageRouteBuilder(
-                                                  pageBuilder: (context, animation, secondaryAnimation) {
-                                                    return DetailPicture(
-                                                      index: x.toString(),
-                                                      idProducto: snapshot.data![0].galery![x].idProduct.toString(),
-                                                    );
-                                                  },
-                                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                                    var begin = Offset(0.0, 1.0);
-                                                    var end = Offset.zero;
-                                                    var curve = Curves.ease;
-
-                                                    var tween = Tween(begin: begin, end: end).chain(
-                                                      CurveTween(curve: curve),
-                                                    );
-
-                                                    return SlideTransition(
-                                                      position: animation.drive(tween),
-                                                      child: child,
-                                                    );
-                                                  },
-                                                ),
+                          height: ScreenUtil().setHeight(290),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: colorPrimary,
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(30),
+                              bottomLeft: Radius.circular(30),
+                            ),
+                          ),
+                          child: (snapshot.data![0].galery!.length > 0)
+                              ? CarouselSlider.builder(
+                                  itemCount: snapshot.data![0].galery!.length,
+                                  itemBuilder: (context, x, y) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation, secondaryAnimation) {
+                                              return DetailPicture(
+                                                index: x.toString(),
+                                                idProducto: snapshot.data![0].galery![x].idProduct.toString(),
                                               );
-//DetailPicture
                                             },
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                horizontal: ScreenUtil().setWidth(0),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                              ),
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                                child: Stack(
-                                                  children: [
-                                                    CachedNetworkImage(
-                                                      placeholder: (context, url) => Container(
-                                                          width: double.infinity, height: double.infinity, child: CupertinoActivityIndicator()),
-                                                      errorWidget: (context, url, error) => Container(
-                                                        width: double.infinity,
-                                                        height: double.infinity,
-                                                        child: Center(
-                                                          child: Icon(Icons.error),
-                                                        ),
-                                                      ),
-                                                      imageUrl: '$apiBaseURL/${snapshot.data![0].galery![x].file}',
-                                                      imageBuilder: (context, imageProvider) => Container(
-                                                        decoration: BoxDecoration(
-                                                          image: DecorationImage(
-                                                            image: imageProvider,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
-                                                      ),
+                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                              var begin = Offset(0.0, 1.0);
+                                              var end = Offset.zero;
+                                              var curve = Curves.ease;
+
+                                              var tween = Tween(begin: begin, end: end).chain(
+                                                CurveTween(curve: curve),
+                                              );
+
+                                              return SlideTransition(
+                                                position: animation.drive(tween),
+                                                child: child,
+                                              );
+                                            },
+                                          ),
+                                        );
+//DetailPicture
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: ScreenUtil().setWidth(0),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          child: Stack(
+                                            children: [
+                                              CachedNetworkImage(
+                                                placeholder: (context, url) =>
+                                                    Container(width: double.infinity, height: double.infinity, child: CupertinoActivityIndicator()),
+                                                errorWidget: (context, url, error) => Container(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  child: Center(
+                                                    child: Icon(Icons.error),
+                                                  ),
+                                                ),
+                                                imageUrl: '$apiBaseURL/${snapshot.data![0].galery![x].file}',
+                                                imageBuilder: (context, imageProvider) => Container(
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                        options: CarouselOptions(
-                                            height: ScreenUtil().setHeight(552),
-                                            onPageChanged: (index, page) {},
-                                            enlargeCenterPage: true,
-                                            autoPlay: true,
-                                            autoPlayCurve: Curves.fastOutSlowIn,
-                                            autoPlayInterval: Duration(seconds: 6),
-                                            autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                                            viewportFraction: 1),
-                                      )
-                                    : Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        child: Center(
-                                          child: Icon(Icons.error),
-                                        ),
-                                      ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                right: ScreenUtil().setWidth(25),
-                                child: SafeArea(
-                                  child: InkWell(
-                                    onTap: () {
-                                      agregarGaleria(context, snapshot.data![0]);
-                                    },
-                                    child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: Container(
-                                        height: ScreenUtil().setHeight(40),
-                                        width: ScreenUtil().setWidth(40),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(color: Colors.white),
-                                          color: Colors.white,
-                                        ),
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.photo_camera,
-                                            color: NewColors.green,
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    );
+                                  },
+                                  options: CarouselOptions(
+                                      height: ScreenUtil().setHeight(552),
+                                      onPageChanged: (index, page) {},
+                                      enlargeCenterPage: true,
+                                      autoPlay: true,
+                                      autoPlayCurve: Curves.fastOutSlowIn,
+                                      autoPlayInterval: Duration(seconds: 6),
+                                      autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                      viewportFraction: 1),
+                                )
+                              : Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: Center(
+                                    child: Icon(Icons.error),
                                   ),
                                 ),
-                              ),
-                              /*  Positioned(
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: ScreenUtil().setWidth(25),
+                          child: SafeArea(
+                            child: InkWell(
+                              onTap: () {
+                                agregarGaleria(context, snapshot.data![0]);
+                              },
+                              child: Align(
+                                alignment: Alignment.topRight,
                                 child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: ScreenUtil().setWidth(20),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: ScreenUtil().setWidth(23),
-                                    vertical: ScreenUtil().setHeight(18),
-                                  ),
+                                  height: ScreenUtil().setHeight(40),
+                                  width: ScreenUtil().setWidth(40),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: const Offset(1, 0), // changes position of shadow
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    height: ScreenUtil().setHeight(50),
-                                    child: ListView.builder(
-                                      itemCount: 5,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (_, index) {
-                                        return Container(
-                                          margin: EdgeInsets.only(
-                                            right: ScreenUtil().setWidth(24),
-                                          ),
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                                          child: Image.asset('assets/img/picture2.jpg'),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              */
-                              SafeArea(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: colorPrimary,
-                                    borderRadius: BorderRadius.circular(5),
+                                    shape: BoxShape.circle,
                                     border: Border.all(color: Colors.white),
-                                  ),
-                                  margin: EdgeInsets.only(
-                                    left: ScreenUtil().setWidth(20),
-                                  ),
-                                  child: BackButton(
                                     color: Colors.white,
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: ScreenUtil().setHeight(24),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(24),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '${snapshot.data![0].nombreProducto}',
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  _controller.changeExpanded2(!_controller.expanded2);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(color: colorPrimary),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  padding: EdgeInsets.all(2),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: colorPrimary,
-                                    size: ScreenUtil().setHeight(20),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.photo_camera,
+                                      color: NewColors.green,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                        SizedBox(
-                          height: ScreenUtil().setHeight(12),
+                        SafeArea(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: colorPrimary,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.white),
+                            ),
+                            margin: EdgeInsets.only(
+                              left: ScreenUtil().setWidth(20),
+                            ),
+                            child: BackButton(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        (_controller.expanded2)
-                            ? Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: ScreenUtil().setWidth(24),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: ScreenUtil().setHeight(290),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(24),
                                 ),
-                                child: Container(
+                                Padding(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: ScreenUtil().setWidth(23),
-                                    vertical: ScreenUtil().setHeight(18),
+                                    horizontal: ScreenUtil().setWidth(24),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: const Offset(1, 0), // changes position of shadow
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${snapshot.data![0].nombreProducto}',
+                                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          _controller.changeExpanded2(!_controller.expanded2);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(color: colorPrimary),
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          padding: EdgeInsets.all(2),
+                                          child: Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: colorPrimary,
+                                            size: ScreenUtil().setHeight(20),
+                                          ),
+                                        ),
                                       ),
                                     ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(12),
+                                ),
+                                (_controller.expanded2)
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: ScreenUtil().setWidth(24),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: ScreenUtil().setWidth(23),
+                                            vertical: ScreenUtil().setHeight(18),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.3),
+                                                spreadRadius: 1,
+                                                blurRadius: 3,
+                                                offset: const Offset(1, 0), // changes position of shadow
+                                              ),
+                                            ],
+                                          ),
+                                          child: Text(
+                                            '${snapshot.data![0].regaloProducto} \n S/.${snapshot.data![0].precioRegaloProducto}',
+                                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: ScreenUtil().setSp(11)),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(12),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setWidth(24),
                                   ),
                                   child: Text(
-                                    '${snapshot.data![0].regaloProducto} \n S/.${snapshot.data![0].precioRegaloProducto}',
+                                    'Descripción',
+                                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(13)),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(6),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setWidth(24),
+                                  ),
+                                  child: Text(
+                                    '${snapshot.data![0].descripcionProducto}',
                                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: ScreenUtil().setSp(11)),
                                   ),
                                 ),
-                              )
-                            : Container(),
-                        SizedBox(
-                          height: ScreenUtil().setHeight(12),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(24),
-                          ),
-                          child: Text(
-                            'Descripción',
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(13)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: ScreenUtil().setHeight(6),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(24),
-                          ),
-                          child: Text(
-                            '${snapshot.data![0].descripcionProducto}',
-                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: ScreenUtil().setSp(11)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: ScreenUtil().setHeight(24),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(24),
-                          ),
-                          child: _expandedContainer('Precio S/. ${snapshot.data![0].precioProducto}', _controller.expanded, _contenido()),
-                        ),
-                        Spacer(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: ScreenUtil().setHeight(20),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: ScreenUtil().setWidth(20),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(24),
                                 ),
-                                width: ScreenUtil().setWidth(160),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: colorPrimary),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        _controller.changeCantidad(-1);
-                                      },
-                                      child: Text(
-                                        '-',
-                                        style: TextStyle(
-                                          fontSize: ScreenUtil().setSp(40),
-                                          color: colorPrimary,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      '${_controller.cantidad}',
-                                      style: TextStyle(fontSize: ScreenUtil().setSp(24)),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        _controller.changeCantidad(1);
-                                      },
-                                      child: Text(
-                                        '+',
-                                        style: TextStyle(
-                                          fontSize: ScreenUtil().setSp(30),
-                                          color: colorPrimary,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: ScreenUtil().setWidth(50),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  dialiogCart(
-                                    context,
-                                    responsive,
-                                    snapshot.data![0],
-                                    '${_controller.cantidad}',
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: colorPrimary,
-                                    borderRadius: BorderRadius.circular(5),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setWidth(24),
                                   ),
-                                  padding: EdgeInsets.all(5),
-                                  child: Icon(
-                                    Icons.shopping_cart,
-                                    color: Colors.white,
-                                    size: ScreenUtil().setHeight(30),
+                                  child: _expandedContainer('Precio S/. ${snapshot.data![0].precioProducto}', _controller.expanded, _contenido()),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(16),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setWidth(10),
+                                  ),
+                                  height: ScreenUtil().setHeight(130),
+                                  child: StreamBuilder(
+                                    stream: productoBloc.infoProductIDDocStream,
+                                    builder: (BuildContext context, AsyncSnapshot<List<InfoProductoModel>> snapshot) {
+                                      if (snapshot.hasData) {
+                                        if (snapshot.data!.length > 0) {
+                                          return Container(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Documentos',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: ScreenUtil().setSp(16),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: ScreenUtil().setHeight(16),
+                                                ),
+                                                Container(
+                                                  height: ScreenUtil().setHeight(90),
+                                                  child: ListView.builder(
+                                                    scrollDirection: Axis.horizontal,
+                                                    itemCount: snapshot.data!.length,
+                                                    itemBuilder: (context, index) {
+                                                      int randomNumber = 0;
+
+                                                      final fechaFormat = snapshot.data![index].proUrl!.split(".");
+                                                      var algo = fechaFormat.length - 1;
+
+                                                      if (fechaFormat[algo] == 'xlsx') {
+                                                        randomNumber = 3;
+                                                      } else if (fechaFormat[algo] == 'pdf') {
+                                                        randomNumber = 2;
+                                                      } else if (fechaFormat[algo] == 'docx') {
+                                                        randomNumber = 1;
+                                                      }
+
+                                                      return itemDatos(snapshot.data![index], randomNumber);
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      } else {
+                                        return Container();
+                                      }
+                                    },
                                   ),
                                 ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(16),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setWidth(10),
+                                  ),
+                                  height: ScreenUtil().setHeight(130),
+                                  child: StreamBuilder(
+                                    stream: productoBloc.infoProductIDUrlStream,
+                                    builder: (BuildContext context, AsyncSnapshot<List<InfoProductoModel>> snapshot) {
+                                      if (snapshot.hasData) {
+                                        if (snapshot.data!.length > 0) {
+                                          return Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Información adicional',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: ScreenUtil().setSp(16),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: ListView.builder(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: ScreenUtil().setHeight(5),
+                                                  ),
+                                                  scrollDirection: Axis.vertical,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index) {
+                                                    return InkWell(
+                                                      onTap: (){
+                                                          _launchInBrowser('${snapshot.data![index].proUrl}');
+                                        
+                                                      },
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.blueGrey.shade100,
+                                                          borderRadius: BorderRadius.circular(10),
+                                                        ),
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: ScreenUtil().setWidth(10),
+                                                          vertical: ScreenUtil().setHeight(10),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: Text(
+                                                                '${snapshot.data![index].proTitulo}',
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: ScreenUtil().setSp(16),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              'visitar',
+                                                              style: TextStyle(
+                                                                fontWeight: FontWeight.w600,
+                                                                fontSize: ScreenUtil().setSp(16),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      } else {
+                                        return Container();
+                                      }
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(150),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: ScreenUtil().setHeight(20),
                               ),
-                            ],
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: ScreenUtil().setWidth(20),
+                                    ),
+                                    width: ScreenUtil().setWidth(160),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: colorPrimary),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            _controller.changeCantidad(-1);
+                                          },
+                                          child: Text(
+                                            '-',
+                                            style: TextStyle(
+                                              fontSize: ScreenUtil().setSp(40),
+                                              color: colorPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          '${_controller.cantidad}',
+                                          style: TextStyle(fontSize: ScreenUtil().setSp(24)),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            _controller.changeCantidad(1);
+                                          },
+                                          child: Text(
+                                            '+',
+                                            style: TextStyle(
+                                              fontSize: ScreenUtil().setSp(30),
+                                              color: colorPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: ScreenUtil().setWidth(50),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      dialiogCart(
+                                        context,
+                                        responsive,
+                                        snapshot.data![0],
+                                        '${_controller.cantidad}',
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: colorPrimary,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      padding: EdgeInsets.all(5),
+                                      child: Icon(
+                                        Icons.shopping_cart,
+                                        color: Colors.white,
+                                        size: ScreenUtil().setHeight(30),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -443,6 +571,220 @@ class _DetalleProductoState extends State<DetalleProducto> {
         },
       ),
     );
+  }
+
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: true,
+        //headers: <String, String>{'my_header_key': 'my_headser_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Widget itemDatos(InfoProductoModel documento, int tipo) {
+    var svg = 'assets/svg/folder_azul.svg';
+    Color col = Color(0xffeef7fe);
+    Color colMore = Color(0xff415eb6);
+
+    if (tipo == 1) {
+      svg = 'assets/svg/folder_azul.svg';
+      col = Color(0xffeef7fe);
+      colMore = Color(0xff415eb6);
+    } else if (tipo == 0) {
+      svg = 'assets/svg/folder_amarillo.svg';
+      col = Color(0xfffffbec);
+      colMore = Color(0xffffb110);
+    } else if (tipo == 2) {
+      svg = 'assets/svg/folder_rojo.svg';
+      col = Color(0xfffeeeee);
+      colMore = Color(0xffac4040);
+    } else if (tipo == 3) {
+      svg = 'assets/svg/folder_cyan.svg';
+      col = Color(0xfff0ffff);
+      colMore = Color(0xff23b0b0);
+    }
+    return Container(
+      decoration: BoxDecoration(
+        color: col,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setWidth(10),
+      ),
+      margin: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setWidth(10),
+      ),
+      width: ScreenUtil().setWidth(150),
+      child: focusGeneral(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: [
+                  Container(
+                    height: ScreenUtil().setSp(30),
+                    width: ScreenUtil().setSp(30),
+                    child: SvgPicture.asset(
+                      '$svg',
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: colMore,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              Text(
+                '${documento.proTitulo}',
+                style: TextStyle(
+                  color: colMore,
+                  fontWeight: FontWeight.bold,
+                  fontSize: ScreenUtil().setSp(18),
+                ),
+              )
+            ],
+          ),
+          documento),
+    );
+  }
+
+  FocusedMenuHolder focusGeneral(Widget childs, InfoProductoModel document) {
+    return FocusedMenuHolder(
+        blurBackgroundColor: Colors.black.withOpacity(0.2),
+        blurSize: 0,
+        animateMenuItems: true,
+        onPressed: () {
+          /* 
+          provider.changeInicio(); */
+        },
+        openWithTap: true,
+        menuWidth: ScreenUtil().setWidth(210),
+        menuItems: [
+          FocusedMenuItem(
+            title: Expanded(
+              child: Text(
+                "ver",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: ScreenUtil().setSp(18),
+                  letterSpacing: ScreenUtil().setSp(0.016),
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            trailingIcon: Icon(
+              Icons.edit_outlined,
+              color: Colors.grey,
+              size: ScreenUtil().setHeight(20),
+            ),
+            onPressed: () async {
+              await new Future.delayed(new Duration(seconds: 1));
+              await [
+                Permission.location,
+                Permission.storage,
+              ].request();
+              var checkResult = await Permission.manageExternalStorage.status;
+
+              if (!checkResult.isGranted) {
+                options = DownloaderUtils(
+                  progressCallback: (current, total) {
+                    //provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                  },
+                  file: File('/storage/emulated/0/RoyalPrestige/${document.proUrl}'),
+                  progress: ProgressImplementation(),
+                  onDone: () {
+                    print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.proUrl}');
+                    // provider.changeFinish();
+                    final _result = OpenFile.open("/storage/emulated/0/RoyalPrestige/${document.proUrl}");
+                    print(_result);
+                  },
+                  deleteOnCancel: true,
+                );
+                //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
+
+                print(core);
+              } else if (await Permission.storage.request().isPermanentlyDenied) {
+                await openAppSettings();
+              } else if (await Permission.storage.request().isDenied) {
+                Map<Permission, PermissionStatus> statuses = await [
+                  Permission.location,
+                  Permission.storage,
+                ].request();
+                print(statuses[Permission.location]);
+              }
+            },
+          ),
+          FocusedMenuItem(
+            title: Expanded(
+              child: Text(
+                "Descargar",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: ScreenUtil().setSp(18),
+                  letterSpacing: ScreenUtil().setSp(0.016),
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            trailingIcon: Icon(
+              Icons.insert_drive_file_sharp,
+              color: Colors.grey,
+              size: ScreenUtil().setHeight(20),
+            ),
+            onPressed: () async {
+              await new Future.delayed(new Duration(seconds: 1));
+              await [
+                Permission.location,
+                Permission.storage,
+              ].request();
+              var checkResult = await Permission.manageExternalStorage.status;
+
+              if (!checkResult.isGranted) {
+                /* var dir = await getExternalStorageDirectory();
+                var testdir = await Directory('${dir!.path}/SOAL').create(recursive: true);  */
+
+                options = DownloaderUtils(
+                  progressCallback: (current, total) {
+                    //provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                  },
+                  file: File('/storage/emulated/0/RoyalPrestige/${document.proUrl}'),
+                  progress: ProgressImplementation(),
+                  onDone: () {
+                    print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.proUrl}');
+                    // provider.changeFinish();
+                  },
+                  deleteOnCancel: true,
+                );
+                //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
+
+                print(core);
+              } else if (await Permission.storage.request().isPermanentlyDenied) {
+                await openAppSettings();
+              } else if (await Permission.storage.request().isDenied) {
+                Map<Permission, PermissionStatus> statuses = await [
+                  Permission.location,
+                  Permission.storage,
+                ].request();
+                print(statuses[Permission.location]);
+              }
+            },
+          ),
+        ],
+        child: childs);
   }
 
   Future<dynamic> dialiogCart(BuildContext context, Responsive responsive, ProductoModel productoModel, String cantidad) {
