@@ -40,7 +40,7 @@ class AlertDatabase {
       final Database db = await dbprovider.getDatabase();
       List<AlertModel> list = [];
       List<Map> maps = await db
-          .rawQuery("SELECT * FROM Alert WHERE alertDate='$date' and idUsuario = '$idUsuario' ORDER BY  strftime('%Y-%m-%d %hh:%mm', alertHour) DESC");
+          .rawQuery("SELECT * FROM Alert WHERE alertDate='$date' and idUsuario = '$idUsuario' ");
 
       if (maps.length > 0) list = AlertModel.fromJsonList(maps);
       return list;

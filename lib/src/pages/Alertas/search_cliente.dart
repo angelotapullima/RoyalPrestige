@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/agregar_cliente.dart';
-import 'package:royal_prestige/src/pages/Clientes/detalle_cliente.dart';
-import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 
 class SearchCliente2Page extends StatefulWidget {
