@@ -250,13 +250,34 @@ class PruebaInicio extends StatelessWidget {
                                 child: Stack(
                                   children: [
                                     Container(
-                                      color: Colors.black.withOpacity(.4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
                                       padding: EdgeInsets.symmetric(
                                         horizontal: responsive.wp(5),
                                         vertical: responsive.hp(7),
                                       ),
                                       height: double.infinity,
                                       width: double.infinity,
+                                      child: StreamBuilder(
+                                        stream: alertasBloc.alertsDayStream,
+                                        builder: (context, AsyncSnapshot<List<AlertModel>> alerts) {
+                                          if (alerts.hasData) {
+                                            if (alerts.data!.length > 0) {
+                                              return Container();
+                                            } else {
+                                              return Column(
+                                                children: [],
+                                              );
+                                            }
+                                          } else {
+                                            return Column(
+                                              children: [],
+                                            );
+                                          }
+                                        },
+                                      ),
                                     ),
                                     Positioned(
                                       right: 0,
