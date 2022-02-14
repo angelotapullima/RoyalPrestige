@@ -1,5 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:timezone/data/latest_all.dart' as tz2;
 import 'package:timezone/timezone.dart' as tz;
 
 class LocalNotificationApi {
@@ -18,16 +20,22 @@ class LocalNotificationApi {
   }
 
   static Future init({bool initScheluded = false}) async {
-    final android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final android = AndroidInitializationSettings('@mipmap/launcher_icon');
     final ios = IOSInitializationSettings();
     final settings = InitializationSettings(android: android, iOS: ios);
     await _alert.initialize(settings, onSelectNotification: (playload) async {
       onNotifications.add(playload);
     });
+
+    if (initScheluded) {
+      tz2.initializeTimeZones();
+      final locationName = await FlutterNativeTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(locationName));
+    }
   }
 
   static Future showAlert({
-    int id = 0,
+    required int id,
     String? title,
     String? body,
     String? playLoad,
@@ -46,10 +54,26 @@ class LocalNotificationApi {
         title,
         body,
         tz.TZDateTime.from(time, tz.local),
+        //_schuledDaily(Time(8)),
         await _alertDetails(),
         payload: playLoad,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
+
+  // static tz.TZDateTime _schuledDaily(Time time) {
+  //   final now = DateTime.now();
+  //   final schuledDate = tz.TZDateTime(
+  //     tz.local,
+  //     now.year,
+  //     now.month,
+  //     now.day,
+  //     time.hour,
+  //     time.minute,
+  //     time.second,
+  //   );
+
+  //   return schuledDate.isBefore(now) ? schuledDate.add(Duration(days: 1)) : schuledDate;
+  // }
 }

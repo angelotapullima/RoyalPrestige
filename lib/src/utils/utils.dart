@@ -19,7 +19,8 @@ obtenerFecha(String date) {
 }
 
 obtenerHora(String date) {
-  var fecha = DateTime.parse('$date');
+  var fecha = DateTime.parse('1900-02-10 $date');
+
   final DateFormat fech = DateFormat('hh:mm a');
   return fech.format(fecha);
 }

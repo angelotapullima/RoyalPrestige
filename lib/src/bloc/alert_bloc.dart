@@ -1,6 +1,7 @@
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
 import 'package:royal_prestige/database/cliente_database.dart';
 import 'package:royal_prestige/src/api/alerta_api.dart';
+import 'package:royal_prestige/src/api/local_notification_api.dart';
 import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/fecha_alert_model.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
@@ -62,12 +63,33 @@ class AlertBloc {
         final fechix = await alertApi.alertDatabase.getAlertByFecha(listDates[x].toString(), idUsuario!);
 
         if (fechix.length > 0) {
-          /*   for (var e = 0; e < fechix.length; e++) {
-            horitas.add(fechix[e].alertHour.toString());
-          }
-          horitas.sort(); */
           for (var y = 0; y < fechix.length; y++) {
             final clients = await clienteDatabase.getClientPorIdCliente(fechix[y].idClient.toString());
+
+            DateTime fechita = DateTime.parse('${fechix[y].alertDate} ${fechix[y].alertHour}');
+
+            if (fechita.isAfter(DateTime.now())) {
+              Duration _horas = fechita.difference(DateTime.now());
+
+              if (_horas.inHours < 1) {
+                LocalNotificationApi.showAlertProgramado(
+                  id: y,
+                  title: '${fechix[y].alertTitle}',
+                  body: "${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas" + "\t" + "Cliente: ${clients[0].nombreCliente}",
+                  playLoad: '-',
+                  time: DateTime.now().add(Duration(seconds: 2)),
+                );
+              } else if (_horas.inHours == 1) {
+                LocalNotificationApi.showAlertProgramado(
+                  id: y,
+                  title: '${fechix[y].alertTitle}',
+                  body: '${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas',
+                  playLoad: '-',
+                  time: DateTime.now().add(Duration(hours: 1)),
+                );
+              }
+            }
+
             AlertModel alertModel = AlertModel();
 
             alertModel.nombreCLiente = (clients.length > 0) ? clients[0].nombreCliente : '';
