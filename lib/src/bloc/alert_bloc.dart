@@ -93,6 +93,5 @@ class AlertBloc {
     print('ctm');
 
     return listaReturn;
-    _alertController.sink.add(listaReturn);
   }
 }
