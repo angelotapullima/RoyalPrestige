@@ -14,6 +14,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:royal_prestige/database/cart_database.dart';
 import 'package:royal_prestige/src/api/productos_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
@@ -22,10 +23,12 @@ import 'package:royal_prestige/src/model/info_product_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/carrito_tab.dart';
 import 'package:royal_prestige/src/pages/detalle_foto.dart';
+import 'package:royal_prestige/src/pages/tabs/documentosPage.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
+import 'package:royal_prestige/src/widget/carrito.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -47,6 +50,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
     productoBloc.obtenerProductoByIdProducto(widget.idProducto);
     productoBloc.getInfoProductByID(widget.idProducto);
 
+    final provider = Provider.of<DocumentsBloc>(context, listen: false);
     final responsive = Responsive.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -68,14 +72,14 @@ class _DetalleProductoState extends State<DetalleProducto> {
                           height: ScreenUtil().setHeight(290),
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: colorPrimary,
+                            color: Colors.white,
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(30),
                               bottomLeft: Radius.circular(30),
                             ),
                           ),
                           child: (snapshot.data![0].galery!.length > 0)
-                              ? CarouselSlider.builder(
+                              ? (snapshot.data![0].galery!.length != 1)?CarouselSlider.builder(
                                   itemCount: snapshot.data![0].galery!.length,
                                   itemBuilder: (context, x, y) {
                                     return InkWell(
@@ -153,7 +157,42 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                       autoPlayInterval: Duration(seconds: 6),
                                       autoPlayAnimationDuration: Duration(milliseconds: 2000),
                                       viewportFraction: 1),
-                                )
+                                ):Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: CupertinoActivityIndicator(),
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: Center(
+                                          child: Icon(Icons.error),
+                                        ),
+                                      ),
+                                      imageUrl: '$apiBaseURL/${snapshot.data![0].galery![0].file}',
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                      
                               : Container(
                                   width: double.infinity,
                                   height: double.infinity,
@@ -163,46 +202,24 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                 ),
                         ),
                         Positioned(
-                          top: 0,
+                          top: ScreenUtil().setHeight(10),
                           right: ScreenUtil().setWidth(25),
                           child: SafeArea(
-                            child: InkWell(
-                              onTap: () {
-                                agregarGaleria(context, snapshot.data![0]);
-                              },
-                              child: Align(
-                                alignment: Alignment.topRight,
-                                child: Container(
-                                  height: ScreenUtil().setHeight(40),
-                                  width: ScreenUtil().setWidth(40),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white),
-                                    color: Colors.white,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.photo_camera,
-                                      color: NewColors.green,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            child:  CarritoWidget(color:Colors.red),
                           ),
                         ),
                         SafeArea(
                           child: Container(
                             decoration: BoxDecoration(
-                              color: colorPrimary,
-                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(35),
                               border: Border.all(color: Colors.white),
                             ),
                             margin: EdgeInsets.only(
                               left: ScreenUtil().setWidth(20),
                             ),
                             child: BackButton(
-                              color: Colors.white,
+                              color: Colors.red,
                             ),
                           ),
                         ),
@@ -212,6 +229,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                           ),
                           child: SingleChildScrollView(
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
                                   height: ScreenUtil().setHeight(24),
@@ -322,7 +340,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: ScreenUtil().setWidth(10),
                                   ),
-                                  height: ScreenUtil().setHeight(130),
+                                  height: ScreenUtil().setHeight(200),
                                   child: StreamBuilder(
                                     stream: productoBloc.infoProductIDDocStream,
                                     builder: (BuildContext context, AsyncSnapshot<List<InfoProductoModel>> snapshot) {
@@ -343,7 +361,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                                   height: ScreenUtil().setHeight(16),
                                                 ),
                                                 Container(
-                                                  height: ScreenUtil().setHeight(90),
+                                                  height: ScreenUtil().setHeight(150),
                                                   child: ListView.builder(
                                                     scrollDirection: Axis.horizontal,
                                                     itemCount: snapshot.data!.length,
@@ -361,7 +379,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                                         randomNumber = 1;
                                                       }
 
-                                                      return itemDatos(snapshot.data![index], randomNumber);
+                                                      return itemDatos(snapshot.data![index], randomNumber,provider);
                                                     },
                                                   ),
                                                 ),
@@ -409,9 +427,8 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index) {
                                                     return InkWell(
-                                                      onTap: (){
-                                                          _launchInBrowser('${snapshot.data![index].proUrl}');
-                                        
+                                                      onTap: () {
+                                                        _launchInBrowser('${snapshot.data![index].proUrl}');
                                                       },
                                                       child: Container(
                                                         decoration: BoxDecoration(
@@ -573,7 +590,6 @@ class _DetalleProductoState extends State<DetalleProducto> {
     );
   }
 
-
   Future<void> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
       await launch(
@@ -586,7 +602,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
     }
   }
 
-  Widget itemDatos(InfoProductoModel documento, int tipo) {
+  Widget itemDatos(InfoProductoModel documento, int tipo, DocumentsBloc provider) {
     var svg = 'assets/svg/folder_azul.svg';
     Color col = Color(0xffeef7fe);
     Color colMore = Color(0xff415eb6);
@@ -608,20 +624,20 @@ class _DetalleProductoState extends State<DetalleProducto> {
       col = Color(0xfff0ffff);
       colMore = Color(0xff23b0b0);
     }
-    return Container(
-      decoration: BoxDecoration(
-        color: col,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(10),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(10),
-      ),
-      width: ScreenUtil().setWidth(150),
-      child: focusGeneral(
-          Column(
+    return focusGeneral(
+        Container(
+          decoration: BoxDecoration(
+            color: col,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(10),
+          ),
+          margin: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(10),
+          ),
+          width: ScreenUtil().setWidth(180),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
@@ -648,19 +664,20 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
               Text(
                 '${documento.proTitulo}',
+                maxLines: 2,
                 style: TextStyle(
                   color: colMore,
                   fontWeight: FontWeight.bold,
-                  fontSize: ScreenUtil().setSp(18),
+                  fontSize: ScreenUtil().setSp(15),
                 ),
               )
             ],
           ),
-          documento),
-    );
+        ),
+        documento,provider);
   }
 
-  FocusedMenuHolder focusGeneral(Widget childs, InfoProductoModel document) {
+  FocusedMenuHolder focusGeneral(Widget childs, InfoProductoModel document,DocumentsBloc provider) {
     return FocusedMenuHolder(
         blurBackgroundColor: Colors.black.withOpacity(0.2),
         blurSize: 0,
@@ -700,7 +717,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
               if (!checkResult.isGranted) {
                 options = DownloaderUtils(
                   progressCallback: (current, total) {
-                    //provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
                   },
                   file: File('/storage/emulated/0/RoyalPrestige/${document.proUrl}'),
                   progress: ProgressImplementation(),
@@ -758,13 +775,13 @@ class _DetalleProductoState extends State<DetalleProducto> {
 
                 options = DownloaderUtils(
                   progressCallback: (current, total) {
-                    //provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
                   },
                   file: File('/storage/emulated/0/RoyalPrestige/${document.proUrl}'),
                   progress: ProgressImplementation(),
                   onDone: () {
                     print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.proUrl}');
-                    // provider.changeFinish();
+                    provider.changeFinish();
                   },
                   deleteOnCancel: true,
                 );

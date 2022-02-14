@@ -1,37 +1,98 @@
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/database/cliente_database.dart';
 import 'package:royal_prestige/src/api/alerta_api.dart';
 import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/fecha_alert_model.dart';
+import 'package:royal_prestige/src/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AlertBloc {
   final alertApi = AlertApi();
+  final clienteDatabase = ClienteDatabase();
 
-  final _alertController = BehaviorSubject<List<AlertModel>>();
-  Stream<List<AlertModel>> get alertsStream => _alertController.stream;
+  final _alertController = BehaviorSubject<List<FechaAlertModel>>();
+  Stream<List<FechaAlertModel>> get alertsStream => _alertController.stream;
+
+  final _alertDayController = BehaviorSubject<List<AlertModel>>();
+  Stream<List<AlertModel>> get alertsDayStream => _alertDayController.stream;
 
   dispose() {
     _alertController.close();
+    _alertDayController.close();
   }
 
-  void getAlerts() async {
+  void getAlertsForDay() async {
+    var now = DateTime.now();
+    String fecha = "${now.year.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+
     String? idUsuario = await StorageManager.readData('idUser');
-    _alertController.sink.add(await alertApi.alertDatabase.getAlert(idUsuario!));
+    _alertDayController.sink.add(await alertApi.alertDatabase.getAlertByFecha(fecha, idUsuario!));
     await alertApi.getAlertForUser();
-    _alertController.sink.add(await alertApi.alertDatabase.getAlert(idUsuario));
+    _alertDayController.sink.add(await alertApi.alertDatabase.getAlertByFecha(fecha, idUsuario));
   }
 
-  Future<List<FechaAlertModel>> getAlertsTodayPluss() async {
+  void getAlertsTodayPluss() async {
+    _alertController.sink.add(await getAlertsTodayPluss2());
+    await alertApi.getAlertForUser();
+    _alertController.sink.add(await getAlertsTodayPluss2());
+  }
+
+  Future<List<FechaAlertModel>> getAlertsTodayPluss2() async {
+    final List<String> listDates = [];
+    final List<FechaAlertModel> listaReturn = [];
     String? idUsuario = await StorageManager.readData('idUser');
     var now = DateTime.now();
     String fecha = "${now.year.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
 
-    final fechasAlertas = await alertApi.alertDatabase.getAlertByFecha(fecha, idUsuario.toString());
+    final fechasAlertas = await alertApi.alertDatabase.getAlertByFechaGroupByDate(fecha, idUsuario.toString());
     print('Cantidad de fechas ${fechasAlertas.length}');
-    if (fechasAlertas.length > 0) {}
+    if (fechasAlertas.length > 0) {
+      for (var i = 0; i < fechasAlertas.length; i++) {
+        listDates.add(fechasAlertas[i].alertDate.toString());
+      }
+    }
 
-    final List<FechaAlertModel> listaReturn = [];
+    if (listDates.length > 0) {
+      for (var x = 0; x < listDates.length; x++) {
+        final List<AlertModel> alertSubList = [];
+        //final List<String> horitas = [];
+        FechaAlertModel fechaAlertModel = FechaAlertModel();
+        fechaAlertModel.fecha = obtenerFecha(listDates[x].toString());
+
+        final fechix = await alertApi.alertDatabase.getAlertByFecha(listDates[x].toString(), idUsuario!);
+
+        if (fechix.length > 0) {
+          /*   for (var e = 0; e < fechix.length; e++) {
+            horitas.add(fechix[e].alertHour.toString());
+          }
+          horitas.sort(); */
+          for (var y = 0; y < fechix.length; y++) {
+            final clients = await clienteDatabase.getClientPorIdCliente(fechix[y].idClient.toString());
+            AlertModel alertModel = AlertModel();
+
+            alertModel.nombreCLiente = (clients.length > 0) ? clients[0].nombreCliente : '';
+            alertModel.telefonoCliente = (clients.length > 0) ? clients[0].telefonoCliente : '';
+            alertModel.idAlert = fechix[y].idAlert;
+            alertModel.idUsuario = fechix[y].idUsuario;
+            alertModel.idClient = fechix[y].idClient;
+            alertModel.alertTitle = fechix[y].alertTitle;
+            alertModel.alertDetail = fechix[y].alertDetail;
+            alertModel.alertDate = fechix[y].alertDate;
+            alertModel.alertHour = obtenerHora(fechix[y].alertHour.toString());
+            alertModel.alertStatus = fechix[y].alertStatus;
+            alertSubList.add(alertModel);
+          }
+        }
+
+        fechaAlertModel.alertas = alertSubList;
+
+        listaReturn.add(fechaAlertModel);
+      }
+    }
+
+    print('ctm');
 
     return listaReturn;
+    _alertController.sink.add(listaReturn);
   }
 }

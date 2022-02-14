@@ -32,7 +32,7 @@ class AlertDatabase {
     } catch (e) {
       print(" $e Error en la  tabla Alert");
       return [];
-    }
+    } 
   }
 
   Future<List<AlertModel>> getAlertByFecha(String date, String idUsuario) async {
@@ -40,7 +40,22 @@ class AlertDatabase {
       final Database db = await dbprovider.getDatabase();
       List<AlertModel> list = [];
       List<Map> maps = await db
-          .rawQuery("SELECT * FROM Alert WHERE date(alertDate) >= DATE($date) and idUsuario = '$idUsuario' ORDER BY cast(idAlert as int) DESC");
+          .rawQuery("SELECT * FROM Alert WHERE alertDate='$date' and idUsuario = '$idUsuario' ORDER BY  strftime('%Y-%m-%d %hh:%mm', alertHour) DESC");
+
+      if (maps.length > 0) list = AlertModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      print(" $e Error en la  tabla Alert");
+      return [];
+    }
+  }
+
+  Future<List<AlertModel>> getAlertByFechaGroupByDate(String date, String idUsuario) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<AlertModel> list = [];
+      List<Map> maps = await db
+          .rawQuery("SELECT * FROM Alert WHERE date(alertDate) >= '$date' and idUsuario = '$idUsuario' group by alertDate");
 
       if (maps.length > 0) list = AlertModel.fromJsonList(maps);
       return list;

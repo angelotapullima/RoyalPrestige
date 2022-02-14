@@ -98,7 +98,7 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
         alertModel.alertTitle = decodedData[i]['alerta_titulo'];
         alertModel.alertDetail = decodedData[i]['alerta_detalle'];
         alertModel.alertDate = decodedData[i]['alerta_fecha'];
-        alertModel.alertHour = decodedData[i]['alerta_hora'];
+        alertModel.alertHour = '1900-02-10 ${decodedData[i]['alerta_hora']}';
         alertModel.alertStatus = decodedData[i]['alerta_estado'];
 
         await alertDatabase.insertAlert(alertModel);

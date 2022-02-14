@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/api/alerta_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
-import 'package:royal_prestige/src/model/alert_model.dart';
-import 'package:royal_prestige/src/model/cliente_model.dart';
+import 'package:royal_prestige/src/model/alert_model.dart'; 
 import 'package:royal_prestige/src/pages/Alertas/search_cliente.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
@@ -379,7 +378,7 @@ class _AddAlertasState extends State<AddAlertas> {
                                       if (res) {
                                         _cargando.value = false;
                                         final alertasBloc = ProviderBloc.alert(context);
-                                        alertasBloc.getAlerts();
+                                        alertasBloc.getAlertsTodayPluss();
                                         provider.changeCliente('', '');
                                         Navigator.pop(context);
                                         showToast2('alerta guardada correctamente', Colors.green);

@@ -405,7 +405,7 @@ class ClientesWidget extends StatelessWidget {
                 ),
                 Center(
                   child: Text(
-                    'Producto no encontrado',
+                    'Persona no encontrado',
                     style: TextStyle(
                       fontSize: responsive.ip(2),
                       fontWeight: FontWeight.w700,
@@ -414,7 +414,7 @@ class ClientesWidget extends StatelessWidget {
                 ),
                 Center(
                   child: Text(
-                    'Intente búscar otro producto',
+                    'Intente búscar otro cliente',
                     style: TextStyle(
                       fontSize: responsive.ip(1.8),
                       fontWeight: FontWeight.w400,
@@ -519,7 +519,7 @@ class ProspectosCliente extends StatelessWidget {
                 ),
                 Center(
                   child: Text(
-                    'Producto no encontrado',
+                    'Persona no encontrado',
                     style: TextStyle(
                       fontSize: responsive.ip(2),
                       fontWeight: FontWeight.w700,
@@ -528,7 +528,7 @@ class ProspectosCliente extends StatelessWidget {
                 ),
                 Center(
                   child: Text(
-                    'Intente búscar otro producto',
+                    'Intente búscar otro cliente',
                     style: TextStyle(
                       fontSize: responsive.ip(1.8),
                       fontWeight: FontWeight.w400,

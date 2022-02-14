@@ -6,12 +6,24 @@ void showToast2(String texto, Color color) {
   Fluttertoast.showToast(msg: texto, toastLength: Toast.LENGTH_SHORT, timeInSecForIosWeb: 3, backgroundColor: color, textColor: Colors.white);
 }
 
-obtenerFecha() {
-  var fecha = DateTime.now();
-  final DateFormat fech = DateFormat('yyyy-MM-dd');
+obtenerFecha(String date) {
+   if (date == 'null' || date == '') {
+    return '';
+  }
+
+  var fecha = DateTime.parse(date);
+
+  final DateFormat fech = new DateFormat('dd MMM yyyy', 'es');
+
   return fech.format(fecha);
 }
 
+obtenerHora(String date) {
+  var fecha = DateTime.parse('$date');
+  final DateFormat fech = DateFormat('hh:mm a');
+  return fech.format(fecha);
+}
+/* 
 obtenerFechaMostrar(String date) {
   var fecha = DateTime.parse(date);
 
@@ -38,7 +50,7 @@ obtenerFechaString(String date) {
   return fech.format(fecha);
 }
 
-
+ */
 
 class NewColors {
   static final Color black = Color(0xFF5A5A5A);

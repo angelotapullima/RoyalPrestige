@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flowder/flowder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,14 +12,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
-import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/document_model.dart';
-import 'package:royal_prestige/src/pages/Alertas/add_alertas.dart';
-import 'package:royal_prestige/src/pages/documento/nuevo_documento.dart';
-import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
-import 'package:royal_prestige/src/utils/utils.dart';
 
 class DocumentosPage extends StatefulWidget {
   const DocumentosPage({Key? key}) : super(key: key);
@@ -38,9 +32,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
   Widget build(BuildContext context) {
     final documentBloc = ProviderBloc.document(context);
     documentBloc.getDocument();
-
-    final alertBloc = ProviderBloc.alert(context);
-    alertBloc.getAlerts();
+ 
 
     final responsive = Responsive.of(context);
     final provider = Provider.of<DocumentsBloc>(context, listen: false);
@@ -358,56 +350,57 @@ class _DocumentosPageState extends State<DocumentosPage> {
       col = Color(0xfff0ffff);
       colMore = Color(0xff23b0b0);
     }
-    return Container(
-      decoration: BoxDecoration(
-        color: col,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(10),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(10),
-      ),
-      width: ScreenUtil().setWidth(140),
-      child: focusGeneral(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: [
-                  Container(
-                    height: ScreenUtil().setSp(45),
-                    width: ScreenUtil().setSp(45),
-                    child: SvgPicture.asset(
-                      '$svg',
+    return focusGeneral(
+      Container(
+        decoration: BoxDecoration(
+          color: col,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenUtil().setWidth(10),
+        ),
+        margin: EdgeInsets.symmetric(
+          horizontal: ScreenUtil().setWidth(10),
+        ),
+        width: ScreenUtil().setWidth(140),
+        child:  Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Container(
+                      height: ScreenUtil().setSp(45),
+                      width: ScreenUtil().setSp(45),
+                      child: SvgPicture.asset(
+                        '$svg',
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: colMore,
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: ScreenUtil().setHeight(10),
-              ),
-              Text(
-                '${documento.documentTitulo}',
-                style: TextStyle(
-                  color: colMore,
-                  fontWeight: FontWeight.bold,
-                  fontSize: ScreenUtil().setSp(19),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: colMore,
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-          documento,
-          provider),
+                SizedBox(
+                  height: ScreenUtil().setHeight(10),
+                ),
+                Text(
+                  '${documento.documentTitulo}',
+                  style: TextStyle(
+                    color: colMore,
+                    fontWeight: FontWeight.bold,
+                    fontSize: ScreenUtil().setSp(19),
+                  ),
+                )
+              ],
+            ),
+           
+      ),documento,
+            provider
     );
   }
 

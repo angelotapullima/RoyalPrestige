@@ -13,6 +13,7 @@ import 'package:royal_prestige/src/pages/home.dart';
 import 'package:royal_prestige/src/pages/login.dart';
 import 'package:royal_prestige/src/pages/splash.dart';
 import 'package:royal_prestige/src/pages/tabs/documentosPage.dart';
+import 'package:royal_prestige/src/pages/tabs/prueba_inicio.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<ControllerCalculo>(
           create: (_) => ControllerCalculo(),
+        ),
+        ChangeNotifierProvider<PrincipalChangeBloc>(
+          create: (_) => PrincipalChangeBloc(),
         ),
       ],
       child: ProviderBloc(

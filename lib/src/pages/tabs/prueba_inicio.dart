@@ -3,8 +3,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/productos_bloc.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/categoria_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/model/promocion_model.dart';
@@ -15,10 +18,9 @@ import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/sliver_header_delegate.dart';
+import 'package:royal_prestige/src/widget/carrito.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
 import 'dart:math' as math;
-
-import '../carrito_tab.dart';
 
 class PruebaInicio extends StatelessWidget {
   const PruebaInicio({Key? key}) : super(key: key);
@@ -31,190 +33,258 @@ class PruebaInicio extends StatelessWidget {
     final promoBloc = ProviderBloc.promocion(context);
     promoBloc.obtenerPromos();
 
+    final dataBloc = ProviderBloc.data(context);
+    dataBloc.obtenerUser();
+    final alertasBloc = ProviderBloc.alert(context);
+    alertasBloc.getAlertsForDay();
     final responsive = Responsive.of(context);
+
+    final provider = Provider.of<PrincipalChangeBloc>(context, listen: false);
+
     return Scaffold(
       body: StreamBuilder(
-        stream: categoriasBloc.categoriaStream,
-        builder: (context, AsyncSnapshot<List<CategoriaModel>> cats) {
-          if (cats.hasData) {
-            if (cats.data!.length > 0) {
-              categoriasBloc.obtenerProductosByIdCategoria(cats.data![0].idCategoria.toString());
-              return CustomScrollView(
-                slivers: [
-                  CustomHeaderPrincipal(),
+          stream: alertasBloc.alertsDayStream,
+          builder: (context, AsyncSnapshot<List<AlertModel>> snapshot) {
+            if (snapshot.hasData) {
+              provider.setIndex(true);
+              return Stack(
+                children: [
                   StreamBuilder(
-                      stream: promoBloc.promocionStream,
-                      builder: (context, AsyncSnapshot<List<PromocionModel>> promo) {
-                        if (promo.hasData) {
-                          if (promo.data!.length > 0) {
-                            var promos = promo.data!;
-                            return SliverToBoxAdapter(
-                              child: Container(
-                                  height: ScreenUtil().setHeight(150),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: ScreenUtil().setHeight(10),
-                                    ),
-                                    height: ScreenUtil().setHeight(150),
-                                    child: CarouselSlider.builder(
-                                      itemCount: promos.length,
-                                      itemBuilder: (context, x, y) {
-                                        return InkWell(
-                                          onTap: () {
-                                            _onTapPromo(context, promos[x]);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(10.0),
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10.0),
-                                              child: Stack(
-                                                children: [
-                                                  CachedNetworkImage(
-                                                    placeholder: (context, url) => Container(
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      child: CupertinoActivityIndicator(),
-                                                    ),
-                                                    errorWidget: (context, url, error) => Container(
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      child: Center(
-                                                        child: Icon(Icons.error),
+                    stream: dataBloc.userStream,
+                    builder: (context, AsyncSnapshot<UserModel> user) {
+                      if (user.hasData) {
+                        return StreamBuilder(
+                          stream: categoriasBloc.categoriaStream,
+                          builder: (context, AsyncSnapshot<List<CategoriaModel>> cats) {
+                            if (cats.hasData) {
+                              if (cats.data!.length > 0) {
+                                categoriasBloc.obtenerProductosByIdCategoria(cats.data![0].idCategoria.toString());
+                                return CustomScrollView(
+                                  slivers: [
+                                    CustomHeaderPrincipal(user: user.data!),
+                                    StreamBuilder(
+                                        stream: promoBloc.promocionStream,
+                                        builder: (context, AsyncSnapshot<List<PromocionModel>> promo) {
+                                          if (promo.hasData) {
+                                            if (promo.data!.length > 0) {
+                                              var promos = promo.data!;
+                                              return SliverToBoxAdapter(
+                                                child: Container(
+                                                    height: ScreenUtil().setHeight(150),
+                                                    child: Container(
+                                                      padding: EdgeInsets.symmetric(
+                                                        vertical: ScreenUtil().setHeight(10),
                                                       ),
-                                                    ),
-                                                    imageUrl: '${promos[x].imagenPromo}',
-                                                    imageBuilder: (context, imageProvider) => Container(
-                                                      decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.cover,
-                                                        ),
+                                                      height: ScreenUtil().setHeight(150),
+                                                      child: CarouselSlider.builder(
+                                                        itemCount: promos.length,
+                                                        itemBuilder: (context, x, y) {
+                                                          return InkWell(
+                                                            onTap: () {
+                                                              _onTapPromo(context, promos[x]);
+                                                            },
+                                                            child: ClipRRect(
+                                                              borderRadius: BorderRadius.circular(10.0),
+                                                              child: Stack(
+                                                                children: [
+                                                                  CachedNetworkImage(
+                                                                    placeholder: (context, url) => Container(
+                                                                      width: double.infinity,
+                                                                      height: double.infinity,
+                                                                      child: CupertinoActivityIndicator(),
+                                                                    ),
+                                                                    errorWidget: (context, url, error) => Container(
+                                                                      width: double.infinity,
+                                                                      height: double.infinity,
+                                                                      child: Center(
+                                                                        child: Icon(Icons.error),
+                                                                      ),
+                                                                    ),
+                                                                    imageUrl: '$apiBaseURL/${promos[x].imagenPromo}',
+                                                                    imageBuilder: (context, imageProvider) => Container(
+                                                                      decoration: BoxDecoration(
+                                                                        image: DecorationImage(
+                                                                          image: imageProvider,
+                                                                          fit: BoxFit.cover,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        options: CarouselOptions(
+                                                            height: ScreenUtil().setHeight(552),
+                                                            onPageChanged: (index, page) {},
+                                                            enlargeCenterPage: true,
+                                                            autoPlay: true,
+                                                            autoPlayCurve: Curves.fastOutSlowIn,
+                                                            autoPlayInterval: Duration(seconds: 6),
+                                                            autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                                            viewportFraction: .8),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                    )),
+                                              );
+                                            } else {
+                                              return SliverToBoxAdapter(
+                                                child: Container(
+                                                  height: ScreenUtil().setHeight(60),
+                                                  child: Center(child: Text('No existen promociones')),
+                                                ),
+                                              );
+                                            }
+                                          } else {
+                                            return SliverToBoxAdapter(
+                                              child: Container(
+                                                height: ScreenUtil().setHeight(60),
+                                                child: CupertinoActivityIndicator(),
                                               ),
+                                            );
+                                          }
+                                        }),
+                                    SliverToBoxAdapter(
+                                      child: Container(
+                                        height: ScreenUtil().setHeight(60),
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: cats.data!.length,
+                                          itemBuilder: (_, index) {
+                                            return itemChoice(cats.data![index], index, categoriasBloc, _controller);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    StreamBuilder(
+                                      stream: categoriasBloc.productosStream,
+                                      builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+                                        if (snapshot.hasData) {
+                                          if (snapshot.data!.length > 0) {
+                                            return SliverPadding(
+                                              padding: EdgeInsets.only(
+                                                left: 0,
+                                                right: 0,
+                                              ),
+                                              sliver: SliverList(
+                                                delegate: SliverChildBuilderDelegate(
+                                                  (BuildContext context, int index) {
+                                                    return GridView.builder(
+                                                      physics: NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      padding: EdgeInsets.symmetric(
+                                                        horizontal: ScreenUtil().setWidth(5),
+                                                      ),
+                                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                        childAspectRatio: .7,
+                                                        crossAxisCount: 2,
+                                                        mainAxisSpacing: responsive.hp(2),
+                                                        crossAxisSpacing: responsive.wp(3),
+                                                      ),
+                                                      itemCount: snapshot.data!.length,
+                                                      itemBuilder: (context, i) {
+                                                        var valorHero = math.Random().nextDouble() * i;
+                                                        return LayoutBuilder(builder: (context, constrain) {
+                                                          return itemProduct(context, snapshot.data![i], valorHero, constrain.maxHeight);
+                                                        });
+                                                      },
+                                                    );
+                                                  },
+                                                  childCount: 1,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return SliverToBoxAdapter(
+                                              child: Container(
+                                                height: ScreenUtil().setHeight(60),
+                                                child: Text('No existen productos'),
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          return SliverToBoxAdapter(
+                                            child: Container(
+                                              height: ScreenUtil().setHeight(60),
+                                              child: CupertinoActivityIndicator(),
                                             ),
-                                          ),
-                                        );
+                                          );
+                                        }
                                       },
-                                      options: CarouselOptions(
-                                          height: ScreenUtil().setHeight(552),
-                                          onPageChanged: (index, page) {},
-                                          enlargeCenterPage: true,
-                                          autoPlay: true,
-                                          autoPlayCurve: Curves.fastOutSlowIn,
-                                          autoPlayInterval: Duration(seconds: 6),
-                                          autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                                          viewportFraction: .8),
-                                    ),
-                                  )),
-                            );
-                          } else {
-                            return SliverToBoxAdapter(
-                              child: Container(
-                                height: ScreenUtil().setHeight(60),
-                                child: Center(child: Text('No existen promociones')),
-                              ),
-                            );
-                          }
-                        } else {
-                          return SliverToBoxAdapter(
-                            child: Container(
-                              height: ScreenUtil().setHeight(60),
-                              child: CupertinoActivityIndicator(),
-                            ),
-                          );
-                        }
-                      }),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      height: ScreenUtil().setHeight(60),
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: cats.data!.length,
-                        itemBuilder: (_, index) {
-                          return itemChoice(cats.data![index], index, categoriasBloc, _controller);
-                        },
-                      ),
-                    ),
-                  ),
-                  StreamBuilder(
-                    stream: categoriasBloc.productosStream,
-                    builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data!.length > 0) {
-                          return SliverPadding(
-                            padding: EdgeInsets.only(
-                              left: 0,
-                              right: 0,
-                            ),
-                            sliver: SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                                  return GridView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: ScreenUtil().setWidth(5),
-                                    ),
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: .7,
-                                      crossAxisCount: 2,
-                                      mainAxisSpacing: responsive.hp(2),
-                                      crossAxisSpacing: responsive.wp(3),
-                                    ),
-                                    itemCount: snapshot.data!.length,
-                                    itemBuilder: (context, i) {
-                                      var valorHero = math.Random().nextDouble() * i;
-                                      return LayoutBuilder(builder: (context, constrain) {
-                                        return itemProduct(context, snapshot.data![i], valorHero, constrain.maxHeight);
-                                      });
-                                    },
-                                  );
-                                },
-                                childCount: 1,
-                              ),
-                            ),
-                          );
-                        } else {
-                          return SliverToBoxAdapter(
-                            child: Container(
-                              height: ScreenUtil().setHeight(60),
-                              child: Text('No existen productos'),
-                            ),
-                          );
-                        }
-                      } else {
-                        return SliverToBoxAdapter(
-                          child: Container(
-                            height: ScreenUtil().setHeight(60),
-                            child: CupertinoActivityIndicator(),
-                          ),
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return Center(
+                                  child: Text('Sin productos para esta categoría'),
+                                );
+                              }
+                            } else {
+                              return ShowLoadding(
+                                active: true,
+                                h: double.infinity,
+                                w: double.infinity,
+                                fondo: Colors.transparent,
+                                colorText: Colors.black,
+                              );
+                            }
+                          },
                         );
+                      } else {
+                        return Container();
                       }
                     },
-                  )
+                  ),
+                  ValueListenableBuilder(
+                      valueListenable: provider.cargando,
+                      builder: (BuildContext context, bool data, Widget? child) {
+                        return (data)
+                            ? Container(
+                                color: Colors.black.withOpacity(.4),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: responsive.wp(5),
+                                  vertical: responsive.hp(7),
+                                ),
+                                height: double.infinity,
+                                width: double.infinity,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      color: Colors.black.withOpacity(.4),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: responsive.wp(5),
+                                        vertical: responsive.hp(7),
+                                      ),
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          provider.setIndex(false);
+                                        },
+                                        child: Container(
+                                          transform: Matrix4.translationValues(responsive.ip(1), -responsive.ip(1.3), 0),
+                                          child: CircleAvatar(
+                                            radius: responsive.ip(2),
+                                            child: Icon(Icons.close),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container();
+                      })
                 ],
               );
             } else {
-              return Center(
-                child: Text('Sin productos para esta categoría'),
-              );
+              return Container();
             }
-          } else {
-            return ShowLoadding(
-              active: true,
-              h: double.infinity,
-              w: double.infinity,
-              fondo: Colors.transparent,
-              colorText: Colors.black,
-            );
-          }
-        },
-      ),
+          }),
     );
   }
 
@@ -363,83 +433,119 @@ class PruebaInicio extends StatelessWidget {
                 SizedBox(
                   height: height * .55,
                   child: (producto.galery!.length > 0)
-                      ? CarouselSlider.builder(
-                          itemCount: producto.galery!.length,
-                          itemBuilder: (context, x, y) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) {
-                                      return DetalleProducto(
-                                        idProducto: producto.idProducto.toString(),
-                                      );
-                                    },
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                      var begin = Offset(0.0, 1.0);
-                                      var end = Offset.zero;
-                                      var curve = Curves.ease;
+                      ? (producto.galery!.length != 1)
+                          ? CarouselSlider.builder(
+                              itemCount: producto.galery!.length,
+                              itemBuilder: (context, x, y) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) {
+                                          return DetalleProducto(
+                                            idProducto: producto.idProducto.toString(),
+                                          );
+                                        },
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          var begin = Offset(0.0, 1.0);
+                                          var end = Offset.zero;
+                                          var curve = Curves.ease;
 
-                                      var tween = Tween(begin: begin, end: end).chain(
-                                        CurveTween(curve: curve),
-                                      );
+                                          var tween = Tween(begin: begin, end: end).chain(
+                                            CurveTween(curve: curve),
+                                          );
 
-                                      return SlideTransition(
-                                        position: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
+                                          return SlideTransition(
+                                            position: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: Stack(
+                                        children: [
+                                          CachedNetworkImage(
+                                            placeholder: (context, url) => Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              child: CupertinoActivityIndicator(),
+                                            ),
+                                            errorWidget: (context, url, error) => Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              child: Center(
+                                                child: Icon(Icons.error),
+                                              ),
+                                            ),
+                                            imageUrl: '$apiBaseURL/${producto.galery![x].file}',
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 );
                               },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Stack(
-                                    children: [
-                                      CachedNetworkImage(
-                                        placeholder: (context, url) => Container(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          child: CupertinoActivityIndicator(),
+                              options: CarouselOptions(
+                                  height: ScreenUtil().setHeight(552),
+                                  onPageChanged: (index, page) {},
+                                  enlargeCenterPage: true,
+                                  autoPlay: true,
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  autoPlayInterval: Duration(seconds: 6),
+                                  autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                  viewportFraction: 1),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: CupertinoActivityIndicator(),
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: Center(
+                                          child: Icon(Icons.error),
                                         ),
-                                        errorWidget: (context, url, error) => Container(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          child: Center(
-                                            child: Icon(Icons.error),
-                                          ),
-                                        ),
-                                        imageUrl: '$apiBaseURL/${producto.galery![x].file}',
-                                        imageBuilder: (context, imageProvider) => Container(
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover,
-                                            ),
+                                      ),
+                                      imageUrl: '$apiBaseURL/${producto.galery![0].file}',
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            );
-                          },
-                          options: CarouselOptions(
-                              height: ScreenUtil().setHeight(552),
-                              onPageChanged: (index, page) {},
-                              enlargeCenterPage: true,
-                              autoPlay: true,
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              autoPlayInterval: Duration(seconds: 6),
-                              autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                              viewportFraction: 1),
-                        )
+                            )
                       : Container(
                           width: double.infinity,
                           height: double.infinity,
@@ -514,8 +620,10 @@ class Controller extends ChangeNotifier {
 }
 
 class CustomHeaderPrincipal extends StatefulWidget {
+  final UserModel user;
   const CustomHeaderPrincipal({
     Key? key,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -601,7 +709,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                           radius: responsive.ip(2),
                           child: ClipOval(
                             child: Image.network(
-                              'prefs.foto',
+                              '${widget.user.userImage}',
                               width: responsive.ip(4),
                               height: responsive.ip(4),
                               fit: BoxFit.contain,
@@ -613,7 +721,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                         width: responsive.wp(2),
                       ),
                       Text(
-                        'alias',
+                        '${widget.user.personName}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: responsive.ip(2.4),
@@ -621,105 +729,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                         ),
                       ),
                       Spacer(),
-                      StreamBuilder(
-                        stream: carritoBloc.cartStream,
-                        builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot) {
-                          int cantidad = 0;
-
-                          if (snapshot.hasData) {
-                            if (snapshot.data!.length > 0) {
-                              for (int i = 0; i < snapshot.data!.length; i++) {
-                                cantidad++;
-                              }
-                            } else {
-                              cantidad = 0;
-                            }
-                          } else {
-                            cantidad = 0;
-                          }
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) {
-                                    return CarritoTab();
-                                  },
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    var begin = Offset(0.0, 1.0);
-                                    var end = Offset.zero;
-                                    var curve = Curves.ease;
-
-                                    var tween = Tween(begin: begin, end: end).chain(
-                                      CurveTween(curve: curve),
-                                    );
-
-                                    return SlideTransition(
-                                      position: animation.drive(tween),
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                            child: Stack(
-                              children: [
-                                (cantidad != 0)
-                                    ? Stack(
-                                        children: <Widget>[
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: Color(0x30F3EFE8),
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: responsive.wp(2),
-                                              vertical: responsive.hp(.5),
-                                            ),
-                                            child: Icon(
-                                              Icons.shopping_bag_sharp,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 0,
-                                            right: 0,
-                                            child: Container(
-                                              child: Text(
-                                                cantidad.toString(),
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: responsive.ip(1),
-                                                ),
-                                              ),
-                                              alignment: Alignment.center,
-                                              width: responsive.ip(1.6),
-                                              height: responsive.ip(1.6),
-                                              decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle),
-                                            ),
-                                            //child: Icon(Icons.brightness_1, size: 8,color: Colors.redAccent,  )
-                                          )
-                                        ],
-                                      )
-                                    : Container(
-                                        decoration: BoxDecoration(
-                                          color: Color(0x30F3EFE8),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: responsive.wp(2),
-                                          vertical: responsive.hp(.5),
-                                        ),
-                                        child: Icon(
-                                          Icons.shopping_bag_sharp,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                      CarritoWidget(color: Colors.white),
                     ],
                   ),
                 ),
@@ -805,4 +815,11 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
       ),
     );
   }
+}
+
+class PrincipalChangeBloc extends ChangeNotifier {
+  ValueNotifier<bool> _cargando = ValueNotifier(false);
+  ValueNotifier<bool> get cargando => this._cargando;
+
+  void setIndex(bool value) => this._cargando.value = value;
 }

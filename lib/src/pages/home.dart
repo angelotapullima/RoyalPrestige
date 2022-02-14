@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     final carritoBloc = ProviderBloc.cart(context);
     carritoBloc.getCart();
 
-    bottomBloc.changePage(1);
+    bottomBloc.changePage(0);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     return Scaffold(
