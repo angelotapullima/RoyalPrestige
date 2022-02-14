@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
+import 'package:royal_prestige/src/api/local_notification_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/Alertas/search_cliente.dart';
 import 'package:royal_prestige/src/pages/Compras/search_product.dart';
@@ -19,8 +20,26 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    LocalNotificationApi.init();
+    listenNotification();
+  }
+
+  void listenNotification() {
+    LocalNotificationApi.onNotifications.stream.listen(onClickNotifications);
+  }
+
+  void onClickNotifications(String? playLoad) {}
 
   // This widget is the root of your application.
   @override

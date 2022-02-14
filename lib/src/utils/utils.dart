@@ -7,7 +7,7 @@ void showToast2(String texto, Color color) {
 }
 
 obtenerFecha(String date) {
-   if (date == 'null' || date == '') {
+  if (date == 'null' || date == '') {
     return '';
   }
 
