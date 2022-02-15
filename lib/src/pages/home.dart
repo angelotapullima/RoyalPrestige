@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:royal_prestige/src/api/local_notification_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
 import 'package:royal_prestige/src/pages/tabs/agenda_page.dart';
 import 'package:royal_prestige/src/pages/tabs/calcular_page.dart';
 import 'package:royal_prestige/src/pages/tabs/cliente_y_prospectos_page.dart';
@@ -26,7 +28,21 @@ class _HomePageState extends State<HomePage> {
     pageList.add(const CalcularPage());
 
     super.initState();
+    LocalNotificationApi.init(initScheluded: true);
+    listenNotification();
   }
+
+  void listenNotification() {
+    LocalNotificationApi.onNotifications.stream.listen(onClickNotifications);
+  }
+
+  void onClickNotifications(String? playLoad) => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DetalleAlerta(
+            idAlert: playLoad,
+          ),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {

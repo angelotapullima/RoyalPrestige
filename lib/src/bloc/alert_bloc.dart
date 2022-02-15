@@ -17,9 +17,13 @@ class AlertBloc {
   final _alertDayController = BehaviorSubject<List<AlertModel>>();
   Stream<List<AlertModel>> get alertsDayStream => _alertDayController.stream;
 
+  final _alertIdController = BehaviorSubject<List<AlertModel>>();
+  Stream<List<AlertModel>> get alertsIdStream => _alertIdController.stream;
+
   dispose() {
     _alertController.close();
     _alertDayController.close();
+    _alertIdController.close();
   }
 
   void getAlertsForDay() async {
@@ -38,6 +42,36 @@ class AlertBloc {
     _alertController.sink.add(await getAlertsTodayPluss2());
   }
 
+  void getAlertById(String idAlert) async {
+    _alertIdController.sink.add(await getAlertId(idAlert));
+  }
+
+  Future<List<AlertModel>> getAlertId(String idAlert) async {
+    final List<AlertModel> listReturn = [];
+    final alertDB = await alertApi.alertDatabase.getAlertByIdAlert(idAlert);
+
+    if (alertDB.length > 0) {
+      final client = await clienteDatabase.getClientPorIdCliente(alertDB[0].idClient.toString());
+
+      if (client.length > 0) {
+        AlertModel alertModel = AlertModel();
+
+        alertModel.nombreCLiente = client[0].nombreCliente;
+        alertModel.telefonoCliente = client[0].telefonoCliente;
+        alertModel.idAlert = alertDB[0].idAlert;
+        alertModel.idUsuario = alertDB[0].idUsuario;
+        alertModel.idClient = alertDB[0].idClient;
+        alertModel.alertTitle = alertDB[0].alertTitle;
+        alertModel.alertDetail = alertDB[0].alertDetail;
+        alertModel.alertDate = alertDB[0].alertDate;
+        alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
+        alertModel.alertStatus = alertDB[0].alertStatus;
+        listReturn.add(alertModel);
+      }
+    }
+    return listReturn;
+  }
+
   Future<List<FechaAlertModel>> getAlertsTodayPluss2() async {
     final List<String> listDates = [];
     final List<FechaAlertModel> listaReturn = [];
@@ -46,7 +80,7 @@ class AlertBloc {
     String fecha = "${now.year.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
 
     final fechasAlertas = await alertApi.alertDatabase.getAlertByFechaGroupByDate(fecha, idUsuario.toString());
-    print('Cantidad de fechas ${fechasAlertas.length}');
+
     if (fechasAlertas.length > 0) {
       for (var i = 0; i < fechasAlertas.length; i++) {
         listDates.add(fechasAlertas[i].alertDate.toString());
@@ -76,7 +110,7 @@ class AlertBloc {
                   id: y,
                   title: '${fechix[y].alertTitle}',
                   body: "${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas" + "\t" + "Cliente: ${clients[0].nombreCliente}",
-                  playLoad: '-',
+                  playLoad: '${fechix[y].idAlert}',
                   time: DateTime.now().add(Duration(seconds: 2)),
                 );
               } else if (_horas.inHours == 1) {
@@ -84,7 +118,7 @@ class AlertBloc {
                   id: y,
                   title: '${fechix[y].alertTitle}',
                   body: '${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas',
-                  playLoad: '-',
+                  playLoad: '${fechix[y].idAlert}',
                   time: DateTime.now().add(Duration(hours: 1)),
                 );
               }

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
-import 'package:royal_prestige/src/api/local_notification_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/Alertas/search_cliente.dart';
 import 'package:royal_prestige/src/pages/Compras/search_product.dart';
@@ -28,18 +27,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    LocalNotificationApi.init(initScheluded: true);
-    listenNotification();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   LocalNotificationApi.init(initScheluded: true);
+  //   listenNotification();
+  // }
 
-  void listenNotification() {
-    LocalNotificationApi.onNotifications.stream.listen(onClickNotifications);
-  }
+  // void listenNotification() {
+  //   LocalNotificationApi.onNotifications.stream.listen(onClickNotifications);
+  // }
 
-  void onClickNotifications(String? playLoad) {}
+  // void onClickNotifications(String? playLoad) async => await Navigator.of(context).push(
+  //       MaterialPageRoute<void>(
+  //         builder: (context) => DetalleAlerta(
+  //           idAlert: playLoad,
+  //         ),
+  //       ),
+  //     );
 
   // This widget is the root of your application.
   @override

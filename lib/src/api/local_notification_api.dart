@@ -11,7 +11,7 @@ class LocalNotificationApi {
   static _alertDetails() async {
     return NotificationDetails(
       android: AndroidNotificationDetails(
-        'chanel id',
+        'chanel id 2',
         'chanel name',
         importance: Importance.max,
       ),
@@ -23,6 +23,13 @@ class LocalNotificationApi {
     final android = AndroidInitializationSettings('@mipmap/launcher_icon');
     final ios = IOSInitializationSettings();
     final settings = InitializationSettings(android: android, iOS: ios);
+    final details = await _alert.getNotificationAppLaunchDetails();
+
+    //Cuando el app está cerrado
+    if (details != null && details.didNotificationLaunchApp) {
+      onNotifications.add(details.payload);
+    }
+
     await _alert.initialize(settings, onSelectNotification: (playload) async {
       onNotifications.add(playload);
     });
@@ -34,13 +41,13 @@ class LocalNotificationApi {
     }
   }
 
-  static Future showAlert({
-    required int id,
-    String? title,
-    String? body,
-    String? playLoad,
-  }) async =>
-      _alert.show(id, title, body, await _alertDetails(), payload: playLoad);
+  // static Future showAlert({
+  //   required int id,
+  //   String? title,
+  //   String? body,
+  //   String? playLoad,
+  // }) async =>
+  //     _alert.show(id, title, body, await _alertDetails(), payload: playLoad);
 
   static Future showAlertProgramado({
     int id = 0,

@@ -6,6 +6,7 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/fecha_alert_model.dart';
 import 'package:royal_prestige/src/pages/Alertas/add_alertas.dart';
+import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 
 class AgendaPage extends StatelessWidget {
@@ -206,56 +207,84 @@ class AgendaPage extends StatelessWidget {
   }
 
   Widget _itemAlerta(BuildContext context, AlertModel alerta, Responsive responsive) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: responsive.wp(2),
-      ),
-      margin: EdgeInsets.only(
-        right: responsive.wp(2),
-        bottom: responsive.hp(.5),
-        top: responsive.hp(.5),
-      ),
-      decoration: BoxDecoration(
-        color: Colors.blueGrey.shade100.withOpacity(.2),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${alerta.nombreCLiente}  ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return DetalleAlerta(
+                idAlert: alerta.idAlert,
+              );
+            },
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              var begin = Offset(0.0, 1.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween = Tween(begin: begin, end: end).chain(
+                CurveTween(curve: curve),
+              );
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
           ),
-          Row(
-            children: [
-              Text(
-                'Telefono: ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: responsive.wp(2),
+        ),
+        margin: EdgeInsets.only(
+          right: responsive.wp(2),
+          bottom: responsive.hp(.5),
+          top: responsive.hp(.5),
+        ),
+        decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100.withOpacity(.2),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${alerta.nombreCLiente}  ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-              Text('${alerta.telefonoCliente}'),
-              Spacer(),
-              Text(
-                'Hora: ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text('${alerta.alertHour}'),
-            ],
-          ),
-          Text(
-            '${alerta.alertTitle}',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
             ),
-          ),
-          Text('${alerta.alertDetail}'),
-          Text(''),
-        ],
+            Row(
+              children: [
+                Text(
+                  'Telefono: ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text('${alerta.telefonoCliente}'),
+                Spacer(),
+                Text(
+                  'Hora: ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text('${alerta.alertHour}'),
+              ],
+            ),
+            Text(
+              '${alerta.alertTitle}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text('${alerta.alertDetail}'),
+            Text(''),
+          ],
+        ),
       ),
     );
   }
