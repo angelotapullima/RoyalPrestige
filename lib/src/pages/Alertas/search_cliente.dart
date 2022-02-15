@@ -37,8 +37,8 @@ class _SearchCliente2PageState extends State<SearchCliente2Page> with TickerProv
       });
       final productosBloc = ProviderBloc.busCliente(context);
 
-      productosBloc.queryClientes('prueba', true);
-      productosBloc.queryProspectos('prueba', true);
+      productosBloc.queryClientes('', true);
+      productosBloc.queryProspectos('', true);
     });
     super.initState();
   }
