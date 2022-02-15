@@ -24,6 +24,22 @@ obtenerHora(String date) {
   final DateFormat fech = DateFormat('hh:mm a');
   return fech.format(fecha);
 }
+
+obtenerPrimerNombre(String nombre) {
+  if (nombre != '') {
+    var separarNombre = nombre.split(' ');
+    return '${separarNombre[0]}';
+  } else {
+    return '';
+  }
+}
+
+obtenerEdad(String date) {
+  DateTime dob = DateTime.parse(date);
+  Duration dur = DateTime.now().difference(dob);
+  String differenceInYears = (dur.inDays / 365).floor().toString();
+  return differenceInYears;
+}
 /* 
 obtenerFechaMostrar(String date) {
   var fecha = DateTime.parse(date);

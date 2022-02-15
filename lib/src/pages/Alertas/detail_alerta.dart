@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/alert_model.dart';
-import 'package:royal_prestige/src/utils/utils.dart';
 
 class DetalleAlerta extends StatelessWidget {
   const DetalleAlerta({Key? key, required this.idAlert}) : super(key: key);
@@ -106,7 +105,7 @@ class DetalleAlerta extends StatelessWidget {
                         width: ScreenUtil().setWidth(8),
                       ),
                       Text(
-                        '${obtenerFecha(alert.alertDate.toString())}',
+                        '${alert.alertDate}',
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(18),
                           fontWeight: FontWeight.w700,

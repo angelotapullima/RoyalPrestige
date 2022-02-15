@@ -16,6 +16,7 @@ import 'package:royal_prestige/src/model/promocion_model.dart';
 import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
+import 'package:royal_prestige/src/pages/info_user.dart';
 import 'package:royal_prestige/src/pages/promo_categoria_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
@@ -873,9 +874,28 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                     children: [
                       InkWell(
                         onTap: () {
-                          /*  final bottomBloc = ProviderBloc.bottom(context);
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) {
+                                return InfoUser();
+                              },
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                var begin = Offset(0.0, 1.0);
+                                var end = Offset.zero;
+                                var curve = Curves.ease;
 
-                                    bottomBloc.changePage(4); */
+                                var tween = Tween(begin: begin, end: end).chain(
+                                  CurveTween(curve: curve),
+                                );
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
                         },
                         child: CircleAvatar(
                           radius: responsive.ip(2),
