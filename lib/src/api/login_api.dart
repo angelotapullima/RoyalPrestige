@@ -47,4 +47,32 @@ class LoginApi {
       return api;
     }
   }
+
+  Future<ApiModel> consultarUsuario() async {
+    try {
+      final url = Uri.parse('$apiBaseURL/api/Admin/consultar_estado_usuario');
+      String? token = await StorageManager.readData('token');
+
+      final resp = await http.post(url, body: {
+        'tn': token,
+        'app': 'true',
+      });
+
+      final decodedData = json.decode(resp.body);
+      print(decodedData);
+
+      final int code = decodedData['result']['code'];
+      ApiModel loginModel = ApiModel();
+      loginModel.code = code.toString();
+      loginModel.message = decodedData['result']['message'];
+      return loginModel;
+    } catch (e) {
+      ApiModel api = ApiModel();
+      api.code = '2';
+      api.message = 'Ocurrió un error';
+      print('Erro Api Login: $e');
+      print(e);
+      return api;
+    }
+  }
 }

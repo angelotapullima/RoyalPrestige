@@ -29,11 +29,39 @@ class AlertBloc {
   void getAlertsForDay() async {
     var now = DateTime.now();
     String fecha = "${now.year.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    //String fecha = "2022-02-18";
 
     String? idUsuario = await StorageManager.readData('idUser');
-    _alertDayController.sink.add(await alertApi.alertDatabase.getAlertByFecha(fecha, idUsuario!));
+    _alertDayController.sink.add(await alertesByFecha(fecha, idUsuario!));
     await alertApi.getAlertForUser();
-    _alertDayController.sink.add(await alertApi.alertDatabase.getAlertByFecha(fecha, idUsuario));
+    _alertDayController.sink.add(await alertesByFecha(fecha, idUsuario));
+  }
+
+  Future<List<AlertModel>> alertesByFecha(String fecha, String idUser) async {
+    final List<AlertModel> listReturn = [];
+
+    final listdd = await alertApi.alertDatabase.getAlertByFecha(fecha, idUser);
+    if (listdd.length > 0) {
+      for (var i = 0; i < listdd.length; i++) {
+        final client = await clienteDatabase.getClientPorIdCliente(listdd[i].idClient.toString());
+
+        AlertModel alertModel = AlertModel();
+
+        alertModel.nombreCLiente = client[0].nombreCliente;
+        alertModel.telefonoCliente = client[0].telefonoCliente;
+        alertModel.idAlert = listdd[i].idAlert;
+        alertModel.idUsuario = listdd[i].idUsuario;
+        alertModel.idClient = listdd[i].idClient;
+        alertModel.alertTitle = listdd[i].alertTitle;
+        alertModel.alertDetail = listdd[i].alertDetail;
+        alertModel.alertDate = obtenerFecha(listdd[i].alertDate.toString());
+        alertModel.alertHour = obtenerHora(listdd[i].alertHour.toString());
+        alertModel.alertStatus = listdd[i].alertStatus;
+        listReturn.add(alertModel);
+      }
+    }
+
+    return listReturn;
   }
 
   void getAlertsTodayPluss() async {
@@ -63,7 +91,7 @@ class AlertBloc {
         alertModel.idClient = alertDB[0].idClient;
         alertModel.alertTitle = alertDB[0].alertTitle;
         alertModel.alertDetail = alertDB[0].alertDetail;
-        alertModel.alertDate = alertDB[0].alertDate;
+        alertModel.alertDate = obtenerFecha(alertDB[0].alertDate.toString());
         alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
         alertModel.alertStatus = alertDB[0].alertStatus;
         listReturn.add(alertModel);
@@ -134,7 +162,9 @@ class AlertBloc {
             alertModel.alertTitle = fechix[y].alertTitle;
             alertModel.alertDetail = fechix[y].alertDetail;
             alertModel.alertDate = fechix[y].alertDate;
-            alertModel.alertHour = obtenerHora(fechix[y].alertHour.toString());
+            alertModel.alertHour = obtenerHora(
+              fechix[y].alertHour.toString(),
+            );
             alertModel.alertStatus = fechix[y].alertStatus;
             alertSubList.add(alertModel);
           }
@@ -145,8 +175,6 @@ class AlertBloc {
         listaReturn.add(fechaAlertModel);
       }
     }
-
-    print('ctm');
 
     return listaReturn;
   }

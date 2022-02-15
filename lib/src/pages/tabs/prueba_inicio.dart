@@ -3,6 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/productos_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/categoria_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/model/promocion_model.dart';
+import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
 import 'package:royal_prestige/src/pages/promo_categoria_page.dart';
@@ -34,7 +37,7 @@ class PruebaInicio extends StatelessWidget {
     promoBloc.obtenerPromos();
 
     final dataBloc = ProviderBloc.data(context);
-    dataBloc.obtenerUser();
+
     final alertasBloc = ProviderBloc.alert(context);
     alertasBloc.getAlertsForDay();
     final responsive = Responsive.of(context);
@@ -265,15 +268,80 @@ class PruebaInicio extends StatelessWidget {
                                         builder: (context, AsyncSnapshot<List<AlertModel>> alerts) {
                                           if (alerts.hasData) {
                                             if (alerts.data!.length > 0) {
-                                              return Container();
+                                              return Container(
+                                                child: ListView.builder(
+                                                  padding: EdgeInsets.only(
+                                                    bottom: responsive.hp(3),
+                                                  ),
+                                                  shrinkWrap: true,
+                                                  physics: ClampingScrollPhysics(),
+                                                  itemCount: 2,
+                                                  itemBuilder: (context, x) {
+                                                    if (x == 0) {
+                                                      return Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: responsive.wp(3),
+                                                          vertical: responsive.hp(2),
+                                                        ),
+                                                        child: Text(
+                                                          'Pendientes para el dia de hoy ${alerts.data![x].alertDate}',
+                                                          style: GoogleFonts.poppins(
+                                                            fontSize: ScreenUtil().setSp(16),
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.w400,
+                                                            letterSpacing: ScreenUtil().setSp(0.016),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+
+                                                    return Container(
+                                                      child: ListView.builder(
+                                                        padding: EdgeInsets.all(0),
+                                                        shrinkWrap: true,
+                                                        physics: ClampingScrollPhysics(),
+                                                        itemCount: alerts.data!.length,
+                                                        itemBuilder: (context, i) {
+                                                          return _itemAlerta(context, alerts.data![i], responsive);
+                                                        },
+                                                      ),
+                                                    );
+                                                    //return _cardCanchas(responsive, canchasDeporte[i], negocio);
+                                                  },
+                                                ),
+                                              );
                                             } else {
                                               return Column(
-                                                children: [],
+                                                children: [
+                                                  Container(
+                                                    height: responsive.hp(30),
+                                                    child: Lottie.asset('assets/Json/lion.json'),
+                                                  ),
+                                                  Text(
+                                                    'No tiene pendientes hoy',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: ScreenUtil().setSp(18),
+                                                    ),
+                                                  )
+                                                ],
                                               );
                                             }
                                           } else {
                                             return Column(
-                                              children: [],
+                                              children: [
+                                                Container(
+                                                  height: responsive.hp(30),
+                                                  child: Lottie.asset('assets/Json/lion.json'),
+                                                ),
+                                                Text(
+                                                  'No tiene pendientes hoy',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: ScreenUtil().setSp(18),
+                                                  ),
+                                                )
+                                              ],
                                             );
                                           }
                                         },
@@ -306,6 +374,89 @@ class PruebaInicio extends StatelessWidget {
               return Container();
             }
           }),
+    );
+  }
+
+  Widget _itemAlerta(BuildContext context, AlertModel alerta, Responsive responsive) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return DetalleAlerta(
+                idAlert: alerta.idAlert,
+              );
+            },
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              var begin = Offset(0.0, 1.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween = Tween(begin: begin, end: end).chain(
+                CurveTween(curve: curve),
+              );
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: responsive.wp(2),
+        ),
+        margin: EdgeInsets.only(
+          right: responsive.wp(2),
+          bottom: responsive.hp(.5),
+          top: responsive.hp(.5),
+        ),
+        decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100.withOpacity(.2),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${alerta.nombreCLiente}  ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Telefono: ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text('${alerta.telefonoCliente}'),
+                Spacer(),
+                Text(
+                  'Hora: ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text('${alerta.alertHour}'),
+              ],
+            ),
+            Text(
+              '${alerta.alertTitle}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text('${alerta.alertDetail}'),
+            Text(''),
+          ],
+        ),
+      ),
     );
   }
 

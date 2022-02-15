@@ -1,13 +1,23 @@
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/src/api/login_api.dart';
+import 'package:royal_prestige/src/model/api_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DataUserBloc {
+  final loginApi = LoginApi();
   final _dataUserController = BehaviorSubject<UserModel>();
+  final _estadouserController = BehaviorSubject<ApiModel>();
 
   Stream<UserModel> get userStream => _dataUserController.stream;
+  Stream<ApiModel> get estadoUserStream => _estadouserController.stream;
 
   dispose() {
     _dataUserController.close();
+    _estadouserController.close();
+  }
+
+  void getEstatusUser() async {
+    _estadouserController.sink.add(await loginApi.consultarUsuario());
   }
 
   void obtenerUser() async {
