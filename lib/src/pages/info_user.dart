@@ -6,14 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/src/bloc/data_user.dart';
+import 'package:royal_prestige/src/pages/logout.dart';
+import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_extend/share_extend.dart';
 
 class InfoUser extends StatefulWidget {
-  const InfoUser({Key? key}) : super(key: key);
+  const InfoUser({Key? key, required this.user}) : super(key: key);
+  final UserModel user;
 
   @override
   _InfoUserState createState() => _InfoUserState();
@@ -23,6 +26,7 @@ class _InfoUserState extends State<InfoUser> {
   Uint8List? _imageFile;
   List<String> imagePaths = [];
   ScreenshotController screenshotController = ScreenshotController();
+  final _controller = ControllerShare();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +36,11 @@ class _InfoUserState extends State<InfoUser> {
         controller: screenshotController,
         child: Stack(
           children: [
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: NewColors.card,
+            ),
             SafeArea(
               child: Container(
                 margin: EdgeInsets.only(
@@ -48,6 +57,14 @@ class _InfoUserState extends State<InfoUser> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 3,
+                      blurRadius: 3,
+                      offset: const Offset(1, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: _tickerDetails(responsive),
               ),
@@ -89,6 +106,7 @@ class _InfoUserState extends State<InfoUser> {
               ),
               iconSize: ScreenUtil().setSp(24),
               onPressed: () {
+                _controller.changeActive(false);
                 takeScreenshotandShare();
               },
             ),
@@ -102,7 +120,7 @@ class _InfoUserState extends State<InfoUser> {
           children: [
             Spacer(),
             Text(
-              '#${_titulo('idUser')}',
+              '#${widget.user.idUser}',
               style: GoogleFonts.poppins(
                 fontStyle: FontStyle.normal,
                 fontWeight: FontWeight.w500,
@@ -121,7 +139,6 @@ class _InfoUserState extends State<InfoUser> {
               'assets/img/logo-royal.png',
               fit: BoxFit.cover,
               height: ScreenUtil().setHeight(50),
-              width: ScreenUtil().setWidth(255),
             ),
           ),
         ),
@@ -150,7 +167,7 @@ class _InfoUserState extends State<InfoUser> {
                     ),
                   ),
                 ),
-                imageUrl: '',
+                imageUrl: '$apiBaseURL/${widget.user.userImage}',
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.red, width: ScreenUtil().setWidth(3)),
@@ -170,11 +187,11 @@ class _InfoUserState extends State<InfoUser> {
         ),
         Center(
           child: Text(
-            '${obtenerPrimerNombre(_titulo('personName'))} ${_titulo('personSurname')}',
+            '${obtenerPrimerNombre('${widget.user.personName}')} ${widget.user.personSurname}',
             style: GoogleFonts.poppins(
               fontStyle: FontStyle.normal,
               fontWeight: FontWeight.w700,
-              color: NewColors.grayCarnet,
+              color: NewColors.card,
               fontSize: ScreenUtil().setSp(18),
             ),
           ),
@@ -182,55 +199,73 @@ class _InfoUserState extends State<InfoUser> {
         SizedBox(
           height: ScreenUtil().setHeight(16),
         ),
-        _data(Icons.email, 'userEmail'),
+        _data('DNI:', ''),
+        SizedBox(
+          height: ScreenUtil().setHeight(12.5),
+        ),
+        _data('Cargo:', ''),
         SizedBox(
           height: ScreenUtil().setHeight(12.5),
         ),
         SizedBox(
           height: ScreenUtil().setHeight(18),
         ),
-        // Row(
-        //   children: [
-        //     Column(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         Text(
-        //           'Edad',
-        //           style: GoogleFonts.poppins(
-        //             fontStyle: FontStyle.normal,
-        //             fontWeight: FontWeight.w400,
-        //             color: Color(0xFF8D9597),
-        //             fontSize: ScreenUtil().setSp(14),
-        //             letterSpacing: ScreenUtil().setSp(0.016),
-        //           ),
-        //         ),
-        //         Text(
-        //           '${obtenerEdad(_titulo('personName'))}',
-        //           style: GoogleFonts.poppins(
-        //             fontStyle: FontStyle.normal,
-        //             fontWeight: FontWeight.w500,
-        //             color: NewColors.backGroundCarnet,
-        //             fontSize: ScreenUtil().setSp(14),
-        //             letterSpacing: ScreenUtil().setSp(0.016),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //     Spacer(),
-
-        //   ],
-        // ),
         Spacer(),
         Center(
           child: Container(
             child: Image.asset(
               'assets/img/logo-royal.png',
               fit: BoxFit.cover,
-              height: ScreenUtil().setHeight(50),
-              width: ScreenUtil().setWidth(255),
+              height: ScreenUtil().setHeight(150),
             ),
           ),
         ),
+        SizedBox(
+          height: ScreenUtil().setHeight(20),
+        ),
+        AnimatedBuilder(
+            animation: _controller,
+            builder: (_, t) {
+              return (_controller.activarLogout)
+                  ? Center(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              opaque: false,
+                              pageBuilder: (context, animation, secondaryAnimation) {
+                                return Logout();
+                              },
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                var begin = Offset(0.0, 1.0);
+                                var end = Offset.zero;
+                                var curve = Curves.ease;
+
+                                var tween = Tween(begin: begin, end: end).chain(
+                                  CurveTween(curve: curve),
+                                );
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Cerrar sesión',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: ScreenUtil().setSp(20),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container();
+            }),
         SizedBox(
           height: ScreenUtil().setHeight(30),
         ),
@@ -238,15 +273,25 @@ class _InfoUserState extends State<InfoUser> {
     );
   }
 
-  Row _data(IconData icon, String titulo) {
+  Row _data(String lavel, String titulo) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon),
+        Text(
+          lavel,
+          style: GoogleFonts.poppins(
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w500,
+            color: NewColors.card,
+            fontSize: ScreenUtil().setSp(14),
+            letterSpacing: ScreenUtil().setSp(0.016),
+          ),
+        ),
         SizedBox(
           width: ScreenUtil().setWidth(8),
         ),
         Text(
-          '${_titulo(titulo)}',
+          titulo,
           style: GoogleFonts.poppins(
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.w500,
@@ -257,11 +302,6 @@ class _InfoUserState extends State<InfoUser> {
         ),
       ],
     );
-  }
-
-  _titulo(String titulo) async {
-    String? data = await StorageManager.readData(titulo);
-    return data;
   }
 
   takeScreenshotandShare() async {
@@ -283,15 +323,28 @@ class _InfoUserState extends State<InfoUser> {
 
       imagePaths.clear();
       imagePaths.add(imgFile.path);
+
       if (imagePaths.isNotEmpty) {
         await Future.delayed(
           Duration(seconds: 1),
         );
 
         ShareExtend.shareMultiple(imagePaths, "image", subject: "carnet");
-      } else {}
+        _controller.changeActive(true);
+      } else {
+        _controller.changeActive(true);
+      }
     }).catchError((onError) {
       print(onError);
     });
+  }
+}
+
+class ControllerShare extends ChangeNotifier {
+  bool activarLogout = true;
+
+  void changeActive(bool a) {
+    activarLogout = a;
+    notifyListeners();
   }
 }

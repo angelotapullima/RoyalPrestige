@@ -878,7 +878,9 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                             context,
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) {
-                                return InfoUser();
+                                return InfoUser(
+                                  user: widget.user,
+                                );
                               },
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                 var begin = Offset(0.0, 1.0);

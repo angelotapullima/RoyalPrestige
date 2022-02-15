@@ -17,6 +17,7 @@ class LoginApi {
       });
 
       final decodedData = json.decode(resp.body);
+      print(decodedData);
 
       final int code = decodedData['result']['code'];
       ApiModel loginModel = ApiModel();
@@ -34,6 +35,8 @@ class LoginApi {
         StorageManager.saveData('idRoleUser', decodedData['data']['ru']);
         StorageManager.saveData('roleName', decodedData['data']['rn']);
         StorageManager.saveData('token', decodedData['data']['tn']);
+        StorageManager.saveData('phoneNumber', decodedData['data']['persona_telefono']);
+        StorageManager.saveData('fechaNacimiento', decodedData['data']['persona_nacimiento']);
 
         return loginModel;
       } else {
