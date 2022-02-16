@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
 import 'package:royal_prestige/database/cliente_database.dart';
 import 'package:royal_prestige/database/compras_database.dart';
+import 'package:royal_prestige/src/model/api_model.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/model/compras_model.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
@@ -12,36 +13,49 @@ class ClienteApi {
   final clienteDatabase = ClienteDatabase();
   final comprasDatabase = ComprasDatabase();
 
-  Future<bool> saveClient(ClienteModel clienteModel) async {
+  Future<ApiModel> saveClient(ClienteModel clienteModel) async {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/guardar_cliente');
       String? token = await StorageManager.readData('token');
-      String? idUsuario = await StorageManager.readData('idUser');
+      //String? idUsuario = await StorageManager.readData('idUser');
 
       final resp = await http.post(url, body: {
         'tn': token,
         'app': 'true',
         'cliente_nombre': '${clienteModel.nombreCliente}',
-        'id_usuario': '$idUsuario',
+        //'id_usuario': '$idUsuario',
         'cliente_nro_doc': '${clienteModel.nroDocCliente}',
+        'cliente_codigo': '${clienteModel.codigoCliente}',
         'cliente_tipo_doc': '${clienteModel.tipoDocCliente}',
         'cliente_nacimiento': '${clienteModel.nacimientoCLiente}',
         'cliente_sexo': '${clienteModel.sexoCliente}',
         'cliente_direccion': '${clienteModel.direccionCliente}',
         'cliente_telefono': '${clienteModel.telefonoCliente}',
+        'cliente_observaciones': '-',
         'cliente_estado': '1',
       });
 
-      if (resp.statusCode == 200) {
-        print(resp.toString());
+      final decodedData = json.decode(resp.body);
 
-        return true;
+      print(decodedData);
+      ApiModel api = ApiModel();
+
+      api.code = decodedData['result']['code'].toString();
+
+      if (decodedData['result']['code'] == 1) {
+        api.message = decodedData['result']["mensaje"];
+        return api;
       } else {
-        return false;
+        api.message = decodedData['result']["mensaje"];
+        return api;
       }
     } catch (e) {
       print(e);
-      return false;
+      ApiModel api = ApiModel();
+
+      api.code = '2';
+      api.message = 'Ocurrió un error';
+      return api;
     }
   }
 
@@ -49,20 +63,22 @@ class ClienteApi {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/guardar_cliente');
       String? token = await StorageManager.readData('token');
-      String? idUsuario = await StorageManager.readData('idUser');
+      //String? idUsuario = await StorageManager.readData('idUser');
 
       final resp = await http.post(url, body: {
         'tn': token,
         'app': 'true',
         'id_cliente': '${clienteModel.idCliente}',
         'cliente_nombre': '${clienteModel.nombreCliente}',
-        'id_usuario': '$idUsuario',
+        //'id_usuario': '$idUsuario',
         'cliente_nro_doc': '${clienteModel.nroDocCliente}',
+        'cliente_codigo': '${clienteModel.codigoCliente}',
         'cliente_tipo_doc': '${clienteModel.tipoDocCliente}',
         'cliente_nacimiento': '${clienteModel.nacimientoCLiente}',
         'cliente_sexo': '${clienteModel.sexoCliente}',
         'cliente_direccion': '${clienteModel.direccionCliente}',
         'cliente_telefono': '${clienteModel.telefonoCliente}',
+        'cliente_observaciones': '-',
         'cliente_estado': '1',
       });
 

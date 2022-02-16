@@ -4,6 +4,7 @@ class ClienteModel {
   String? nombreCliente;
   String? tipoDocCliente;
   String? nroDocCliente;
+  String? codigoCliente;
   String? sexoCliente;
   String? nacimientoCLiente;
   String? telefonoCliente;
@@ -18,6 +19,7 @@ class ClienteModel {
     this.nombreCliente,
     this.tipoDocCliente,
     this.nroDocCliente,
+    this.codigoCliente,
     this.sexoCliente,
     this.nacimientoCLiente,
     this.telefonoCliente,

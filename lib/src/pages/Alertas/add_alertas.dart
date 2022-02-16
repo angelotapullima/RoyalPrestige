@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/api/alerta_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
-import 'package:royal_prestige/src/model/alert_model.dart'; 
+import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/pages/Alertas/search_cliente.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
@@ -68,68 +68,6 @@ class _AddAlertasState extends State<AddAlertas> {
                     children: [
                       SizedBox(
                         height: ScreenUtil().setHeight(25),
-                      ),
-                      Text(
-                        ' Cliente',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      ValueListenableBuilder(
-                          valueListenable: provider.idCliente,
-                          builder: (context, String data, snapshot) {
-                            return InkWell(
-                              onTap: () {
-                                provider.changeCliente('', '');
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) {
-                                      return SearchCliente2Page();
-                                    },
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                      var begin = Offset(0.0, 1.0);
-                                      var end = Offset.zero;
-                                      var curve = Curves.ease;
-
-                                      var tween = Tween(begin: begin, end: end).chain(
-                                        CurveTween(curve: curve),
-                                      );
-
-                                      return SlideTransition(
-                                        position: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: ScreenUtil().setWidth(10),
-                                  vertical: ScreenUtil().setHeight(15),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.grey.shade300),
-                                ),
-                                width: double.infinity,
-                                height: ScreenUtil().setHeight(55),
-                                child: Text(
-                                  (data != '') ? provider.nombreCliente.value.toString() : 'Buscar cliente',
-                                  style: TextStyle(color: (data != '') ? Colors.black : Colors.grey.shade700),
-                                ),
-                              ),
-                            );
-                          }),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
                       ),
                       Text(
                         ' Título',
@@ -227,6 +165,68 @@ class _AddAlertasState extends State<AddAlertas> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
+                      Text(
+                        ' Cliente',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(6),
+                      ),
+                      ValueListenableBuilder(
+                          valueListenable: provider.idCliente,
+                          builder: (context, String data, snapshot) {
+                            return InkWell(
+                              onTap: () {
+                                provider.changeCliente('', '');
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return SearchCliente2Page();
+                                    },
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
+
+                                      var tween = Tween(begin: begin, end: end).chain(
+                                        CurveTween(curve: curve),
+                                      );
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(10),
+                                  vertical: ScreenUtil().setHeight(15),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.grey.shade300),
+                                ),
+                                width: double.infinity,
+                                height: ScreenUtil().setHeight(55),
+                                child: Text(
+                                  (data != '') ? provider.nombreCliente.value.toString() : 'Buscar cliente',
+                                  style: TextStyle(color: (data != '') ? Colors.black : Colors.grey.shade700),
+                                ),
+                              ),
+                            );
+                          }),
                       SizedBox(
                         height: ScreenUtil().setHeight(20),
                       ),
@@ -360,40 +360,36 @@ class _AddAlertasState extends State<AddAlertas> {
                           onPressed: () async {
                             if (_tituloController.text.isNotEmpty) {
                               if (_detalleController.text.isNotEmpty) {
-                                if (provider.idCliente.value != '') {
-                                  if (fechaDato != 'Seleccionar') {
-                                    if (horaDato != 'Seleccionar') {
-                                      _cargando.value = true;
-                                      final alertApi = AlertApi();
+                                if (fechaDato != 'Seleccionar') {
+                                  if (horaDato != 'Seleccionar') {
+                                    _cargando.value = true;
+                                    final alertApi = AlertApi();
 
-                                      AlertModel alertModel = AlertModel();
-                                      alertModel.alertTitle = _tituloController.text;
-                                      alertModel.alertDetail = _detalleController.text;
-                                      alertModel.idClient = provider.idCliente.value;
-                                      alertModel.alertDate = fechaDato;
-                                      alertModel.alertHour = horaDato;
+                                    AlertModel alertModel = AlertModel();
+                                    alertModel.alertTitle = _tituloController.text;
+                                    alertModel.alertDetail = _detalleController.text;
+                                    alertModel.idClient = provider.idCliente.value;
+                                    alertModel.alertDate = fechaDato;
+                                    alertModel.alertHour = horaDato;
 
-                                      final res = await alertApi.saveAlert(alertModel);
+                                    final res = await alertApi.saveAlert(alertModel);
 
-                                      if (res) {
-                                        _cargando.value = false;
-                                        final alertasBloc = ProviderBloc.alert(context);
-                                        alertasBloc.getAlertsTodayPluss();
-                                        provider.changeCliente('', '');
-                                        Navigator.pop(context);
-                                        showToast2('alerta guardada correctamente', Colors.green);
-                                      } else {
-                                        _cargando.value = false;
-                                        showToast2('ocurrio un error', Colors.red);
-                                      }
+                                    if (res) {
+                                      _cargando.value = false;
+                                      final alertasBloc = ProviderBloc.alert(context);
+                                      alertasBloc.getAlertsTodayPluss();
+                                      provider.changeCliente('', '');
+                                      Navigator.pop(context);
+                                      showToast2('alerta guardada correctamente', Colors.green);
                                     } else {
-                                      showToast2('Por favor ingrese una hora', Colors.red);
+                                      _cargando.value = false;
+                                      showToast2('ocurrio un error', Colors.red);
                                     }
                                   } else {
-                                    showToast2('Por favor ingrese una fecha', Colors.red);
+                                    showToast2('Por favor ingrese una hora', Colors.red);
                                   }
                                 } else {
-                                  showToast2('Por favor seleccione el cliente', Colors.red);
+                                  showToast2('Por favor ingrese una fecha', Colors.red);
                                 }
                               } else {
                                 showToast2('Por favor ingrese el detalle de la alerta', Colors.red);

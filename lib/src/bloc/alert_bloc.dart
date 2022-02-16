@@ -95,6 +95,18 @@ class AlertBloc {
         alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
         alertModel.alertStatus = alertDB[0].alertStatus;
         listReturn.add(alertModel);
+      } else if (alertDB[0].idClient == '0') {
+        AlertModel alertModel = AlertModel();
+
+        alertModel.idAlert = alertDB[0].idAlert;
+        alertModel.idUsuario = alertDB[0].idUsuario;
+        alertModel.idClient = alertDB[0].idClient;
+        alertModel.alertTitle = alertDB[0].alertTitle;
+        alertModel.alertDetail = alertDB[0].alertDetail;
+        alertModel.alertDate = obtenerFecha(alertDB[0].alertDate.toString());
+        alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
+        alertModel.alertStatus = alertDB[0].alertStatus;
+        listReturn.add(alertModel);
       }
     }
     return listReturn;
@@ -137,7 +149,7 @@ class AlertBloc {
                 LocalNotificationApi.showAlertProgramado(
                   id: y,
                   title: '${fechix[y].alertTitle}',
-                  body: "${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas" + "\t" + "Cliente: ${clients[0].nombreCliente}",
+                  body: "${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas",
                   playLoad: '${fechix[y].idAlert}',
                   time: DateTime.now().add(Duration(seconds: 2)),
                 );

@@ -130,7 +130,8 @@ class CarritoTab extends StatelessWidget {
                           return Column(
                             children: [
                               Slidable(
-                                key: ValueKey(index),
+                                //key: ValueKey(index),
+                                key: UniqueKey(),
                                 startActionPane: ActionPane(
                                   // A motion is a widget used to control how the pane animates.
                                   motion: const ScrollMotion(),

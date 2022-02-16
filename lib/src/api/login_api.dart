@@ -32,11 +32,12 @@ class LoginApi {
         StorageManager.saveData('userImage', decodedData['data']['u_i']);
         StorageManager.saveData('personName', decodedData['data']['p_n']);
         StorageManager.saveData('personSurname', decodedData['data']['p_p']);
+        StorageManager.saveData('personSecondSurname', decodedData['data']['p_m']);
+        StorageManager.saveData('personDNI', decodedData['data']['dni']);
         StorageManager.saveData('idRoleUser', decodedData['data']['ru']);
+        StorageManager.saveData('personCargo', decodedData['data']['u_c']);
         StorageManager.saveData('roleName', decodedData['data']['rn']);
         StorageManager.saveData('token', decodedData['data']['tn']);
-        StorageManager.saveData('phoneNumber', decodedData['data']['persona_telefono']);
-        StorageManager.saveData('fechaNacimiento', decodedData['data']['persona_nacimiento']);
 
         return loginModel;
       } else {

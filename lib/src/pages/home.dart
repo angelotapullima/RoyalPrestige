@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
     final carritoBloc = ProviderBloc.cart(context);
     carritoBloc.getCart();
 
-    bottomBloc.changePage(0);
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerUser();
     dataBloc.getEstatusUser();
@@ -64,6 +63,7 @@ class _HomePageState extends State<HomePage> {
         StreamBuilder(
           stream: bottomBloc.selectPageStream,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
+            bottomBloc.changePage(snapshot.data);
             return Stack(
               children: [
                 Container(

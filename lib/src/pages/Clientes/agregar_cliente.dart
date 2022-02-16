@@ -20,6 +20,7 @@ class _AgregarClienteState extends State<AgregarCliente> {
   String fechaDato = 'Seleccionar';
   TextEditingController _nombreController = TextEditingController();
   TextEditingController _nroDocController = TextEditingController();
+  TextEditingController _codigoClienteController = TextEditingController();
 
   TextEditingController _telefonoController = TextEditingController();
   TextEditingController _direccionController = TextEditingController();
@@ -30,6 +31,7 @@ class _AgregarClienteState extends State<AgregarCliente> {
     _nroDocController.dispose();
     _telefonoController.dispose();
     _direccionController.dispose();
+    _codigoClienteController.dispose();
     super.dispose();
   }
 
@@ -160,7 +162,56 @@ class _AgregarClienteState extends State<AgregarCliente> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Documento ',
+                          hintText: 'Documento',
+                          hintStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(14),
+                            color: Colors.grey[600],
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 2.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              ScreenUtil().setWidth(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
+                      Text(
+                        ' Código cliente',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(6),
+                      ),
+                      TextField(
+                        controller: _codigoClienteController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Código cliente',
                           hintStyle: TextStyle(
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.grey[600],
@@ -397,6 +448,7 @@ class _AgregarClienteState extends State<AgregarCliente> {
                                           clienteModel.nombreCliente = _nombreController.text;
                                           clienteModel.tipoDocCliente = valueTipoDoc;
                                           clienteModel.nroDocCliente = _nroDocController.text;
+                                          clienteModel.codigoCliente = _codigoClienteController.text;
                                           clienteModel.sexoCliente = valueSexo;
                                           clienteModel.nacimientoCLiente = fechaDato;
                                           clienteModel.telefonoCliente = _telefonoController.text;
@@ -404,7 +456,7 @@ class _AgregarClienteState extends State<AgregarCliente> {
 
                                           final res = await clienteApi.saveClient(clienteModel);
 
-                                          if (res) {
+                                          if (res.code == '1') {
                                             showToast2('Cliente agregado correctamente', Colors.green);
                                             final clienteBloc = ProviderBloc.cliente(context);
                                             clienteBloc.getClientForTipo('1');
@@ -412,7 +464,7 @@ class _AgregarClienteState extends State<AgregarCliente> {
                                             Navigator.pop(context);
                                             _cargando.value = false;
                                           } else {
-                                            showToast2('Ocurrió un error', Colors.red);
+                                            showToast2('${res.message}', Colors.red);
                                             _cargando.value = false;
                                           }
                                         } else {

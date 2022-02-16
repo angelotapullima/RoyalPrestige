@@ -103,20 +103,22 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
 
         await alertDatabase.insertAlert(alertModel);
 
-        ClienteModel clienteModel = ClienteModel();
+        if (alertModel.idClient != '0') {
+          ClienteModel clienteModel = ClienteModel();
 
-        clienteModel.idCliente = decodedData[i]['cliente']['id_cliente'];
-        clienteModel.idUsuario = decodedData[i]['cliente']['id_usuario'];
-        clienteModel.nombreCliente = decodedData[i]['cliente']['cliente_nombre'];
-        clienteModel.tipoDocCliente = decodedData[i]['cliente']['cliente_tipo_doc'];
-        clienteModel.nroDocCliente = decodedData[i]['cliente']['cliente_nro_doc'];
-        clienteModel.nacimientoCLiente = decodedData[i]['cliente']['cliente_nacimiento'];
-        clienteModel.sexoCliente = decodedData[i]['cliente']['cliente_sexo'];
-        clienteModel.direccionCliente = decodedData[i]['cliente']['cliente_direccion'];
-        clienteModel.telefonoCliente = decodedData[i]['cliente']['cliente_telefono'];
-        clienteModel.estadoCliente = decodedData[i]['cliente']['cliente_estado'];
+          clienteModel.idCliente = decodedData[i]['cliente']['id_cliente'];
+          clienteModel.idUsuario = decodedData[i]['cliente']['id_usuario'];
+          clienteModel.nombreCliente = decodedData[i]['cliente']['cliente_nombre'];
+          clienteModel.tipoDocCliente = decodedData[i]['cliente']['cliente_tipo_doc'];
+          clienteModel.nroDocCliente = decodedData[i]['cliente']['cliente_nro_doc'];
+          clienteModel.nacimientoCLiente = decodedData[i]['cliente']['cliente_nacimiento'];
+          clienteModel.sexoCliente = decodedData[i]['cliente']['cliente_sexo'];
+          clienteModel.direccionCliente = decodedData[i]['cliente']['cliente_direccion'];
+          clienteModel.telefonoCliente = decodedData[i]['cliente']['cliente_telefono'];
+          clienteModel.estadoCliente = decodedData[i]['cliente']['cliente_estado'];
 
-        await clienteDatabase.insertCliente(clienteModel);
+          await clienteDatabase.insertCliente(clienteModel);
+        }
       }
     } catch (e) {
       print(e);

@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/src/api/logout_api.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
+import 'package:royal_prestige/src/widget/show_loading.dart';
 
-class Logout extends StatelessWidget {
+class Logout extends StatefulWidget {
   const Logout({Key? key}) : super(key: key);
 
+  @override
+  State<Logout> createState() => _LogoutState();
+}
+
+class _LogoutState extends State<Logout> {
+  final _controller = LogoutController();
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -79,8 +87,17 @@ class Logout extends StatelessWidget {
                       width: ScreenUtil().setWidth(130),
                       child: MaterialButton(
                         onPressed: () async {
-                          await StorageManager.deleteAllData();
-                          Navigator.of(context).pushNamedAndRemoveUntil('login', (Route<dynamic> route) => true);
+                          _controller.changeAtive(true);
+                          final logoutApi = LogoutApi();
+                          final res = await logoutApi.logoutUsuario();
+
+                          if (res) {
+                            await StorageManager.deleteAllData();
+                            Navigator.of(context).pushNamedAndRemoveUntil('login', (Route<dynamic> route) => true);
+                          } else {
+                            showToast2('Ocurrió un error, inténtelo nuevamente', Colors.red);
+                          }
+                          _controller.changeAtive(false);
                         },
                         color: Colors.red,
                         textColor: Colors.white,
@@ -91,9 +108,29 @@ class Logout extends StatelessWidget {
                 )
               ],
             ),
-          )
+          ),
+          AnimatedBuilder(
+              animation: _controller,
+              builder: (_, t) {
+                return ShowLoadding(
+                  active: _controller.active,
+                  h: double.infinity,
+                  w: double.infinity,
+                  colorText: Colors.transparent,
+                  fondo: Colors.black.withOpacity(0.5),
+                );
+              }),
         ],
       ),
     );
+  }
+}
+
+class LogoutController extends ChangeNotifier {
+  bool active = false;
+
+  void changeAtive(bool a) {
+    active = a;
+    notifyListeners();
   }
 }

@@ -60,40 +60,44 @@ class DetalleAlerta extends StatelessWidget {
                   SizedBox(
                     height: ScreenUtil().setHeight(12),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.person_outlined, color: Colors.red),
-                      SizedBox(
-                        width: ScreenUtil().setWidth(8),
-                      ),
-                      Text(
-                        '${alert.nombreCLiente}',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(14),
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.phone_outlined, color: Colors.red),
-                      SizedBox(
-                        width: ScreenUtil().setWidth(8),
-                      ),
-                      Text(
-                        '${alert.telefonoCliente}',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(14),
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
+                  (alert.idClient != '0')
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.person_outlined, color: Colors.red),
+                            SizedBox(
+                              width: ScreenUtil().setWidth(8),
+                            ),
+                            Text(
+                              '${alert.nombreCLiente}',
+                              style: TextStyle(
+                                fontSize: ScreenUtil().setSp(14),
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  (alert.idClient != '0')
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.phone_outlined, color: Colors.red),
+                            SizedBox(
+                              width: ScreenUtil().setWidth(8),
+                            ),
+                            Text(
+                              '${alert.telefonoCliente}',
+                              style: TextStyle(
+                                fontSize: ScreenUtil().setSp(14),
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
                   SizedBox(
                     height: ScreenUtil().setHeight(12),
                   ),

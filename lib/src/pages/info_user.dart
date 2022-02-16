@@ -131,14 +131,14 @@ class _InfoUserState extends State<InfoUser> {
           ],
         ),
         SizedBox(
-          height: ScreenUtil().setHeight(30),
+          height: ScreenUtil().setHeight(20),
         ),
         Center(
           child: Container(
             child: Image.asset(
-              'assets/img/logo-royal.png',
+              'assets/img/sethi_logo.png',
               fit: BoxFit.cover,
-              height: ScreenUtil().setHeight(50),
+              height: ScreenUtil().setHeight(100),
             ),
           ),
         ),
@@ -199,11 +199,11 @@ class _InfoUserState extends State<InfoUser> {
         SizedBox(
           height: ScreenUtil().setHeight(16),
         ),
-        _data('DNI:', ''),
+        _data('DNI:', '${widget.user.personDNI}'),
         SizedBox(
           height: ScreenUtil().setHeight(12.5),
         ),
-        _data('Cargo:', ''),
+        _data('Cargo:', '${widget.user.personCargo}'),
         SizedBox(
           height: ScreenUtil().setHeight(12.5),
         ),
@@ -216,7 +216,7 @@ class _InfoUserState extends State<InfoUser> {
             child: Image.asset(
               'assets/img/logo-royal.png',
               fit: BoxFit.cover,
-              height: ScreenUtil().setHeight(150),
+              height: ScreenUtil().setHeight(100),
             ),
           ),
         ),
