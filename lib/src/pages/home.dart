@@ -63,7 +63,10 @@ class _HomePageState extends State<HomePage> {
         StreamBuilder(
           stream: bottomBloc.selectPageStream,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            bottomBloc.changePage(snapshot.data);
+            if (snapshot.hasData) {
+              bottomBloc.changePage(snapshot.data);
+            }
+
             return Stack(
               children: [
                 Container(

@@ -195,6 +195,34 @@ class _DetalleClienteState extends State<DetalleCliente> {
                       SizedBox(
                         height: ScreenUtil().setHeight(20),
                       ),
+                      Text(
+                        ' Código de cliente',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(6),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenUtil().setWidth(10),
+                          vertical: ScreenUtil().setHeight(10),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        width: double.infinity,
+                        height: ScreenUtil().setHeight(40),
+                        child: Text(cliente.codigoCliente.toString()),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
                       Row(
                         children: [
                           Container(

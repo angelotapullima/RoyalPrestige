@@ -21,6 +21,7 @@ class _EditarClienteState extends State<EditarCliente> {
   String fechaDato = 'Seleccionar';
   TextEditingController _nombreController = TextEditingController();
   TextEditingController _nroDocController = TextEditingController();
+  TextEditingController _codClienteController = TextEditingController();
 
   TextEditingController _telefonoController = TextEditingController();
   TextEditingController _direccionController = TextEditingController();
@@ -31,6 +32,7 @@ class _EditarClienteState extends State<EditarCliente> {
     _nroDocController.dispose();
     _telefonoController.dispose();
     _direccionController.dispose();
+    _codClienteController.dispose();
     super.dispose();
   }
 
@@ -55,6 +57,7 @@ class _EditarClienteState extends State<EditarCliente> {
     _nroDocController.text = widget.clienteModel.nroDocCliente.toString();
     _telefonoController.text = widget.clienteModel.telefonoCliente.toString();
     _direccionController.text = widget.clienteModel.direccionCliente.toString();
+    _codClienteController.text = widget.clienteModel.codigoCliente.toString();
     fechaDato = widget.clienteModel.nacimientoCLiente.toString();
     valueTipoDoc = widget.clienteModel.tipoDocCliente.toString();
     valueSexo = widget.clienteModel.sexoCliente.toString();
@@ -174,6 +177,55 @@ class _EditarClienteState extends State<EditarCliente> {
                           filled: true,
                           fillColor: Colors.white,
                           hintText: 'Documento ',
+                          hintStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(14),
+                            color: Colors.grey[600],
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 2.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              ScreenUtil().setWidth(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
+                      Text(
+                        ' Código de cliente',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(6),
+                      ),
+                      TextField(
+                        controller: _codClienteController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Código de cliente',
                           hintStyle: TextStyle(
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.grey[600],
@@ -415,6 +467,7 @@ class _EditarClienteState extends State<EditarCliente> {
                                           clienteModel.telefonoCliente = _telefonoController.text;
                                           clienteModel.direccionCliente = _direccionController.text;
                                           clienteModel.idCliente = widget.clienteModel.idCliente;
+                                          clienteModel.codigoCliente = _codClienteController.text;
 
                                           final res = await clienteApi.editCLient(clienteModel);
 
