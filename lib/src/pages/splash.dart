@@ -19,11 +19,11 @@ class _SplashState extends State<Splash> {
 
       loginApi.consultarUsuario();
       String? token = await StorageManager.readData('token');
+      final bottomBloc = ProviderBloc.botton(context);
+      bottomBloc.changePage(0);
       if (token == null || token.isEmpty) {
         Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
       } else {
-        final bottomBloc = ProviderBloc.botton(context);
-        bottomBloc.changePage(0);
         Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
       }
     });

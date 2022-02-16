@@ -54,6 +54,7 @@ class DatabaseHelper {
       ' nombreCliente TEXT,'
       ' tipoDocCliente TEXT,'
       ' nroDocCliente TEXT,'
+      ' codigoCliente TEXT,'
       ' sexoCliente TEXT,'
       ' nacimientoCLiente TEXT,'
       ' telefonoCliente TEXT,'
@@ -105,7 +106,7 @@ class DatabaseHelper {
       ' observacionCompra TEXT,'
       ' estadoCompra TEXT)';
 
-      static const String tableInfoProductSql = 'CREATE TABLE InfoProduct('
+  static const String tableInfoProductSql = 'CREATE TABLE InfoProduct('
       ' idProDoc TEXT PRIMARY KEY,'
       ' idProducto TEXT,'
       ' proTipo TEXT,'

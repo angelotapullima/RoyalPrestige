@@ -121,6 +121,7 @@ class ClienteApi {
         clienteModel.telefonoCliente = decodedData[i]['cliente_telefono'];
         clienteModel.observacionesCliente = decodedData[i]['cliente_observaciones'];
         clienteModel.estadoCliente = decodedData[i]['cliente_estado'];
+        clienteModel.codigoCliente = decodedData[i]['cliente_codigo'];
 
         if (decodedData[i]['compras'].length > 0) {
           //Tipo 1, es Cliente
