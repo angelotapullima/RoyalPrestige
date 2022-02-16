@@ -27,9 +27,9 @@ class AlertBloc {
   }
 
   void getAlertsForDay() async {
-    //var now = DateTime.now();
-    //String fecha = "${now.year.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
-    String fecha = "2022-02-18";
+    var now = DateTime.now();
+    String fecha = "${now.year.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    //String fecha = "2022-02-18";
 
     String? idUsuario = await StorageManager.readData('idUser');
     _alertDayController.sink.add(await alertesByFecha(fecha, idUsuario!));

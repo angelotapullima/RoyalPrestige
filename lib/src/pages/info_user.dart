@@ -83,7 +83,10 @@ class _InfoUserState extends State<InfoUser> {
           child: Container(
             height: ScreenUtil().setHeight(8),
             width: ScreenUtil().setWidth(100),
-            decoration: BoxDecoration(color: NewColors.grayCarnet.withOpacity(0.6), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+              color: NewColors.grayCarnet.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ),
         Row(
@@ -131,7 +134,7 @@ class _InfoUserState extends State<InfoUser> {
           ],
         ),
         SizedBox(
-          height: ScreenUtil().setHeight(20),
+          height: ScreenUtil().setHeight(0),
         ),
         Center(
           child: Container(

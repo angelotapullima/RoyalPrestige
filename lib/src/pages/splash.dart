@@ -42,7 +42,7 @@ class _SplashState extends State<Splash> {
               width: ScreenUtil().setWidth(350),
               height: ScreenUtil().setHeight(350),
               child: const Image(
-                image: AssetImage('assets/img/logo-royal.png'),
+                image: AssetImage('assets/img/sethi_logo.png'),
               ),
             ),
           ),
