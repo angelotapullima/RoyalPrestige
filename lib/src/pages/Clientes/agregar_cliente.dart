@@ -196,7 +196,7 @@ class _AgregarClienteState extends State<AgregarCliente> {
                         height: ScreenUtil().setHeight(20),
                       ),
                       Text(
-                        ' Código cliente',
+                        ' Código de cliente',
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(16),
                           fontWeight: FontWeight.w600,
@@ -211,7 +211,7 @@ class _AgregarClienteState extends State<AgregarCliente> {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Código cliente',
+                          hintText: 'Código de cliente',
                           hintStyle: TextStyle(
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.grey[600],
