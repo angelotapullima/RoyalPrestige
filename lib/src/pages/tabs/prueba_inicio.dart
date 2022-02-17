@@ -15,6 +15,7 @@ import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/model/promocion_model.dart';
 import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
+import 'package:royal_prestige/src/pages/detail_promocion_vista.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
 import 'package:royal_prestige/src/pages/info_user.dart';
 import 'package:royal_prestige/src/pages/promo_categoria_page.dart';
@@ -498,7 +499,7 @@ class PruebaInicio extends StatelessWidget {
   }
 
   _onTapPromo(BuildContext context, PromocionModel promo) {
-    if (promo.idProduct != '0') {
+    if (promo.promoTipo == '1') {
       Navigator.push(
         context,
         PageRouteBuilder(
@@ -523,7 +524,7 @@ class PruebaInicio extends StatelessWidget {
           },
         ),
       );
-    } else {
+    } else if (promo.promoTipo == '2') {
       Navigator.push(
         context,
         PageRouteBuilder(
@@ -548,6 +549,32 @@ class PruebaInicio extends StatelessWidget {
           },
         ),
       );
+    } else {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return DetailPromoVista(
+              foto: promo.imagenPromo.toString(),
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(0.0, 1.0);
+            var end = Offset.zero;
+            var curve = Curves.ease;
+
+            var tween = Tween(begin: begin, end: end).chain(
+              CurveTween(curve: curve),
+            );
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+      //DetailPromoVista
     }
   }
 
@@ -831,7 +858,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState(); 
   }
 
   @override

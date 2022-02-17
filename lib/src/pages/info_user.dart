@@ -150,8 +150,8 @@ class _InfoUserState extends State<InfoUser> {
         ),
         Center(
           child: Container(
-            width: ScreenUtil().setWidth(120),
-            height: ScreenUtil().setHeight(120),
+            width: ScreenUtil().setWidth(230),
+            height: ScreenUtil().setHeight(230),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: CachedNetworkImage(
@@ -170,7 +170,7 @@ class _InfoUserState extends State<InfoUser> {
                     ),
                   ),
                 ),
-                imageUrl: '$apiBaseURL/${widget.user.userImage}',
+                imageUrl: '${widget.user.userImage}',
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.red, width: ScreenUtil().setWidth(3)),
@@ -200,11 +200,11 @@ class _InfoUserState extends State<InfoUser> {
           ),
         ),
         SizedBox(
-          height: ScreenUtil().setHeight(16),
+          height: ScreenUtil().setHeight(5),
         ),
         _data('DNI:', '${widget.user.personDNI}'),
         SizedBox(
-          height: ScreenUtil().setHeight(12.5),
+          height: ScreenUtil().setHeight(5),
         ),
         _data('Cargo:', '${widget.user.personCargo}'),
         SizedBox(

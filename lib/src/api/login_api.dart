@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/src/api/cuota_api.dart';
 import 'package:royal_prestige/src/model/api_model.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +26,9 @@ class LoginApi {
       loginModel.message = decodedData['result']['message'];
 
       if (code == 1) {
+        final cuotaApi = CuotaApi();
+
+        await cuotaApi.getCuotas();
         StorageManager.saveData('idUser', decodedData['data']['c_u']);
         StorageManager.saveData('idPerson', decodedData['data']['c_p']);
         StorageManager.saveData('userNickname', decodedData['data']['_n']);

@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
           child: ScreenUtilInit(
         designSize: const Size(375, 812),
         builder: () => MaterialApp(
-          title: 'Royal Prestige',
+          title: 'Sethi',
           theme: ThemeData(
             primarySwatch: Colors.blueGrey,
             textTheme: GoogleFonts.latoTextTheme(),

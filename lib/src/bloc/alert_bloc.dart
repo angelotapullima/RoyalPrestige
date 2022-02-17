@@ -47,8 +47,8 @@ class AlertBloc {
 
         AlertModel alertModel = AlertModel();
 
-        alertModel.nombreCLiente = client[0].nombreCliente;
-        alertModel.telefonoCliente = client[0].telefonoCliente;
+        alertModel.nombreCLiente = (client.length>0)?client[0].nombreCliente:'';
+        alertModel.telefonoCliente = (client.length>0)?client[0].telefonoCliente:'';
         alertModel.idAlert = listdd[i].idAlert;
         alertModel.idUsuario = listdd[i].idUsuario;
         alertModel.idClient = listdd[i].idClient;
@@ -84,8 +84,8 @@ class AlertBloc {
       if (client.length > 0) {
         AlertModel alertModel = AlertModel();
 
-        alertModel.nombreCLiente = client[0].nombreCliente;
-        alertModel.telefonoCliente = client[0].telefonoCliente;
+        alertModel.nombreCLiente = (client.length>0)?client[0].nombreCliente:'';
+        alertModel.telefonoCliente = (client.length>0)?client[0].telefonoCliente:'';
         alertModel.idAlert = alertDB[0].idAlert;
         alertModel.idUsuario = alertDB[0].idUsuario;
         alertModel.idClient = alertDB[0].idClient;

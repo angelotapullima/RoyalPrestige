@@ -9,7 +9,7 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await getDatabase();
 
   Future<Database> getDatabase() async {
-    final String path = join(await getDatabasesPath(), 'royalv4.db');
+    final String path = join(await getDatabasesPath(), 'royal.db');
     return openDatabase(path, onCreate: (db, version) {
       db.execute(tableCategoriaSql);
       db.execute(tableProductoSql);
@@ -21,6 +21,7 @@ class DatabaseHelper {
       db.execute(tablePromocionSql);
       db.execute(tableComprasSql);
       db.execute(tableInfoProductSql);
+      db.execute(tableCuotasSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 
@@ -88,6 +89,7 @@ class DatabaseHelper {
   static const String tablePromocionSql = 'CREATE TABLE Promocion('
       ' idPromo TEXT PRIMARY KEY,'
       ' idProduct TEXT,'
+      ' promoTipo TEXT,'
       ' idCategoria TEXT,'
       ' precioPromo TEXT,'
       ' detallePromo TEXT,'
@@ -114,4 +116,11 @@ class DatabaseHelper {
       ' proDetalle TEXT,'
       ' proUrl TEXT,'
       ' proEstado TEXT)';
+
+  static const String tableCuotasSql = 'CREATE TABLE Cuotas('
+      ' idCuota TEXT PRIMARY KEY,'
+      ' cuotaNombre TEXT,'
+      ' cuotaMultiplicador TEXT,'
+      ' cuotaMostar TEXT,'
+      ' cuotaEstado TEXT)';
 }

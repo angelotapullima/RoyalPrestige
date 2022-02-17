@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
+import 'package:royal_prestige/src/bloc/cuota_bloc.dart';
+import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/model/cuota_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
@@ -30,6 +33,9 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final cuotaBloc=ProviderBloc.cuota(context);
+    cuotaBloc.getCuotasMostar();
     final responsive = Responsive.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -52,52 +58,6 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
             builder: (_, c) {
               return Column(
                 children: [
-                  /*  Container(
-                      child: TextField(
-                        maxLines: 1,
-                        controller: _precioProductoController,
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          if (value.isNotEmpty) {
-                            _controller.calcularProducto(value);
-                          } else {
-                            _controller.lipiar();
-                            _depositoController.text = '';
-                          }
-                        },
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: 'Precio producto',
-                          labelStyle: TextStyle(
-                            color: colorgray,
-                            fontWeight: FontWeight.w400,
-                            fontSize: ScreenUtil().setSp(12),
-                          ),
-                          fillColor: Colors.white,
-                          contentPadding:
-                              EdgeInsets.only(left: ScreenUtil().setWidth(10), top: ScreenUtil().setHeight(5), bottom: ScreenUtil().setHeight(1)),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: colorPrimary, width: ScreenUtil().setWidth(1)),
-                          ),
-                        ),
-                        style: TextStyle(
-                          color: colorPrimary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: ScreenUtil().setSp(15),
-                        ),
-                      ),
-                    ),
-                     */
-
                   _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(), 1),
                   SizedBox(
                     height: ScreenUtil().setHeight(14),
@@ -106,7 +66,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
                   SizedBox(
                     height: ScreenUtil().setHeight(14),
                   ),
-                  _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(responsive), 3),
+                  _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(responsive,cuotaBloc), 3),
                   SizedBox(
                     height: ScreenUtil().setHeight(24),
                   ),
@@ -402,7 +362,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
     );
   }
 
-  Widget _contenido3(Responsive responsive) {
+  Widget _contenido3(Responsive responsive, CuotaBloc cuotaBloc) {
     return Column(
       children: [
         SizedBox(
@@ -419,44 +379,42 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
         SizedBox(
           height: ScreenUtil().setHeight(10),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('12 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota12}.00',
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('14 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota14}.00',
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('16 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota16}.00',
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('19 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota19}.00',
-            ),
-          ],
+        Container(
+          child: StreamBuilder(
+            stream: cuotaBloc.cuotasMostrarStream,
+            builder: (BuildContext context, AsyncSnapshot<List<CuotaModel>> snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.length > 0) {
+                  return Container(
+                    height: snapshot.data!.length * ScreenUtil().setHeight(20),
+                    child: ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('${snapshot.data![index].cuotaNombre}   --->'),
+                            Text(
+                              'S/. ${(double.parse('${_controller.saldoFinancio.toStringAsFixed(2)}') * double.parse('${snapshot.data![index].cuotaMultiplicador}')).round()}.00',
+                            ),
+                          ],
+                        );
+                      },
+                      itemCount: snapshot.data!.length,
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              } else {
+                return Container();
+              }
+            },
+          ),
         ),
         ExpansionPrueba(
           title: 'Mostrar todas las cuotas',
+          monto: '${_controller.saldoFinancio.toStringAsFixed(2)}',
         ),
         SizedBox(
           height: ScreenUtil().setHeight(24),
@@ -477,28 +435,29 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
           }
           if (index == cart.length) {
             return Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Total',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,color:Colors.red,
-                          fontSize: ScreenUtil().setSp(17),
-                        ),
-                      ),
+              children: [
+                Expanded(
+                  child: Text(
+                    'Total',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                      fontSize: ScreenUtil().setSp(17),
                     ),
-                    SizedBox(
-                      width: ScreenUtil().setWidth(10),
-                    ),
-                    Text(
-                      'S/.${total}0',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: ScreenUtil().setSp(15),
-                      ),
-                    ),
-                  ],
-                );
+                  ),
+                ),
+                SizedBox(
+                  width: ScreenUtil().setWidth(10),
+                ),
+                Text(
+                  'S/.${total}0',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: ScreenUtil().setSp(15),
+                  ),
+                ),
+              ],
+            );
           }
 
           return Column(

@@ -1,5 +1,6 @@
 class PromocionModel {
   String? idPromo;
+  String? promoTipo;
   String? idProduct;
   String? idCategoria;
   String? precioPromo;
@@ -10,6 +11,7 @@ class PromocionModel {
 
   PromocionModel({
     this.idPromo,
+    this.promoTipo,
     this.idProduct,
     this.idCategoria,
     this.precioPromo,
@@ -23,6 +25,7 @@ class PromocionModel {
 
   Map<String, dynamic> toJson() => {
         'idPromo': idPromo,
+        'promoTipo': promoTipo,
         'idProduct': idProduct,
         'idCategoria': idCategoria,
         'precioPromo': precioPromo,
@@ -34,6 +37,7 @@ class PromocionModel {
 
   factory PromocionModel.fromJson(Map<String, dynamic> json) => PromocionModel(
         idPromo: json["idPromo"],
+        promoTipo: json["promoTipo"],
         idProduct: json["idProduct"],
         idCategoria: json["idCategoria"],
         precioPromo: json["precioPromo"],

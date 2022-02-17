@@ -5,6 +5,7 @@ import 'package:royal_prestige/src/bloc/busqueda_bloc.dart';
 import 'package:royal_prestige/src/bloc/cart_bloc.dart';
 import 'package:royal_prestige/src/bloc/clientes_bloc.dart';
 import 'package:royal_prestige/src/bloc/compras_bloc.dart';
+import 'package:royal_prestige/src/bloc/cuota_bloc.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/document_bloc.dart';
 import 'package:royal_prestige/src/bloc/galeria_producto_bloc.dart';
@@ -23,6 +24,7 @@ class ProviderBloc extends InheritedWidget {
   final promoBloc = PromocionBloc();
   final busquedaGeneralTab = BusquedaGeneralTab();
   final comprasBloc = ComprasBloc();
+  final cuotaBloc = CuotaBloc();
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
   @override
@@ -70,5 +72,9 @@ class ProviderBloc extends InheritedWidget {
 
   static ComprasBloc compras(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.comprasBloc;
+  }
+
+  static CuotaBloc cuota(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.cuotaBloc;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/src/api/cuota_api.dart';
 import 'package:royal_prestige/src/api/login_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 
@@ -16,13 +17,15 @@ class _SplashState extends State<Splash> {
   void initState() {
     Future.delayed(const Duration(seconds: 2), () async {
       final loginApi = LoginApi();
+      final cuotaApi = CuotaApi();
 
-      loginApi.consultarUsuario();
+      cuotaApi.getCuotas();
       String? token = await StorageManager.readData('token');
 
       if (token == null || token.isEmpty) {
         Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
       } else {
+        loginApi.consultarUsuario();
         final bottomBloc = ProviderBloc.botton(context);
         bottomBloc.changePage(0);
         Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);

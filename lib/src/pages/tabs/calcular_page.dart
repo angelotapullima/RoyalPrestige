@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
+import 'package:royal_prestige/src/bloc/cuota_bloc.dart';
+import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/model/cuota_model.dart';
 import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 
@@ -25,7 +28,8 @@ class _CalcularPageState extends State<CalcularPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { final cuotaBloc=ProviderBloc.cuota(context);
+    cuotaBloc.getCuotasMostar();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -112,7 +116,7 @@ class _CalcularPageState extends State<CalcularPage> {
                     SizedBox(
                       height: ScreenUtil().setHeight(14),
                     ),
-                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(_controller), 3, _controller),
+                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(_controller,cuotaBloc), 3, _controller),
                     SizedBox(
                       height: ScreenUtil().setHeight(14),
                     ),
@@ -407,7 +411,7 @@ class _CalcularPageState extends State<CalcularPage> {
     );
   }
 
-  Widget _contenido3(ControllerCalculo _controller) {
+  Widget _contenido3(ControllerCalculo _controller,CuotaBloc cuotaBloc) {
     return Column(
       children: [
         SizedBox(
@@ -424,48 +428,45 @@ class _CalcularPageState extends State<CalcularPage> {
         SizedBox(
           height: ScreenUtil().setHeight(24),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('12 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota12}.00',
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('14 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota14}.00',
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('16 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota16}.00',
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('19 CUOTAS    --->'),
-            Text(
-              'S/. ${_controller.cuota19}.00',
-            ),
-          ],
+       Container(
+          child: StreamBuilder(
+            stream: cuotaBloc.cuotasMostrarStream,
+            builder: (BuildContext context, AsyncSnapshot<List<CuotaModel>> snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.length > 0) {
+                  return Container(
+                    height: snapshot.data!.length * ScreenUtil().setHeight(20),
+                    child: ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('${snapshot.data![index].cuotaNombre}   --->'),
+                            Text(
+                              'S/. ${(double.parse('${_controller.saldoFinancio.toStringAsFixed(2)}') * double.parse('${snapshot.data![index].cuotaMultiplicador}')).round()}.00',
+                            ),
+                          ],
+                        );
+                      },
+                      itemCount: snapshot.data!.length,
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              } else {
+                return Container();
+              }
+            },
+          ),
         ),
         SizedBox(
           height: ScreenUtil().setHeight(10),
         ),
         ExpansionPrueba(
-          title: 'Mostrar todas las cuotas',
-        ),
+          title: 'Mostrar todas las cuotas',monto: '${_controller.saldoFinancio.toStringAsFixed(2)}',
+        ), 
       ],
     );
   }
