@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_prestige/src/api/local_notification_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/api_model.dart';
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
         StreamBuilder(
           stream: bottomBloc.selectPageStream,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
+            if (snapshot.hasData) {
               bottomBloc.changePage(snapshot.data);
             }
             return Stack(
@@ -132,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       'Inicio\n',
                                       style: TextStyle(
-                                        fontSize: responsive.ip(1.5),
+                                        fontSize: ScreenUtil().setSp(12),
                                         color: (bottomBloc.page == 0) ? Colors.red : Colors.grey,
                                       ),
                                     )
@@ -157,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       'Documentos\n',
                                       style: TextStyle(
-                                        fontSize: responsive.ip(1.5),
+                                        fontSize: ScreenUtil().setSp(12),
                                         color: (bottomBloc.page == 1) ? Colors.red : Colors.grey,
                                       ),
                                     )
@@ -183,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                       'Clientes y\nprospectos',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: responsive.ip(1.6),
+                                        fontSize: ScreenUtil().setSp(12),
                                         color: (bottomBloc.page == 2) ? Colors.red : Colors.grey,
                                       ),
                                     )
@@ -209,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                                       'Agenda\n',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: responsive.ip(1.6),
+                                        fontSize: ScreenUtil().setSp(12),
                                         color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
                                       ),
                                     )
@@ -295,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       'Calculadora\n',
                                       style: TextStyle(
-                                        fontSize: responsive.ip(1.6),
+                                        fontSize: ScreenUtil().setSp(12),
                                         color: (bottomBloc.page == 4) ? Colors.red : Colors.grey,
                                       ),
                                     )

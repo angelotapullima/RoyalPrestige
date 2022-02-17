@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
 import 'package:royal_prestige/database/cuotas_database.dart';
 import 'package:royal_prestige/src/model/cuota_model.dart';
 import 'package:royal_prestige/src/utils/constants.dart';

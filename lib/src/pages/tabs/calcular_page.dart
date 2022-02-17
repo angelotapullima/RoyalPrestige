@@ -7,6 +7,7 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cuota_model.dart';
 import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
+import 'package:royal_prestige/src/widget/carrito.dart';
 
 class CalcularPage extends StatefulWidget {
   const CalcularPage({Key? key}) : super(key: key);
@@ -28,7 +29,8 @@ class _CalcularPageState extends State<CalcularPage> {
   }
 
   @override
-  Widget build(BuildContext context) { final cuotaBloc=ProviderBloc.cuota(context);
+  Widget build(BuildContext context) {
+    final cuotaBloc = ProviderBloc.cuota(context);
     cuotaBloc.getCuotasMostar();
     return Scaffold(
       body: SafeArea(
@@ -44,9 +46,10 @@ class _CalcularPageState extends State<CalcularPage> {
                 return Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenUtil().setWidth(10),
-                        vertical: ScreenUtil().setHeight(5),
+                      padding: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(10),
+                        top: ScreenUtil().setHeight(5),
+                        bottom: ScreenUtil().setHeight(5),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -58,6 +61,8 @@ class _CalcularPageState extends State<CalcularPage> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
+                          Spacer(),
+                          CarritoWidget(color: Colors.grey)
                         ],
                       ),
                     ),
@@ -116,7 +121,7 @@ class _CalcularPageState extends State<CalcularPage> {
                     SizedBox(
                       height: ScreenUtil().setHeight(14),
                     ),
-                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(_controller,cuotaBloc), 3, _controller),
+                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(_controller, cuotaBloc), 3, _controller),
                     SizedBox(
                       height: ScreenUtil().setHeight(14),
                     ),
@@ -411,7 +416,7 @@ class _CalcularPageState extends State<CalcularPage> {
     );
   }
 
-  Widget _contenido3(ControllerCalculo _controller,CuotaBloc cuotaBloc) {
+  Widget _contenido3(ControllerCalculo _controller, CuotaBloc cuotaBloc) {
     return Column(
       children: [
         SizedBox(
@@ -428,7 +433,7 @@ class _CalcularPageState extends State<CalcularPage> {
         SizedBox(
           height: ScreenUtil().setHeight(24),
         ),
-       Container(
+        Container(
           child: StreamBuilder(
             stream: cuotaBloc.cuotasMostrarStream,
             builder: (BuildContext context, AsyncSnapshot<List<CuotaModel>> snapshot) {
@@ -465,8 +470,9 @@ class _CalcularPageState extends State<CalcularPage> {
           height: ScreenUtil().setHeight(10),
         ),
         ExpansionPrueba(
-          title: 'Mostrar todas las cuotas',monto: '${_controller.saldoFinancio.toStringAsFixed(2)}',
-        ), 
+          title: 'Mostrar todas las cuotas',
+          monto: '${_controller.saldoFinancio.toStringAsFixed(2)}',
+        ),
       ],
     );
   }

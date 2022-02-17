@@ -942,36 +942,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                   SizedBox(
                     height: ScreenUtil().setHeight(5),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          padding: EdgeInsets.all(5),
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                            size: ScreenUtil().setHeight(30),
-                          ),
-                        ),
-                        SizedBox(
-                          width: ScreenUtil().setWidth(20),
-                        ),
-                        Expanded(
-                          child: Text('Seguir buscando'),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(5),
-                  ),
+                  
                   InkWell(
                     onTap: () {
                       Navigator.pop(context);
