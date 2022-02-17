@@ -59,162 +59,162 @@ class _HomePageState extends State<HomePage> {
     dataBloc.obtenerUser();
     dataBloc.getEstatusUser();
     return Scaffold(
-        body: Stack(
-      children: [
-        StreamBuilder(
-          stream: bottomBloc.selectPageStream,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              bottomBloc.changePage(snapshot.data);
-            }
-            return Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(
-                    bottom: kBottomNavigationBarHeight * responsive.hp(.21),
-                  ),
-                  child: IndexedStack(
-                    index: snapshot.data,
-                    children: pageList,
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: kBottomNavigationBarHeight * responsive.hp(.21),
+      body: Stack(
+        children: [
+          StreamBuilder(
+            stream: bottomBloc.selectPageStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                bottomBloc.changePage(snapshot.data);
+              }
+              return Stack(
+                children: [
+                  Container(
                     padding: EdgeInsets.only(
-                      bottom: responsive.hp(2),
-                      left: responsive.wp(2),
-                      right: responsive.wp(2),
+                      bottom: kBottomNavigationBarHeight * responsive.hp(.21),
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadiusDirectional.only(
-                        topStart: Radius.circular(20),
-                        topEnd: Radius.circular(20),
+                    child: IndexedStack(
+                      index: snapshot.data,
+                      children: pageList,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: kBottomNavigationBarHeight * responsive.hp(.21),
+                      padding: EdgeInsets.only(
+                        bottom: responsive.hp(2),
+                        left: responsive.wp(2),
+                        right: responsive.wp(2),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadiusDirectional.only(
+                          topStart: Radius.circular(20),
+                          topEnd: Radius.circular(20),
                         ),
-                      ],
-                    ),
-                    child: StreamBuilder(
-                      stream: bottomBloc.selectPageStream,
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        return Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: responsive.wp(2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  bottomBloc.changePage(0);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: responsive.hp(1),
-                                    ),
-                                    Icon(
-                                      Icons.home,
-                                      size: responsive.ip(3),
-                                      color: (bottomBloc.page == 0) ? Colors.red : Colors.grey,
-                                    ),
-                                    Text(
-                                      'Inicio\n',
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(12),
+                        ],
+                      ),
+                      child: StreamBuilder(
+                        stream: bottomBloc.selectPageStream,
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: responsive.wp(2),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    bottomBloc.changePage(0);
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: responsive.hp(1),
+                                      ),
+                                      Icon(
+                                        Icons.home,
+                                        size: responsive.ip(3),
                                         color: (bottomBloc.page == 0) ? Colors.red : Colors.grey,
                                       ),
-                                    )
-                                  ],
+                                      Text(
+                                        'Inicio\n',
+                                        style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(12),
+                                          color: (bottomBloc.page == 0) ? Colors.red : Colors.grey,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  bottomBloc.changePage(1);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: responsive.hp(1),
-                                    ),
-                                    Icon(
-                                      Icons.file_copy,
-                                      size: responsive.ip(3),
-                                      color: (bottomBloc.page == 1) ? Colors.red : Colors.grey,
-                                    ),
-                                    Text(
-                                      'Documentos\n',
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(12),
+                                InkWell(
+                                  onTap: () {
+                                    bottomBloc.changePage(1);
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: responsive.hp(1),
+                                      ),
+                                      Icon(
+                                        Icons.file_copy,
+                                        size: responsive.ip(3),
                                         color: (bottomBloc.page == 1) ? Colors.red : Colors.grey,
                                       ),
-                                    )
-                                  ],
+                                      Text(
+                                        'Documentos\n',
+                                        style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(12),
+                                          color: (bottomBloc.page == 1) ? Colors.red : Colors.grey,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  bottomBloc.changePage(2);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: responsive.hp(1),
-                                    ),
-                                    Icon(
-                                      Icons.person,
-                                      size: responsive.ip(3.5),
-                                      color: (bottomBloc.page == 2) ? Colors.red : Colors.grey,
-                                    ),
-                                    Text(
-                                      'Clientes y\nprospectos',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(12),
+                                InkWell(
+                                  onTap: () {
+                                    bottomBloc.changePage(2);
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: responsive.hp(1),
+                                      ),
+                                      Icon(
+                                        Icons.person,
+                                        size: responsive.ip(3.5),
                                         color: (bottomBloc.page == 2) ? Colors.red : Colors.grey,
                                       ),
-                                    )
-                                  ],
+                                      Text(
+                                        'Clientes y\nprospectos',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(12),
+                                          color: (bottomBloc.page == 2) ? Colors.red : Colors.grey,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  bottomBloc.changePage(3);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: responsive.hp(1),
-                                    ),
-                                    Icon(
-                                      Icons.view_agenda,
-                                      size: responsive.ip(3),
-                                      color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
-                                    ),
-                                    Text(
-                                      'Agenda\n',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(12),
+                                InkWell(
+                                  onTap: () {
+                                    bottomBloc.changePage(3);
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: responsive.hp(1),
+                                      ),
+                                      Icon(
+                                        Icons.view_agenda,
+                                        size: responsive.ip(3),
                                         color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
                                       ),
-                                    )
-                                    /*  StreamBuilder(
+                                      Text(
+                                        'Agenda\n',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(12),
+                                          color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
+                                        ),
+                                      )
+                                      /*  StreamBuilder(
                                               stream: carritoBloc.cartStream,
                                               builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot) {
                                                 int cantidad = 0;
@@ -275,65 +275,66 @@ class _HomePageState extends State<HomePage> {
                                               color: (bottomBloc.page == 3) ? Colors.red : Colors.grey,
                                             ),
                                           ) */
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  bottomBloc.changePage(4);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: responsive.hp(1),
-                                    ),
-                                    Icon(
-                                      Icons.calculate,
-                                      size: responsive.ip(3),
-                                      color: (bottomBloc.page == 4) ? Colors.red : Colors.grey,
-                                    ),
-                                    Text(
-                                      'Calculadora\n',
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(12),
+                                InkWell(
+                                  onTap: () {
+                                    bottomBloc.changePage(4);
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: responsive.hp(1),
+                                      ),
+                                      Icon(
+                                        Icons.calculate,
+                                        size: responsive.ip(3),
                                         color: (bottomBloc.page == 4) ? Colors.red : Colors.grey,
                                       ),
-                                    )
-                                  ],
+                                      Text(
+                                        'Calculadora\n',
+                                        style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(12),
+                                          color: (bottomBloc.page == 4) ? Colors.red : Colors.grey,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
-        ),
-        StreamBuilder(
-          stream: dataBloc.estadoUserStream,
-          builder: (context, AsyncSnapshot<ApiModel> estadoUser) {
-            if (estadoUser.hasData) {
-              return (estadoUser.data!.code != '1')
-                  ? Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      color: Colors.white,
-                      child: Center(
-                        child: Text('El usuario se encuenta actualmente deshabilitado'),
-                      ),
-                    )
-                  : Container();
-            } else {
-              return Container();
-            }
-          },
-        ),
-      ],
-    ));
+                ],
+              );
+            },
+          ),
+          StreamBuilder(
+            stream: dataBloc.estadoUserStream,
+            builder: (context, AsyncSnapshot<ApiModel> estadoUser) {
+              if (estadoUser.hasData) {
+                return (estadoUser.data!.code == '2')
+                    ? Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text('El usuario se encuenta actualmente deshabilitado'),
+                        ),
+                      )
+                    : Container();
+              } else {
+                return Container();
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
