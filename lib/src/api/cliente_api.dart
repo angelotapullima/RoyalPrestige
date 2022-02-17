@@ -159,14 +159,12 @@ class ClienteApi {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/guardar_compra');
       String? token = await StorageManager.readData('token');
-      String? idUsuario = await StorageManager.readData('idUser');
 
       final resp = await http.post(url, body: {
         'tn': token,
         'app': 'true',
         'id_cliente': '${compra.idCliente}',
         'id_producto': '${compra.idProducto}',
-        'id_usuario': '$idUsuario',
         'compra_monto_cuota': '${compra.montoCuotaCompra}',
         'compra_fecha_pago': '${compra.fechaPagoCompra}',
         'compra_fecha': '${compra.fechaCompra}',
@@ -174,10 +172,15 @@ class ClienteApi {
         'compra_estado': '1',
       });
 
-      if (resp.statusCode == 200) {
-        print(resp.toString());
+      final decodedData = json.decode(resp.body);
+      print(decodedData);
 
-        return true;
+      if (resp.statusCode == 200) {
+        if (decodedData["result"]["code"] == 1) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
