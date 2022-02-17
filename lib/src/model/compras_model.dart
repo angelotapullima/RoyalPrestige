@@ -1,5 +1,3 @@
-import 'package:royal_prestige/src/model/producto_model.dart';
-
 class ComprasModel {
   String? idCompra;
   String? idUsuario;
@@ -10,7 +8,6 @@ class ComprasModel {
   String? fechaCompra;
   String? observacionCompra;
   String? estadoCompra;
-  ProductoModel? producto;
 
   ComprasModel({
     this.idCompra,
@@ -22,7 +19,6 @@ class ComprasModel {
     this.fechaCompra,
     this.observacionCompra,
     this.estadoCompra,
-    this.producto,
   });
 
   static List<ComprasModel> fromJsonList(List<dynamic> json) => json.map((i) => ComprasModel.fromJson(i)).toList();

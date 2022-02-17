@@ -420,44 +420,72 @@ class PruebaInicio extends StatelessWidget {
           color: Colors.blueGrey.shade100.withOpacity(.2),
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${alerta.nombreCLiente}  ',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
-              children: [
-                Text(
-                  'Telefono: ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+        child: ('${alerta.idClient}' == '0')
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(''),
+                  Text(
+                    '${alerta.alertTitle}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text('${alerta.telefonoCliente}'),
-                Spacer(),
-                Text(
-                  'Hora: ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      Spacer(),
+                      Text(
+                        'Hora: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text('${alerta.alertHour}'),
+                    ],
                   ),
-                ),
-                Text('${alerta.alertHour}'),
-              ],
-            ),
-            Text(
-              '${alerta.alertTitle}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+                  Text('${alerta.alertDetail}'),
+                  Text(''),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(''),
+                  Text(
+                    '${alerta.nombreCLiente}  ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Telefono: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text('${alerta.telefonoCliente}'),
+                      Spacer(),
+                      Text(
+                        'Hora: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text('${alerta.alertHour}'),
+                    ],
+                  ),
+                  Text(
+                    '${alerta.alertTitle}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text('${alerta.alertDetail}'),
+                  Text(''),
+                ],
               ),
-            ),
-            Text('${alerta.alertDetail}'),
-            Text(''),
-          ],
-        ),
       ),
     );
   }
@@ -858,7 +886,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
 
   @override
   void initState() {
-    super.initState(); 
+    super.initState();
   }
 
   @override

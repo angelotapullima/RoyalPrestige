@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/api/cliente_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/model/compras_model.dart';
-import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
@@ -21,24 +19,21 @@ class AgregarCompra extends StatefulWidget {
 
 class _AgregarCompraState extends State<AgregarCompra> {
   ValueNotifier<bool> _cargando = ValueNotifier(false);
-  String fechaPagoDato = 'Seleccionar';
   String fechaCompraDato = 'Seleccionar';
-  String horaCompraDato = 'Seleccionar';
-  TextEditingController _montoCuotaController = TextEditingController();
+  TextEditingController _productosController = TextEditingController();
+  TextEditingController _montoTotalController = TextEditingController();
+  TextEditingController _fechaPagoController = TextEditingController();
   TextEditingController _observacionController = TextEditingController();
-  String nombreProducto = '';
-  String idProducto = '';
 
   @override
   void dispose() {
-    _montoCuotaController.dispose();
+    _montoTotalController.dispose();
     _observacionController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<EstadoController>(context, listen: false);
     final responsive = Responsive.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -70,68 +65,7 @@ class _AgregarCompraState extends State<AgregarCompra> {
                         height: ScreenUtil().setHeight(25),
                       ),
                       Text(
-                        ' Nombre de producto',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      ValueListenableBuilder(
-                          valueListenable: provider.idProducto,
-                          builder: (context, String data, snapshot) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) {
-                                      return SearchProducto();
-                                    },
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                      var begin = Offset(0.0, 1.0);
-                                      var end = Offset.zero;
-                                      var curve = Curves.ease;
-
-                                      var tween = Tween(begin: begin, end: end).chain(
-                                        CurveTween(curve: curve),
-                                      );
-
-                                      return SlideTransition(
-                                        position: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: ScreenUtil().setWidth(10),
-                                  vertical: ScreenUtil().setHeight(15),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.grey.shade300),
-                                ),
-                                width: double.infinity,
-                                height: ScreenUtil().setHeight(55),
-                                child: Text(
-                                  (data != '') ? provider.nombreProducto.value.toString() : 'Buscar producto',
-                                  style: TextStyle(color: (data != '') ? Colors.black : Colors.grey.shade700),
-                                ),
-                              ),
-                            );
-                          }),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Monto por cuota ',
+                        ' Producto(s)',
                         style: TextStyle(
                           fontSize: ScreenUtil().setSp(16),
                           fontWeight: FontWeight.w600,
@@ -142,12 +76,63 @@ class _AgregarCompraState extends State<AgregarCompra> {
                         height: ScreenUtil().setHeight(6),
                       ),
                       TextField(
-                        controller: _montoCuotaController,
+                        controller: _productosController,
+                        keyboardType: TextInputType.text,
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Nombre producto(s)',
+                          hintStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(14),
+                            color: Colors.grey[600],
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 2.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              ScreenUtil().setWidth(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
+                      Text(
+                        ' Monto total',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(6),
+                      ),
+                      TextField(
+                        controller: _montoTotalController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Monto cuota ',
+                          hintText: 'Monto total',
                           hintStyle: TextStyle(
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.grey[600],
@@ -191,6 +176,57 @@ class _AgregarCompraState extends State<AgregarCompra> {
                       SizedBox(
                         height: ScreenUtil().setHeight(6),
                       ),
+                      TextField(
+                        controller: _fechaPagoController,
+                        keyboardType: TextInputType.text,
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Fecha de pago',
+                          hintStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(14),
+                            color: Colors.grey[600],
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 2.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              ScreenUtil().setWidth(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
+                      Text(
+                        ' Fecha de compra',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(6),
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -205,17 +241,17 @@ class _AgregarCompraState extends State<AgregarCompra> {
                         height: ScreenUtil().setHeight(50),
                         child: InkWell(
                           onTap: () {
-                            _selectdatePago(context);
+                            _selectdate(context);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
                                 child: Text(
-                                  fechaPagoDato,
+                                  fechaCompraDato,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: (fechaPagoDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
+                                    color: (fechaCompraDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
                                     fontSize: ScreenUtil().setSp(16),
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -228,128 +264,6 @@ class _AgregarCompraState extends State<AgregarCompra> {
                             ],
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: responsive.wp(43),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ' Fecha de compra',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(16),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(6),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.only(
-                                    right: ScreenUtil().setWidth(5),
-                                  ),
-                                  height: ScreenUtil().setHeight(50),
-                                  child: InkWell(
-                                    onTap: () {
-                                      _selectdate(context);
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            fechaCompraDato,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: (fechaCompraDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
-                                              fontSize: ScreenUtil().setSp(16),
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                        Icon(
-                                          Icons.calendar_today,
-                                          color: colorPrimary,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            width: responsive.wp(43),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ' Hora de Compra',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(16),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(6),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.only(
-                                    right: ScreenUtil().setWidth(5),
-                                  ),
-                                  height: ScreenUtil().setHeight(50),
-                                  child: InkWell(
-                                    onTap: () {
-                                      _selectHora(context);
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            horaCompraDato,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: (horaCompraDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
-                                              fontSize: ScreenUtil().setSp(16),
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                        Icon(
-                                          Icons.timelapse_outlined,
-                                          color: colorPrimary,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
                       ),
                       SizedBox(
                         height: ScreenUtil().setHeight(20),
@@ -410,44 +324,38 @@ class _AgregarCompraState extends State<AgregarCompra> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           color: colorPrimary,
                           onPressed: () async {
-                            if (provider.idProducto.value != '') {
-                              if (_montoCuotaController.text.isNotEmpty) {
-                                if (fechaPagoDato != 'Seleccionar') {
+                            if (_productosController.text.isNotEmpty) {
+                              if (_montoTotalController.text.isNotEmpty) {
+                                if (_fechaPagoController.text.isNotEmpty) {
                                   if (fechaCompraDato != 'Seleccionar') {
-                                    if (horaCompraDato != 'Seleccionar') {
-                                      if (_observacionController.text.isNotEmpty) {
-                                        _cargando.value = true;
-                                        final clienteApi = ClienteApi();
+                                    if (_observacionController.text.isNotEmpty) {
+                                      _cargando.value = true;
+                                      final clienteApi = ClienteApi();
 
-                                        ComprasModel compra = ComprasModel();
-                                        compra.idCliente = widget.clienteData.idCliente.toString();
-                                        compra.idProducto = provider.idProducto.value;
-                                        compra.montoCuotaCompra = _montoCuotaController.text;
-                                        compra.fechaPagoCompra = fechaPagoDato;
-                                        compra.fechaCompra = '$fechaCompraDato $horaCompraDato';
-                                        compra.observacionCompra = _observacionController.text;
+                                      ComprasModel compra = ComprasModel();
+                                      compra.idCliente = widget.clienteData.idCliente.toString();
+                                      compra.idProducto = _productosController.text;
+                                      compra.montoCuotaCompra = _montoTotalController.text;
+                                      compra.fechaPagoCompra = _fechaPagoController.text;
+                                      compra.fechaCompra = '$fechaCompraDato';
+                                      compra.observacionCompra = _observacionController.text;
 
-                                        final res = await clienteApi.guardarCompra(compra);
+                                      final res = await clienteApi.guardarCompra(compra);
 
-                                        if (res) {
-                                          showToast2('Compra agregado correctamente', Colors.green);
+                                      if (res) {
+                                        showToast2('Compra agregado correctamente', Colors.green);
 
-                                          provider.changeProducto('', '');
+                                        final comprasBloc = ProviderBloc.compras(context);
+                                        comprasBloc.obtenerComprasByIdCliente(widget.clienteData.idCliente.toString());
 
-                                          final comprasBloc = ProviderBloc.compras(context);
-                                          comprasBloc.obtenerComprasByIdCliente(widget.clienteData.idCliente.toString());
-
-                                          Navigator.pop(context);
-                                          _cargando.value = false;
-                                        } else {
-                                          showToast2('Ocurrió un error', Colors.red);
-                                          _cargando.value = false;
-                                        }
+                                        Navigator.pop(context);
+                                        _cargando.value = false;
                                       } else {
-                                        showToast2('Por favor ingrese una observacion de la compra', Colors.red);
+                                        showToast2('Ocurrió un error', Colors.red);
+                                        _cargando.value = false;
                                       }
                                     } else {
-                                      showToast2('Por favor seleccione la hora de compra', Colors.red);
+                                      showToast2('Por favor ingrese una observacion de la compra', Colors.red);
                                     }
                                   } else {
                                     showToast2('Por favor seleccione la fecha de compra', Colors.red);
@@ -459,7 +367,7 @@ class _AgregarCompraState extends State<AgregarCompra> {
                                 showToast2('Por favor ingrese el monto de pago por cuota', Colors.red);
                               }
                             } else {
-                              showToast2('Por favor seleccione un producto', Colors.red);
+                              showToast2('Por favor ingrese producto(s)', Colors.red);
                             }
                           },
                           child: Text(
@@ -522,35 +430,6 @@ class _AgregarCompraState extends State<AgregarCompra> {
 
     setState(() {
       fechaCompraDato =
-          "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-    });
-  }
-
-  _selectHora(BuildContext context) async {
-    TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    print('date $picked');
-
-    setState(() {
-      horaCompraDato = "${picked!.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
-    });
-  }
-
-  _selectdatePago(BuildContext context) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime(DateTime.now().month - 1),
-      initialDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 2),
-    );
-
-    print('date $picked');
-
-    setState(() {
-      fechaPagoDato =
           "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
     });
   }

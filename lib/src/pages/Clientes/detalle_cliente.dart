@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,11 +7,10 @@ import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/model/compras_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/editar_cliente.dart';
 import 'package:royal_prestige/src/pages/Compras/agregar_compra.dart';
+import 'package:royal_prestige/src/pages/Compras/detalle_compra.dart';
 import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
-import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
-import 'dart:math' as math;
 
 class DetalleCliente extends StatefulWidget {
   final ClienteModel clienteModel;
@@ -452,16 +449,15 @@ class _DetalleClienteState extends State<DetalleCliente> {
                                   horizontal: ScreenUtil().setWidth(5),
                                 ),
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: .6,
+                                  childAspectRatio: .75,
                                   crossAxisCount: 2,
                                   mainAxisSpacing: responsive.hp(2),
                                   crossAxisSpacing: responsive.wp(3),
                                 ),
                                 itemCount: compras.data!.length,
                                 itemBuilder: (context, i) {
-                                  var valorHero = math.Random().nextDouble() * i;
                                   return LayoutBuilder(builder: (context, constrain) {
-                                    return itemProduct(context, compras.data![i], valorHero, constrain.maxHeight);
+                                    return itemCompra(context, compras.data![i], constrain.maxHeight);
                                   });
                                 },
                               );
@@ -507,9 +503,34 @@ class _DetalleClienteState extends State<DetalleCliente> {
     );
   }
 
-  Widget itemProduct(BuildContext context, ComprasModel compra, var valorHero, double height) {
+  Widget itemCompra(BuildContext context, ComprasModel compra, double height) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return DetalleCompra(
+                compra: compra,
+              );
+            },
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              var begin = Offset(0.0, 1.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween = Tween(begin: begin, end: end).chain(
+                CurveTween(curve: curve),
+              );
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
       child: Stack(
         children: [
           Container(
@@ -535,128 +556,38 @@ class _DetalleClienteState extends State<DetalleCliente> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: height * .50,
-                  child: (compra.producto!.galery!.length > 0)
-                      ? CarouselSlider.builder(
-                          itemCount: compra.producto?.galery!.length,
-                          itemBuilder: (context, x, y) {
-                            return InkWell(
-                              onTap: () {},
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Stack(
-                                    children: [
-                                      CachedNetworkImage(
-                                        placeholder: (context, url) => Container(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          child: CupertinoActivityIndicator(),
-                                        ),
-                                        errorWidget: (context, url, error) => Container(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          child: Center(
-                                            child: Icon(Icons.error),
-                                          ),
-                                        ),
-                                        imageUrl: '$apiBaseURL/${compra.producto!.galery![x].file}',
-                                        imageBuilder: (context, imageProvider) => Container(
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          options: CarouselOptions(
-                              height: ScreenUtil().setHeight(552),
-                              onPageChanged: (index, page) {},
-                              enlargeCenterPage: true,
-                              autoPlay: true,
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              autoPlayInterval: Duration(seconds: 6),
-                              autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                              viewportFraction: 1),
-                        )
-                      : Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: Center(
-                            child: Icon(Icons.error),
-                          ),
-                        ),
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(10),
+                  height: ScreenUtil().setHeight(20),
                 ),
                 Text(
-                  '${compra.producto!.nombreProducto}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  '${compra.idProducto}',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: ScreenUtil().setSp(15),
                   ),
                 ),
                 SizedBox(
+                  height: ScreenUtil().setHeight(8),
+                ),
+                Text(
+                  'Fecha pago',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: ScreenUtil().setSp(11),
+                  ),
+                ),
+                SizedBox(
                   height: ScreenUtil().setHeight(2),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      'Cuota',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: ScreenUtil().setSp(11),
-                      ),
-                    ),
-                    SizedBox(width: ScreenUtil().setWidth(8)),
-                    Text(
-                      'S/ ${compra.montoCuotaCompra}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: ScreenUtil().setSp(11),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Fecha pago',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: ScreenUtil().setSp(11),
-                      ),
-                    ),
-                    SizedBox(width: ScreenUtil().setWidth(8)),
-                    Text(
-                      '${compra.fechaPagoCompra}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: ScreenUtil().setSp(11),
-                      ),
-                    ),
-                  ],
+                Text(
+                  '${compra.fechaPagoCompra}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: ScreenUtil().setSp(11),
+                  ),
                 ),
                 SizedBox(
                   height: ScreenUtil().setHeight(5),
@@ -689,7 +620,7 @@ class _DetalleClienteState extends State<DetalleCliente> {
                     ),
                     padding: EdgeInsets.all(8),
                     child: Text(
-                      'S/ ${compra.producto!.precioProducto}',
+                      'S/ ${compra.montoCuotaCompra}',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,

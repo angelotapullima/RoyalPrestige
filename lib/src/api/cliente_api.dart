@@ -106,6 +106,7 @@ class ClienteApi {
       });
 
       final decodedData = json.decode(resp.body);
+      print(decodedData);
 
       for (var i = 0; i < decodedData.length; i++) {
         ClienteModel clienteModel = ClienteModel();
@@ -159,6 +160,7 @@ class ClienteApi {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/guardar_compra');
       String? token = await StorageManager.readData('token');
+      print('${compra.idProducto}');
 
       final resp = await http.post(url, body: {
         'tn': token,
