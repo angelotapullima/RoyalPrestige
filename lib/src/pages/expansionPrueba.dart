@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; 
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cuota_model.dart';
 
@@ -20,10 +18,10 @@ class ExpansionPrueba extends StatefulWidget {
 
 class _ExpansionPruebaState extends State<ExpansionPrueba> {
   //final _controller = ControllerCalculo();
-  late ControllerCalculo _controller;
+   
   @override
   void initState() {
-    _controller = Provider.of<ControllerCalculo>(context, listen: false);
+    
     super.initState();
   }
 
