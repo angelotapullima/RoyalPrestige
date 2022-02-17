@@ -1,14 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:royal_prestige/src/api/productos_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/galery_model.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
-import 'package:royal_prestige/src/utils/utils.dart';
 
 class DetailPicture extends StatefulWidget {
   const DetailPicture({
@@ -47,13 +44,7 @@ class _DetailPictureState extends State<DetailPicture> {
                   appBar: AppBar(
                     backgroundColor: Colors.transparent,
                     actions: [
-                      // InkWell(
-                      //   onTap: () {},
-                      //   child: Padding(
-                      //     padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(8)),
-                      //     child: Icon(Icons.delete),
-                      //   ),
-                      // ),
+                    
                       Container(
                         height: responsive.ip(1),
                         padding: EdgeInsets.symmetric(
@@ -113,7 +104,7 @@ class _DetailPictureState extends State<DetailPicture> {
                                   ),
                                 ),
                               ),
-                              InkWell(
+                            /*   InkWell(
                                 onTap: () async {
                                   final productosApi = ProductosApi();
 
@@ -150,7 +141,7 @@ class _DetailPictureState extends State<DetailPicture> {
                                   ),
                                 ),
                               )
-                            ],
+                           */  ],
                           ),
                         );
                       }),

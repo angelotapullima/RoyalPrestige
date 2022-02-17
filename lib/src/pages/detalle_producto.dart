@@ -22,6 +22,7 @@ import 'package:royal_prestige/src/model/cart_model.dart';
 import 'package:royal_prestige/src/model/info_product_model.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/carrito_tab.dart';
+import 'package:royal_prestige/src/pages/detail_promocion_vista.dart';
 import 'package:royal_prestige/src/pages/detalle_foto.dart';
 import 'package:royal_prestige/src/pages/tabs/documentosPage.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
@@ -159,38 +160,61 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                           autoPlayAnimationDuration: Duration(milliseconds: 2000),
                                           viewportFraction: 1),
                                     )
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                        child: Stack(
-                                          children: [
-                                            CachedNetworkImage(
-                                              placeholder: (context, url) => Container(
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                                child: CupertinoActivityIndicator(),
+                                  : InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation, secondaryAnimation) {
+                                              return DetailPromoVista(foto: '${snapshot.data![0].galery![0].file}');
+                                            },
+                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                              var begin = Offset(0.0, 1.0);
+                                              var end = Offset.zero;
+                                              var curve = Curves.ease;
+
+                                              var tween = Tween(begin: begin, end: end).chain(
+                                                CurveTween(curve: curve),
+                                              );
+
+                                              return SlideTransition(
+                                                position: animation.drive(tween),
+                                                child: child,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                        //DetailPromoVista
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) => Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              child: CupertinoActivityIndicator(),
+                                            ),
+                                            errorWidget: (context, url, error) => Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              child: Center(
+                                                child: Icon(Icons.error),
                                               ),
-                                              errorWidget: (context, url, error) => Container(
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                                child: Center(
-                                                  child: Icon(Icons.error),
-                                                ),
-                                              ),
-                                              imageUrl: '$apiBaseURL/${snapshot.data![0].galery![0].file}',
-                                              imageBuilder: (context, imageProvider) => Container(
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: imageProvider,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                            ),
+                                            imageUrl: '$apiBaseURL/${snapshot.data![0].galery![0].file}',
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ),
                                     )
