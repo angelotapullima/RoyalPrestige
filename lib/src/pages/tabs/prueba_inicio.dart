@@ -990,30 +990,30 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                     children: [
                       InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) {
-                                return EditFrase(
-                                  frase: '${widget.user.frase}',
-                                );
-                              },
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                var begin = Offset(0.0, 1.0);
-                                var end = Offset.zero;
-                                var curve = Curves.ease;
+                          // Navigator.push(
+                          //   context,
+                          //   PageRouteBuilder(
+                          //     pageBuilder: (context, animation, secondaryAnimation) {
+                          //       return EditFrase(
+                          //         frase: '${widget.user.frase}',
+                          //       );
+                          //     },
+                          //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          //       var begin = Offset(0.0, 1.0);
+                          //       var end = Offset.zero;
+                          //       var curve = Curves.ease;
 
-                                var tween = Tween(begin: begin, end: end).chain(
-                                  CurveTween(curve: curve),
-                                );
+                          //       var tween = Tween(begin: begin, end: end).chain(
+                          //         CurveTween(curve: curve),
+                          //       );
 
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
+                          //       return SlideTransition(
+                          //         position: animation.drive(tween),
+                          //         child: child,
+                          //       );
+                          //     },
+                          //   ),
+                          // );
                         },
                         child: Text(
                           '" ${widget.user.frase} "',
