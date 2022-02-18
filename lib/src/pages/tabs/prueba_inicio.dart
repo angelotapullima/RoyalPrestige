@@ -17,7 +17,6 @@ import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/detail_promocion_vista.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
-import 'package:royal_prestige/src/pages/edit_frase.dart';
 import 'package:royal_prestige/src/pages/info_user.dart';
 import 'package:royal_prestige/src/pages/promo_categoria_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
