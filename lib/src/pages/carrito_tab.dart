@@ -9,13 +9,37 @@ import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/calculadora_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 
-class CarritoTab extends StatelessWidget {
+class CarritoTab extends StatefulWidget {
   const CarritoTab({Key? key}) : super(key: key);
+
+  @override
+  State<CarritoTab> createState() => _CarritoTabState();
+}
+
+class _CarritoTabState extends State<CarritoTab> {
+  TextEditingController _cantidadController = TextEditingController();
+
+  @override
+  void dispose() {
+    _cantidadController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    print('Se ejecuta el init');
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      final carritoBloc = ProviderBloc.cart(context);
+      carritoBloc.getCart();
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final carritoBloc = ProviderBloc.cart(context);
-    carritoBloc.getCart();
+    //carritoBloc.getCart();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -49,6 +73,10 @@ class CarritoTab extends StatelessWidget {
                             for (var i = 0; i < snapshot.data!.length; i++) {
                               montex = (montex + double.parse('${snapshot.data![i].subtotal}'));
                             }
+
+                            if (_cantidadController.text.isEmpty) {
+                              _cantidadController.text = montex.toStringAsFixed(2);
+                            }
                             return Column(
                               children: [
                                 Container(
@@ -68,11 +96,42 @@ class CarritoTab extends StatelessWidget {
                                       ),
                                       Spacer(),
                                       Text(
-                                        'S/.$montex',
+                                        'S/. ',
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           fontSize: ScreenUtil().setSp(18),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: ScreenUtil().setWidth(120),
+                                        child: TextField(
+                                          controller: _cantidadController,
+                                          keyboardType: TextInputType.number,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: ScreenUtil().setSp(18),
+                                          ),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            hintText: '00.00',
+                                            hintStyle: TextStyle(
+                                              fontSize: ScreenUtil().setSp(14),
+                                              color: Colors.grey[600],
+                                            ),
+                                            enabledBorder: InputBorder.none,
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                color: Colors.grey.shade300,
+                                                width: 2.0,
+                                              ),
+                                            ),
+                                            border: InputBorder.none,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -96,7 +155,7 @@ class CarritoTab extends StatelessWidget {
                                         PageRouteBuilder(
                                           pageBuilder: (context, animation, secondaryAnimation) {
                                             return CalculaDoraPage(
-                                              monto: montex,
+                                              monto: double.parse(_cantidadController.text),
                                               cart: snapshot.data!,
                                             );
                                           },

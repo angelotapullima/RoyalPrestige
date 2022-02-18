@@ -20,6 +20,12 @@ class DataUserBloc {
     _estadouserController.sink.add(await loginApi.consultarUsuario());
   }
 
+  void obtenerDatosUser() async {
+    obtenerUser();
+    await loginApi.getDataUsuario();
+    obtenerUser();
+  }
+
   void obtenerUser() async {
     UserModel userModel = UserModel();
     userModel.idUser = await StorageManager.readData('idUser');
@@ -33,6 +39,8 @@ class DataUserBloc {
     userModel.roleName = await StorageManager.readData('roleName');
     userModel.personDNI = await StorageManager.readData('personDNI');
     userModel.personCargo = await StorageManager.readData('personCargo');
+    userModel.userCodigo = await StorageManager.readData('userCodigo');
+    userModel.frase = await StorageManager.readData('frase');
     _dataUserController.sink.add(userModel);
   }
 }
@@ -49,6 +57,8 @@ class UserModel {
   String? roleName;
   String? personDNI;
   String? personCargo;
+  String? userCodigo;
+  String? frase;
 
   UserModel({
     this.idUser,
@@ -62,5 +72,7 @@ class UserModel {
     this.roleName,
     this.personDNI,
     this.personCargo,
+    this.userCodigo,
+    this.frase,
   });
 }

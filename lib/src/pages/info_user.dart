@@ -7,15 +7,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
-import 'package:royal_prestige/src/pages/logout.dart'; 
+import 'package:royal_prestige/src/bloc/provider_bloc.dart';
+import 'package:royal_prestige/src/pages/logout.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
+import 'package:royal_prestige/src/widget/show_loading.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_extend/share_extend.dart';
 
 class InfoUser extends StatefulWidget {
-  const InfoUser({Key? key, required this.user}) : super(key: key);
-  final UserModel user;
+  const InfoUser({Key? key}) : super(key: key);
 
   @override
   _InfoUserState createState() => _InfoUserState();
@@ -29,52 +30,68 @@ class _InfoUserState extends State<InfoUser> {
 
   @override
   Widget build(BuildContext context) {
+    final dataBloc = ProviderBloc.data(context);
+    dataBloc.obtenerDatosUser();
     final responsive = Responsive.of(context);
     return Scaffold(
-      body: Screenshot(
-        controller: screenshotController,
-        child: Stack(
-          children: [
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: NewColors.card,
-            ),
-            SafeArea(
-              child: Container(
-                margin: EdgeInsets.only(
-                  top: ScreenUtil().setHeight(10),
-                  bottom: ScreenUtil().setHeight(10),
-                  left: ScreenUtil().setWidth(16),
-                  right: ScreenUtil().setWidth(16),
-                ),
-                padding: EdgeInsets.only(
-                  top: ScreenUtil().setHeight(16),
-                  left: ScreenUtil().setWidth(16),
-                  right: ScreenUtil().setWidth(16),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 3,
-                      blurRadius: 3,
-                      offset: const Offset(1, 0), // changes position of shadow
+      body: StreamBuilder(
+          stream: dataBloc.userStream,
+          builder: (context, AsyncSnapshot<UserModel> snapshot) {
+            if (snapshot.hasData) {
+              return Screenshot(
+                controller: screenshotController,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      color: NewColors.card,
+                    ),
+                    SafeArea(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(10),
+                          bottom: ScreenUtil().setHeight(10),
+                          left: ScreenUtil().setWidth(16),
+                          right: ScreenUtil().setWidth(16),
+                        ),
+                        padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(16),
+                          left: ScreenUtil().setWidth(16),
+                          right: ScreenUtil().setWidth(16),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 3,
+                              blurRadius: 3,
+                              offset: const Offset(1, 0), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: _tickerDetails(snapshot.data!, responsive),
+                      ),
                     ),
                   ],
                 ),
-                child: _tickerDetails(responsive),
-              ),
-            ),
-          ],
-        ),
-      ),
+              );
+            } else {
+              return ShowLoadding(
+                active: true,
+                h: double.infinity,
+                w: double.infinity,
+                colorText: Colors.transparent,
+                fondo: Colors.black.withOpacity(0.5),
+              );
+            }
+          }),
     );
   }
 
-  Widget _tickerDetails(Responsive responsive) {
+  Widget _tickerDetails(UserModel user, Responsive responsive) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -122,7 +139,7 @@ class _InfoUserState extends State<InfoUser> {
           children: [
             Spacer(),
             Text(
-              '#${widget.user.idUser}',
+              '#${user.userCodigo}',
               style: GoogleFonts.poppins(
                 fontStyle: FontStyle.normal,
                 fontWeight: FontWeight.w500,
@@ -169,7 +186,7 @@ class _InfoUserState extends State<InfoUser> {
                     ),
                   ),
                 ),
-                imageUrl: '${widget.user.userImage}',
+                imageUrl: '${user.userImage}',
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.red, width: ScreenUtil().setWidth(3)),
@@ -189,7 +206,7 @@ class _InfoUserState extends State<InfoUser> {
         ),
         Center(
           child: Text(
-            '${obtenerPrimerNombre('${widget.user.personName}')} ${widget.user.personSurname}',
+            '${obtenerPrimerNombre('${user.personName}')} ${user.personSurname}',
             style: GoogleFonts.poppins(
               fontStyle: FontStyle.normal,
               fontWeight: FontWeight.w700,
@@ -201,11 +218,11 @@ class _InfoUserState extends State<InfoUser> {
         SizedBox(
           height: ScreenUtil().setHeight(5),
         ),
-        _data('DNI:', '${widget.user.personDNI}'),
+        _data('DNI:', '${user.personDNI}'),
         SizedBox(
           height: ScreenUtil().setHeight(5),
         ),
-        _data('Cargo:', '${widget.user.personCargo}'),
+        _data('Cargo:', '${user.personCargo}'),
         SizedBox(
           height: ScreenUtil().setHeight(12.5),
         ),

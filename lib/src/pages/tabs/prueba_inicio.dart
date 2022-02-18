@@ -17,6 +17,7 @@ import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/detail_promocion_vista.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
+import 'package:royal_prestige/src/pages/edit_frase.dart';
 import 'package:royal_prestige/src/pages/info_user.dart';
 import 'package:royal_prestige/src/pages/promo_categoria_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
@@ -933,9 +934,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                             context,
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) {
-                                return InfoUser(
-                                  user: widget.user,
-                                );
+                                return InfoUser();
                               },
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                 var begin = Offset(0.0, 1.0);
@@ -989,12 +988,40 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                   ),
                   child: Row(
                     children: [
-                      Text(
-                        '" Caminando firme "',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: responsive.ip(2.1),
-                          fontWeight: FontWeight.w600,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) {
+                                return EditFrase(
+                                  frase: '${widget.user.frase}',
+                                );
+                              },
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                var begin = Offset(0.0, 1.0);
+                                var end = Offset.zero;
+                                var curve = Curves.ease;
+
+                                var tween = Tween(begin: begin, end: end).chain(
+                                  CurveTween(curve: curve),
+                                );
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Text(
+                          '" ${widget.user.frase} "',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: responsive.ip(2.1),
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],

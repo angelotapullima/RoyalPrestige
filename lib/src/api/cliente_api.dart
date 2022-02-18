@@ -106,7 +106,6 @@ class ClienteApi {
       });
 
       final decodedData = json.decode(resp.body);
-      print(decodedData);
 
       for (var i = 0; i < decodedData.length; i++) {
         ClienteModel clienteModel = ClienteModel();
