@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerDatosUser();
-    dataBloc.getEstatusUser();
+    
     return Scaffold(
       body: Stack(
         children: [

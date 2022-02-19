@@ -8,6 +8,7 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/calculadora_page.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
+import 'package:royal_prestige/src/utils/constants.dart';
 
 class CarritoTab extends StatefulWidget {
   const CarritoTab({Key? key}) : super(key: key);
@@ -229,43 +230,47 @@ class _CarritoTabState extends State<CarritoTab> {
                                         width: ScreenUtil().setWidth(80),
                                         height: ScreenUtil().setHeight(80),
                                         child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(10.0),
-                                            child: CachedNetworkImage(
-                                              progressIndicatorBuilder: (_, url, downloadProgress) {
-                                                return Container(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  child: Stack(
-                                                    children: [
-                                                      Center(
-                                                        child: CircularProgressIndicator(
-                                                          value: downloadProgress.progress,
-                                                          backgroundColor: Colors.green,
-                                                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
-                                                        ),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          child: CachedNetworkImage(
+                                            progressIndicatorBuilder: (_, url, downloadProgress) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                child: Stack(
+                                                  children: [
+                                                    Center(
+                                                      child: CircularProgressIndicator(
+                                                        value: downloadProgress.progress,
+                                                        backgroundColor: Colors.green,
+                                                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+                                                      
                                                       ),
-                                                      Center(
-                                                        child: (downloadProgress.progress != null)
-                                                            ? Text(
-                                                                '${(downloadProgress.progress! * 100).toInt().toString()}%',
-                                                              )
-                                                            : Container(),
-                                                      )
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                              errorWidget: (context, url, error) => Icon(Icons.error),
-                                              imageUrl: '${snapshot.data![index].fotoProducto}',
-                                              imageBuilder: (context, imageProvider) => Container(
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: imageProvider,
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                                    ),
+                                                    Center(
+                                                      child: (downloadProgress.progress != null)
+                                                          ? Text(
+                                                              '${(downloadProgress.progress! * 100).toInt().toString()}%',
+                                                            )
+                                                          : Container(),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                            errorWidget: (context, url, error) => Icon(Icons.error),
+                                            imageUrl: (snapshot.data![index].galery!.length > 0)
+                                                ? '$apiBaseURL/${snapshot.data![index].galery![0].file}'
+                                                : '$apiBaseURL/${snapshot.data![index].fotoProducto}',
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
-                                            )),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: ScreenUtil().setWidth(10),

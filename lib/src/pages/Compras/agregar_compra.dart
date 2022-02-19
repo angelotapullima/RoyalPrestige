@@ -77,7 +77,7 @@ class _AgregarCompraState extends State<AgregarCompra> {
                       ),
                       TextField(
                         controller: _productosController,
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.multiline,
                         maxLines: 3,
                         decoration: InputDecoration(
                           filled: true,
@@ -281,6 +281,7 @@ class _AgregarCompraState extends State<AgregarCompra> {
                       ),
                       TextField(
                         maxLines: 3,
+                        keyboardType: TextInputType.multiline,
                         controller: _observacionController,
                         decoration: InputDecoration(
                           filled: true,

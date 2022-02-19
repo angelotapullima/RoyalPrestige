@@ -16,7 +16,7 @@ class DataUserBloc {
     _estadouserController.close();
   }
 
-  void getEstatusUser() async {
+  void getEstatusUser2() async {
     _estadouserController.sink.add(await loginApi.consultarUsuario());
   }
 

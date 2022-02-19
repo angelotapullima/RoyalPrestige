@@ -34,14 +34,14 @@ class PruebaInicio extends StatelessWidget {
   Widget build(BuildContext context) {
     final _controller = Controller();
     final categoriasBloc = ProviderBloc.productos(context);
-    categoriasBloc.obtenerCategorias();
-    final promoBloc = ProviderBloc.promocion(context);
-    promoBloc.obtenerPromos();
-
     final dataBloc = ProviderBloc.data(context);
-
     final alertasBloc = ProviderBloc.alert(context);
+    final promoBloc = ProviderBloc.promocion(context);
+
+    promoBloc.obtenerPromos();
+    categoriasBloc.obtenerCategorias();
     alertasBloc.getAlertsForDay();
+
     final responsive = Responsive.of(context);
 
     final provider = Provider.of<PrincipalChangeBloc>(context, listen: false);
@@ -956,7 +956,7 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                           radius: responsive.ip(2),
                           child: ClipOval(
                             child: Image.network(
-                              '${widget.user.userImage}',
+                              '$apiBaseURL/${widget.user.userImage}',
                               width: responsive.ip(4),
                               height: responsive.ip(4),
                               fit: BoxFit.contain,

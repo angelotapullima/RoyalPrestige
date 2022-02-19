@@ -272,7 +272,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
                                     LinearPercentIndicator(
                                       width: responsive.wp(90),
                                       lineHeight: 14.0,
-                                      percent: data / 100,
+                                      percent: data /1000,
                                       backgroundColor: Colors.white,
                                       progressColor: Colors.blue,
                                     ),
@@ -393,7 +393,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
               color: Colors.grey,
               size: ScreenUtil().setHeight(20),
             ), 
-            onPressed: () async {
+          onPressed: () async {
               await new Future.delayed(new Duration(seconds: 1));
               await [
                 Permission.location,
@@ -410,7 +410,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
                   progress: ProgressImplementation(),
                   onDone: () {
                     print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.documentFile}');
-                    provider.changeFinish();
+                    // provider.changeFinish();
                     final _result = OpenFile.open("/storage/emulated/0/RoyalPrestige/${document.documentFile}");
                     print(_result);
                   },
@@ -419,7 +419,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
                 //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
                 core = await Flowder.download('$apiBaseURL/${document.documentFile}', options);
 
-                print(core);
+                print('core $core');
               } else if (await Permission.storage.request().isPermanentlyDenied) {
                 await openAppSettings();
               } else if (await Permission.storage.request().isDenied) {
@@ -428,6 +428,10 @@ class _DocumentosPageState extends State<DocumentosPage> {
                   Permission.storage,
                 ].request();
                 print(statuses[Permission.location]);
+              } else if (await Permission.location.isRestricted) {
+                print('restricted');
+                await openAppSettings();
+                // The OS restricts access, for example because of parental controls.
               }
             },
           ),

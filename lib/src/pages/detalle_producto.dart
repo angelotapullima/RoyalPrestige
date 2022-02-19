@@ -764,7 +764,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                 //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
                 core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
 
-                print(core);
+                print('core $core');
               } else if (await Permission.storage.request().isPermanentlyDenied) {
                 await openAppSettings();
               } else if (await Permission.storage.request().isDenied) {
@@ -773,6 +773,10 @@ class _DetalleProductoState extends State<DetalleProducto> {
                   Permission.storage,
                 ].request();
                 print(statuses[Permission.location]);
+              } else if (await Permission.location.isRestricted) {
+                print('restricted');
+                await openAppSettings();
+                // The OS restricts access, for example because of parental controls.
               }
             },
           ),
@@ -942,7 +946,6 @@ class _DetalleProductoState extends State<DetalleProducto> {
                   SizedBox(
                     height: ScreenUtil().setHeight(5),
                   ),
-                  
                   InkWell(
                     onTap: () {
                       Navigator.pop(context);
