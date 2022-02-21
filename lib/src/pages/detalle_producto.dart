@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/database/cart_database.dart';
@@ -744,25 +745,57 @@ class _DetalleProductoState extends State<DetalleProducto> {
                 Permission.location,
                 Permission.storage,
               ].request();
-              var checkResult = await Permission.manageExternalStorage.status;
+              var checkResult = await Permission.storage.status;
 
-              if (!checkResult.isGranted) {
-                options = DownloaderUtils(
-                  progressCallback: (current, total) {
-                    provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
-                  },
-                  file: File('/storage/emulated/0/RoyalPrestige/${document.proUrl}'),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.proUrl}');
-                    // provider.changeFinish();
-                    final _result = OpenFile.open("/storage/emulated/0/RoyalPrestige/${document.proUrl}");
-                    print(_result);
-                  },
-                  deleteOnCancel: true,
-                );
-                //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
-                core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
+              if (checkResult.isGranted) {
+                if (Platform.isIOS) {
+                  var medis = '';
+                  var horaServidor = '${document.proUrl}';
+                  var csm = horaServidor.split('/');
+                  medis = csm[csm.length - 1].trim();
+
+                  final testdir = (await getApplicationDocumentsDirectory()).path;
+
+                  options = DownloaderUtils(
+                    progressCallback: (current, total) {
+                      provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    },
+                    file: File('$testdir/$medis'),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      print('COMPLETE /$testdir/$medis');
+                      // provider.changeFinish();
+                      final _result = OpenFile.open('$testdir/$medis');
+                      print(_result);
+                    },
+                    deleteOnCancel: true,
+                  );
+                  //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                  core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
+
+                  print('core $core');
+                } else {
+                  final testdir = (await getApplicationDocumentsDirectory()).path;
+
+                  options = DownloaderUtils(
+                    progressCallback: (current, total) {
+                      provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    },
+                    file: File('$testdir/${document.proUrl}'),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      print('COMPLETE $testdir/${document.proUrl}');
+                      // provider.changeFinish();
+                      final _result = OpenFile.open("$testdir/${document.proUrl}");
+                      print(_result);
+                    },
+                    deleteOnCancel: true,
+                  );
+                  //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                  core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
+
+                  print('core $core');
+                }
 
                 print('core $core');
               } else if (await Permission.storage.request().isPermanentlyDenied) {
@@ -805,26 +838,48 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ].request();
               var checkResult = await Permission.manageExternalStorage.status;
 
-              if (!checkResult.isGranted) {
+              if (checkResult.isGranted) {
                 /* var dir = await getExternalStorageDirectory();
                 var testdir = await Directory('${dir!.path}/SOAL').create(recursive: true);  */
+                if (Platform.isIOS) {
+                  final testdir = (await getApplicationDocumentsDirectory()).path;
 
-                options = DownloaderUtils(
-                  progressCallback: (current, total) {
-                    provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
-                  },
-                  file: File('/storage/emulated/0/RoyalPrestige/${document.proUrl}'),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.proUrl}');
-                    provider.changeFinish();
-                  },
-                  deleteOnCancel: true,
-                );
-                //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
-                core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
+                  options = DownloaderUtils(
+                    progressCallback: (current, total) {
+                      provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    },
+                    file: File('/$testdir/${document.proUrl}'),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      print('COMPLETE /$testdir/${document.proUrl}');
+                      provider.changeFinish();
+                    },
+                    deleteOnCancel: true,
+                  );
+                  //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                  core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
 
-                print(core);
+                  print(core);
+                } else {
+                  final testdir = (await getApplicationDocumentsDirectory()).path;
+
+                  options = DownloaderUtils(
+                    progressCallback: (current, total) {
+                      provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    },
+                    file: File('/$testdir/${document.proUrl}'),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      print('COMPLETE /$testdir/${document.proUrl}');
+                      provider.changeFinish();
+                    },
+                    deleteOnCancel: true,
+                  );
+                  //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                  core = await Flowder.download('$apiBaseURL/${document.proUrl}', options);
+
+                  print(core);
+                }
               } else if (await Permission.storage.request().isPermanentlyDenied) {
                 await openAppSettings();
               } else if (await Permission.storage.request().isDenied) {
