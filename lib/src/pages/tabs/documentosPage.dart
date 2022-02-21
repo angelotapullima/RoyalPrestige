@@ -8,6 +8,7 @@ import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,6 @@ class _DocumentosPageState extends State<DocumentosPage> {
   Widget build(BuildContext context) {
     final documentBloc = ProviderBloc.document(context);
     documentBloc.getDocument();
- 
 
     final responsive = Responsive.of(context);
     final provider = Provider.of<DocumentsBloc>(context, listen: false);
@@ -73,18 +73,18 @@ class _DocumentosPageState extends State<DocumentosPage> {
                       if (snapshot.hasData) {
                         if (snapshot.data!.length > 0) {
                           return Container(
-                            width: double.infinity, 
+                            width: double.infinity,
                             child: GridView.builder(
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: ScreenUtil().setWidth(5),
-                                    ),
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: 1.4,
-                                      crossAxisCount: 2,
-                                      mainAxisSpacing: responsive.hp(2),
-                                      crossAxisSpacing: responsive.wp(3),
-                                    ),
+                                shrinkWrap: true,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(5),
+                                ),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  childAspectRatio: 1.4,
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: responsive.hp(2),
+                                  crossAxisSpacing: responsive.wp(3),
+                                ),
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
                                   int randomNumber = 0;
@@ -112,7 +112,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
                     },
                   ),
                 ),
-              /*   SizedBox(
+                /*   SizedBox(
                   height: ScreenUtil().setHeight(10),
                 ),
                 Container(
@@ -240,7 +240,8 @@ class _DocumentosPageState extends State<DocumentosPage> {
                     }
                   },
                 ),
-              */ ],
+              */
+              ],
             ),
             Positioned(
               bottom: 20,
@@ -272,7 +273,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
                                     LinearPercentIndicator(
                                       width: responsive.wp(90),
                                       lineHeight: 14.0,
-                                      percent: data /1000,
+                                      percent: data / 10000,
                                       backgroundColor: Colors.white,
                                       progressColor: Colors.blue,
                                     ),
@@ -312,57 +313,56 @@ class _DocumentosPageState extends State<DocumentosPage> {
       colMore = Color(0xff23b0b0);
     }
     return focusGeneral(
-      Container(
-        decoration: BoxDecoration(
-          color: col,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: ScreenUtil().setWidth(10),
-        ),
-        margin: EdgeInsets.symmetric(
-          horizontal: ScreenUtil().setWidth(10),
-        ),
-        width: ScreenUtil().setWidth(140),
-        child:  Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: [
-                    Container(
-                      height: ScreenUtil().setSp(45),
-                      width: ScreenUtil().setSp(45),
-                      child: SvgPicture.asset(
-                        '$svg',
-                      ),
+        Container(
+          decoration: BoxDecoration(
+            color: col,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(10),
+          ),
+          margin: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(10),
+          ),
+          width: ScreenUtil().setWidth(140),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: [
+                  Container(
+                    height: ScreenUtil().setSp(45),
+                    width: ScreenUtil().setSp(45),
+                    child: SvgPicture.asset(
+                      '$svg',
                     ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: colMore,
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(10),
-                ),
-                Text(
-                  '${documento.documentTitulo}',
-                  style: TextStyle(
-                    color: colMore,
-                    fontWeight: FontWeight.bold,
-                    fontSize: ScreenUtil().setSp(19),
                   ),
-                )
-              ],
-            ),
-           
-      ),documento,
-            provider
-    );
+                  Spacer(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: colMore,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              Text(
+                '${documento.documentTitulo}',
+                style: TextStyle(
+                  color: colMore,
+                  fontWeight: FontWeight.bold,
+                  fontSize: ScreenUtil().setSp(19),
+                ),
+              )
+            ],
+          ),
+        ),
+        documento,
+        provider);
   }
 
   FocusedMenuHolder focusGeneral(Widget childs, DocumentModel document, DocumentsBloc provider) {
@@ -379,7 +379,7 @@ class _DocumentosPageState extends State<DocumentosPage> {
           FocusedMenuItem(
             title: Expanded(
               child: Text(
-                "ver",
+                "Ver",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w400,
                   fontSize: ScreenUtil().setSp(18),
@@ -392,46 +392,80 @@ class _DocumentosPageState extends State<DocumentosPage> {
               Icons.edit_outlined,
               color: Colors.grey,
               size: ScreenUtil().setHeight(20),
-            ), 
-          onPressed: () async {
-              await new Future.delayed(new Duration(seconds: 1));
-              await [
-                Permission.location,
-                Permission.storage,
-              ].request();
-              var checkResult = await Permission.manageExternalStorage.status;
-
-              if (!checkResult.isGranted) {
-                options = DownloaderUtils(
-                  progressCallback: (current, total) {
-                    provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
-                  },
-                  file: File('/storage/emulated/0/RoyalPrestige/${document.documentFile}'),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.documentFile}');
-                    // provider.changeFinish();
-                    final _result = OpenFile.open("/storage/emulated/0/RoyalPrestige/${document.documentFile}");
-                    print(_result);
-                  },
-                  deleteOnCancel: true,
-                );
-                //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
-                core = await Flowder.download('$apiBaseURL/${document.documentFile}', options);
-
-                print('core $core');
-              } else if (await Permission.storage.request().isPermanentlyDenied) {
-                await openAppSettings();
-              } else if (await Permission.storage.request().isDenied) {
-                Map<Permission, PermissionStatus> statuses = await [
+            ),
+            onPressed: () async {
+              try {
+                await new Future.delayed(new Duration(seconds: 1));
+                await [
                   Permission.location,
                   Permission.storage,
                 ].request();
-                print(statuses[Permission.location]);
-              } else if (await Permission.location.isRestricted) {
-                print('restricted');
-                await openAppSettings();
-                // The OS restricts access, for example because of parental controls.
+                var checkResult = await Permission.storage.status;
+
+                if (checkResult.isGranted) {
+                  if (Platform.isIOS) {
+                    var medis = '';
+                    var horaServidor = '${document.documentFile}';
+                    var csm = horaServidor.split('/');
+                    medis = csm[csm.length - 1].trim();
+
+                    final testdir = (await getApplicationDocumentsDirectory()).path;
+
+                    options = DownloaderUtils(
+                      progressCallback: (current, total) {
+                        provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                      },
+                      file: File('$testdir/$medis'),
+                      progress: ProgressImplementation(),
+                      onDone: () {
+                        print('COMPLETE /$testdir/$medis');
+                        // provider.changeFinish();
+                        final _result = OpenFile.open('$testdir/$medis');
+                        print(_result);
+                      },
+                      deleteOnCancel: true,
+                    );
+                    //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                    core = await Flowder.download('$apiBaseURL/${document.documentFile}', options);
+
+                    print('core $core');
+                  } else {
+                   final testdir = (await getApplicationDocumentsDirectory()).path;
+
+                    options = DownloaderUtils(
+                      progressCallback: (current, total) {
+                        provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                      },
+                      file: File('$testdir/${document.documentFile}'),
+                      progress: ProgressImplementation(),
+                      onDone: () {
+                        print('COMPLETE $testdir/${document.documentFile}');
+                        // provider.changeFinish();
+                        final _result = OpenFile.open("$testdir/${document.documentFile}");
+                        print(_result);
+                      },
+                      deleteOnCancel: true,
+                    );
+                    //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                    core = await Flowder.download('$apiBaseURL/${document.documentFile}', options);
+
+                    print('core $core');
+                  }
+                } else if (await Permission.storage.request().isPermanentlyDenied) {
+                  await openAppSettings();
+                } else if (await Permission.storage.request().isDenied) {
+                  Map<Permission, PermissionStatus> statuses = await [
+                    Permission.location,
+                    Permission.storage,
+                  ].request();
+                  print(statuses[Permission.location]);
+                } else if (await Permission.location.isRestricted) {
+                  print('restricted');
+                  await openAppSettings();
+                  // The OS restricts access, for example because of parental controls.
+                }
+              } catch (e) {
+                print(e);
               }
             },
           ),
@@ -458,28 +492,50 @@ class _DocumentosPageState extends State<DocumentosPage> {
                 Permission.location,
                 Permission.storage,
               ].request();
-              var checkResult = await Permission.manageExternalStorage.status;
+              var checkResult = await Permission.storage.status;
 
-              if (!checkResult.isGranted) {
+              if (checkResult.isGranted) {
                 /* var dir = await getExternalStorageDirectory();
                 var testdir = await Directory('${dir!.path}/SOAL').create(recursive: true);  */
+                if (Platform.isIOS) {
+                final testdir = (await getApplicationDocumentsDirectory()).path;
+ 
+                  options = DownloaderUtils(
+                    progressCallback: (current, total) {
+                      provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    },
+                    file: File('/$testdir/${document.documentFile}'),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      print('COMPLETE /$testdir/${document.documentFile}');
+                      provider.changeFinish();
+                    },
+                    deleteOnCancel: true,
+                  );
+                  //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                  core = await Flowder.download('$apiBaseURL/${document.documentFile}', options);
 
-                options = DownloaderUtils(
-                  progressCallback: (current, total) {
-                    provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
-                  },
-                  file: File('/storage/emulated/0/RoyalPrestige/${document.documentFile}'),
-                  progress: ProgressImplementation(),
-                  onDone: () {
-                    print('COMPLETE /storage/emulated/0/RoyalPrestige/${document.documentFile}');
-                    provider.changeFinish();
-                  },
-                  deleteOnCancel: true,
-                );
-                //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
-                core = await Flowder.download('$apiBaseURL/${document.documentFile}', options);
+                  print(core);
+                } else {
+               final testdir = (await getApplicationDocumentsDirectory()).path;
 
-                print(core);
+                  options = DownloaderUtils(
+                    progressCallback: (current, total) {
+                      provider.cargando.value = double.parse((current / total * 100).toStringAsFixed(2));
+                    },
+                    file: File('/$testdir/${document.documentFile}'),
+                    progress: ProgressImplementation(),
+                    onDone: () {
+                      print('COMPLETE /$testdir/${document.documentFile}');
+                      provider.changeFinish();
+                    },
+                    deleteOnCancel: true,
+                  );
+                  //core = await Flowder.download('http://ipv4.download.thinkbroadband.com/5MB.zip', options);
+                  core = await Flowder.download('$apiBaseURL/${document.documentFile}', options);
+
+                  print(core);
+                }
               } else if (await Permission.storage.request().isPermanentlyDenied) {
                 await openAppSettings();
               } else if (await Permission.storage.request().isDenied) {
