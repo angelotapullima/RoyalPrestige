@@ -98,7 +98,7 @@ class LoginApi {
       });
 
       final decodedData = json.decode(resp.body);
-      print(decodedData);
+      //print(decodedData);
 
       final int code = decodedData['respuesta']['code'];
       ApiModel loginModel = ApiModel();
