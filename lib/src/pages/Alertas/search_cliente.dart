@@ -1,5 +1,6 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
@@ -20,6 +21,8 @@ class _SearchCliente2PageState extends State<SearchCliente2Page> with TickerProv
   final _currentPageNotifier = ValueNotifier<bool>(false);
   int igual = 0;
   int csmare = 0;
+
+  FocusNode _focusSearch = FocusNode();
 
   @override
   void dispose() {
@@ -57,92 +60,118 @@ class _SearchCliente2PageState extends State<SearchCliente2Page> with TickerProv
         centerTitle: false,
         backgroundColor: Color(0xFFF0EFEF),
         flexibleSpace: SafeArea(
-          child: Container(
-            margin: EdgeInsets.only(
-              left: responsive.wp(10),
-              bottom: responsive.hp(1),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                      toolbarOptions: ToolbarOptions(paste: true, cut: true, copy: true, selectAll: true),
-                      controller: _controllerBusquedaCliente,
-                      keyboardType: TextInputType.text,
-                      textAlign: TextAlign.start,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelStyle: TextStyle(color: Colors.white),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide(color: Colors.white),
+          child: KeyboardActions(
+            config: KeyboardActionsConfig(
+              keyboardSeparatorColor: Colors.white,
+              keyboardBarColor: Colors.white,
+              actions: [
+                KeyboardActionsItem(
+                  focusNode: _focusSearch,
+                  toolbarButtons: [
+                    (node) {
+                      return GestureDetector(
+                        onTap: () => node.unfocus(),
+                        child: Container(
+                          color: Colors.white,
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Cerrar",
+                          ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        hintText: '¿Qué está buscando?',
-                        hintStyle: TextStyle(color: Colors.black45),
-                      ),
-                      onChanged: (value) {
-                        if (value.length >= 0 && value != ' ' && value != '') {
-                          final productosBloc = ProviderBloc.busCliente(context);
-
-                          productosBloc.queryClientes('$value', false);
-                          productosBloc.queryProspectos('$value', false);
-
-                          igual++;
-                          _currentPageNotifier.value = true;
-                        } else {
-                          productosBloc.resetearCantidades();
-                        }
-                      },
-                      onSubmitted: (value) {
-                        if (value.length >= 0 && value != ' ' && value != '') {
-                          igual++;
-                          _currentPageNotifier.value = true;
-
-                          final productosBloc = ProviderBloc.busCliente(context);
-
-                          productosBloc.queryClientes('$value', false);
-                          productosBloc.queryProspectos('$value', false);
-                        } else {
-                          productosBloc.resetearCantidades();
-                        }
-                      }),
-                ),
-                SizedBox(
-                  width: responsive.wp(1),
-                ),
-                ValueListenableBuilder(
-                  valueListenable: _currentPageNotifier,
-                  builder: (BuildContext context, bool data, Widget? child) {
-                    return (data)
-                        ? InkWell(
-                            onTap: () {
-                              igual++;
-
-                              productosBloc.resetearCantidades();
-                              _controllerBusquedaCliente.text = '';
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              radius: responsive.ip(1.5),
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: responsive.ip(2),
-                              ),
-                            ),
-                          )
-                        : Container();
-                  },
-                ),
-                SizedBox(
-                  width: responsive.wp(1),
+                      );
+                    }
+                  ],
                 ),
               ],
+            ),
+            child: Container(
+              margin: EdgeInsets.only(
+                left: responsive.wp(10),
+                bottom: responsive.hp(1),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                        toolbarOptions: ToolbarOptions(paste: true, cut: true, copy: true, selectAll: true),
+                        controller: _controllerBusquedaCliente,
+                        keyboardType: TextInputType.text,
+                        focusNode: _focusSearch,
+                        textAlign: TextAlign.start,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          labelStyle: TextStyle(color: Colors.white),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          hintText: '¿Qué está buscando?',
+                          hintStyle: TextStyle(color: Colors.black45),
+                        ),
+                        onChanged: (value) {
+                          if (value.length >= 0 && value != ' ' && value != '') {
+                            final productosBloc = ProviderBloc.busCliente(context);
+
+                            productosBloc.queryClientes('$value', false);
+                            productosBloc.queryProspectos('$value', false);
+
+                            igual++;
+                            _currentPageNotifier.value = true;
+                          } else {
+                            productosBloc.resetearCantidades();
+                          }
+                        },
+                        onSubmitted: (value) {
+                          if (value.length >= 0 && value != ' ' && value != '') {
+                            igual++;
+                            _currentPageNotifier.value = true;
+
+                            final productosBloc = ProviderBloc.busCliente(context);
+
+                            productosBloc.queryClientes('$value', false);
+                            productosBloc.queryProspectos('$value', false);
+                          } else {
+                            productosBloc.resetearCantidades();
+                          }
+                        }),
+                  ),
+                  SizedBox(
+                    width: responsive.wp(1),
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: _currentPageNotifier,
+                    builder: (BuildContext context, bool data, Widget? child) {
+                      return (data)
+                          ? InkWell(
+                              onTap: () {
+                                igual++;
+
+                                productosBloc.resetearCantidades();
+                                _controllerBusquedaCliente.text = '';
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                radius: responsive.ip(1.5),
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: responsive.ip(2),
+                                ),
+                              ),
+                            )
+                          : Container();
+                    },
+                  ),
+                  SizedBox(
+                    width: responsive.wp(1),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:royal_prestige/src/api/cliente_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
@@ -24,6 +25,12 @@ class _AgregarClienteState extends State<AgregarCliente> {
 
   TextEditingController _telefonoController = TextEditingController();
   TextEditingController _direccionController = TextEditingController();
+
+  FocusNode _focusNombre = FocusNode();
+  FocusNode _focusNroDoc = FocusNode();
+  FocusNode _focusCodCliente = FocusNode();
+  FocusNode _focusTelefono = FocusNode();
+  FocusNode _focusDireccion = FocusNode();
 
   @override
   void dispose() {
@@ -71,434 +78,487 @@ class _AgregarClienteState extends State<AgregarCliente> {
         builder: (BuildContext context, bool data, Widget? child) {
           return Stack(
             children: [
-              SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ScreenUtil().setWidth(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: ScreenUtil().setHeight(25),
-                      ),
-                      Text(
-                        ' Nombre de cliente',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
+              KeyboardActions(
+                config: KeyboardActionsConfig(
+                  keyboardSeparatorColor: Colors.white,
+                  keyboardBarColor: Colors.white,
+                  actions: [
+                    KeyboardActionsItem(
+                      focusNode: _focusNombre,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                    KeyboardActionsItem(
+                      focusNode: _focusNroDoc,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                    KeyboardActionsItem(
+                      focusNode: _focusCodCliente,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                    KeyboardActionsItem(
+                      focusNode: _focusTelefono,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                    KeyboardActionsItem(
+                      focusNode: _focusDireccion,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setWidth(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: ScreenUtil().setHeight(25),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        controller: _nombreController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Nombre ',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
-                            ),
+                        Text(
+                          ' Nombre de cliente',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Tipo de documento',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      dropTipoDoc(),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Nro. de documento',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        controller: _nroDocController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Documento',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
+                        TextField(
+                          controller: _nombreController,
+                          focusNode: _focusNombre,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Nombre ',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
                             ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
                             ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Código de cliente',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        controller: _codigoClienteController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Código de cliente',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
-                            ),
+                        Text(
+                          ' Tipo de documento',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: responsive.wp(43),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ' Sexo',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(16),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(6),
-                                ),
-                                dropSexo(),
-                              ],
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        dropTipoDoc(),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Nro. de documento',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        TextField(
+                          controller: _nroDocController,
+                          focusNode: _focusNroDoc,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Documento',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
                             ),
                           ),
-                          Spacer(),
-                          Container(
-                            width: responsive.wp(43),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ' Fecha de Nacimiento',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(16),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(6),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.grey.shade300,
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Código de cliente',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        TextField(
+                          controller: _codigoClienteController,
+                          focusNode: _focusCodCliente,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Código de cliente',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: responsive.wp(43),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    ' Sexo',
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(16),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                  padding: EdgeInsets.only(
-                                    right: ScreenUtil().setWidth(5),
+                                  SizedBox(
+                                    height: ScreenUtil().setHeight(6),
                                   ),
-                                  height: ScreenUtil().setHeight(50),
-                                  child: InkWell(
-                                    onTap: () {
-                                      _selectdate(context);
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            fechaDato,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: (fechaDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
-                                              fontSize: ScreenUtil().setSp(16),
-                                              fontWeight: FontWeight.w400,
+                                  dropSexo(),
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              width: responsive.wp(43),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    ' Fecha de Nacimiento',
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(16),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: ScreenUtil().setHeight(6),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors.grey.shade300,
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(
+                                      right: ScreenUtil().setWidth(5),
+                                    ),
+                                    height: ScreenUtil().setHeight(50),
+                                    child: InkWell(
+                                      onTap: () {
+                                        _selectdate(context);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              fechaDato,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: (fechaDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
+                                                fontSize: ScreenUtil().setSp(16),
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Icon(
-                                          Icons.calendar_today,
-                                          color: colorPrimary,
-                                        ),
-                                      ],
+                                          Icon(
+                                            Icons.calendar_today,
+                                            color: colorPrimary,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Teléfono',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          ],
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        controller: _telefonoController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: ' Teléfono',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
-                            ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Teléfono',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Dirección',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        maxLines: 3,
-                        controller: _direccionController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Dirección ',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
+                        TextField(
+                          controller: _telefonoController,
+                          focusNode: _focusTelefono,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: ' Teléfono',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
                             ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
                             ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          color: colorPrimary,
-                          onPressed: () async {
-                            if (_nombreController.text.isNotEmpty) {
-                              if (valueTipoDoc != 'Seleccionar') {
-                                if (_nroDocController.text.isNotEmpty) {
-                                  if (valueSexo != 'Seleccionar') {
-                                    if (_telefonoController.text.isNotEmpty) {
-                                      if (fechaDato != 'Seleccionar') {
-                                        if (_direccionController.text.isNotEmpty) {
-                                          _cargando.value = true;
-                                          final clienteApi = ClienteApi();
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Dirección',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        TextField(
+                          maxLines: 3,
+                          controller: _direccionController,
+                          focusNode: _focusDireccion,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Dirección ',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            color: colorPrimary,
+                            onPressed: () async {
+                              if (_nombreController.text.isNotEmpty) {
+                                if (valueTipoDoc != 'Seleccionar') {
+                                  if (_nroDocController.text.isNotEmpty) {
+                                    if (valueSexo != 'Seleccionar') {
+                                      if (_telefonoController.text.isNotEmpty) {
+                                        if (fechaDato != 'Seleccionar') {
+                                          if (_direccionController.text.isNotEmpty) {
+                                            _cargando.value = true;
+                                            final clienteApi = ClienteApi();
 
-                                          ClienteModel clienteModel = ClienteModel();
-                                          clienteModel.nombreCliente = _nombreController.text;
-                                          clienteModel.tipoDocCliente = valueTipoDoc;
-                                          clienteModel.nroDocCliente = _nroDocController.text;
-                                          clienteModel.codigoCliente = _codigoClienteController.text;
-                                          clienteModel.sexoCliente = valueSexo;
-                                          clienteModel.nacimientoCLiente = fechaDato;
-                                          clienteModel.telefonoCliente = _telefonoController.text;
-                                          clienteModel.direccionCliente = _direccionController.text;
+                                            ClienteModel clienteModel = ClienteModel();
+                                            clienteModel.nombreCliente = _nombreController.text;
+                                            clienteModel.tipoDocCliente = valueTipoDoc;
+                                            clienteModel.nroDocCliente = _nroDocController.text;
+                                            clienteModel.codigoCliente = _codigoClienteController.text;
+                                            clienteModel.sexoCliente = valueSexo;
+                                            clienteModel.nacimientoCLiente = fechaDato;
+                                            clienteModel.telefonoCliente = _telefonoController.text;
+                                            clienteModel.direccionCliente = _direccionController.text;
 
-                                          final res = await clienteApi.saveClient(clienteModel);
+                                            final res = await clienteApi.saveClient(clienteModel);
 
-                                          if (res.code == '1') {
-                                            showToast2('Cliente agregado correctamente', Colors.green);
-                                            final clienteBloc = ProviderBloc.cliente(context);
-                                            clienteBloc.getClientForTipo('1');
-                                            clienteBloc.getClientForTipo('2');
-                                            Navigator.pop(context);
-                                            _cargando.value = false;
+                                            if (res.code == '1') {
+                                              showToast2('Cliente agregado correctamente', Colors.green);
+                                              final clienteBloc = ProviderBloc.cliente(context);
+                                              clienteBloc.getClientForTipo('1');
+                                              clienteBloc.getClientForTipo('2');
+                                              Navigator.pop(context);
+                                              _cargando.value = false;
+                                            } else {
+                                              showToast2('${res.message}', Colors.red);
+                                              _cargando.value = false;
+                                            }
                                           } else {
-                                            showToast2('${res.message}', Colors.red);
-                                            _cargando.value = false;
+                                            showToast2('Por favor ingrese una Dirección del cliente', Colors.red);
                                           }
                                         } else {
-                                          showToast2('Por favor ingrese una Dirección del cliente', Colors.red);
+                                          showToast2('Por favor ingrese la fecha de nacimiento del cliente', Colors.red);
                                         }
                                       } else {
-                                        showToast2('Por favor ingrese la fecha de nacimiento del cliente', Colors.red);
+                                        showToast2('Por favor ingrese el nro de teléfono del cliente', Colors.red);
                                       }
                                     } else {
-                                      showToast2('Por favor ingrese el nro de teléfono del cliente', Colors.red);
+                                      showToast2('Por favor seleccione el sexo del cliente', Colors.red);
                                     }
                                   } else {
-                                    showToast2('Por favor seleccione el sexo del cliente', Colors.red);
+                                    showToast2('Por favor ingrese el nro de documento del cliente', Colors.red);
                                   }
                                 } else {
-                                  showToast2('Por favor ingrese el nro de documento del cliente', Colors.red);
+                                  showToast2('Por favor seleccione el tipo de documento', Colors.red);
                                 }
                               } else {
-                                showToast2('Por favor seleccione el tipo de documento', Colors.red);
+                                showToast2('Por favor ingrese el nombre del cliente', Colors.red);
                               }
-                            } else {
-                              showToast2('Por favor ingrese el nombre del cliente', Colors.red);
-                            }
-                          },
-                          child: Text(
-                            'Guardar',
-                            style: TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(17)),
+                            },
+                            child: Text(
+                              'Guardar',
+                              style: TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(17)),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(50),
-                      ),
-                    ],
+                        SizedBox(
+                          height: ScreenUtil().setHeight(50),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

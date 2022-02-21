@@ -7,8 +7,6 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/detalle_producto.dart';
 
-
-
 enum EstadoBusqueda { inicio, datos, vacio }
 
 class BusquedaProducto extends StatefulWidget {

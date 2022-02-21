@@ -243,7 +243,6 @@ class _CarritoTabState extends State<CarritoTab> {
                                                         value: downloadProgress.progress,
                                                         backgroundColor: Colors.green,
                                                         valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
-                                                      
                                                       ),
                                                     ),
                                                     Center(

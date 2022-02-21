@@ -40,6 +40,19 @@ obtenerEdad(String date) {
   String differenceInYears = (dur.inDays / 365).floor().toString();
   return differenceInYears;
 }
+
+Widget closeNode(FocusNode node) {
+  return GestureDetector(
+    onTap: () => node.unfocus(),
+    child: Container(
+      color: Colors.white,
+      padding: EdgeInsets.all(8.0),
+      child: Text(
+        "Cerrar",
+      ),
+    ),
+  );
+}
 /* 
 obtenerFechaMostrar(String date) {
   var fecha = DateTime.parse(date);

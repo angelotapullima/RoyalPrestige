@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:royal_prestige/src/api/cliente_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
@@ -24,6 +25,11 @@ class _AgregarCompraState extends State<AgregarCompra> {
   TextEditingController _montoTotalController = TextEditingController();
   TextEditingController _fechaPagoController = TextEditingController();
   TextEditingController _observacionController = TextEditingController();
+
+  FocusNode _focusProductos = FocusNode();
+  FocusNode _focusMontoTotal = FocusNode();
+  FocusNode _focusFechaPago = FocusNode();
+  FocusNode _focusObservacion = FocusNode();
 
   @override
   void dispose() {
@@ -53,334 +59,378 @@ class _AgregarCompraState extends State<AgregarCompra> {
         builder: (BuildContext context, bool data, Widget? child) {
           return Stack(
             children: [
-              SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ScreenUtil().setWidth(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: ScreenUtil().setHeight(25),
-                      ),
-                      Text(
-                        ' Producto(s)',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
+              KeyboardActions(
+                config: KeyboardActionsConfig(
+                  keyboardSeparatorColor: Colors.white,
+                  keyboardBarColor: Colors.white,
+                  actions: [
+                    KeyboardActionsItem(
+                      focusNode: _focusProductos,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                    KeyboardActionsItem(
+                      focusNode: _focusMontoTotal,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                    KeyboardActionsItem(
+                      focusNode: _focusFechaPago,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                    KeyboardActionsItem(
+                      focusNode: _focusObservacion,
+                      toolbarButtons: [
+                        (node) {
+                          return closeNode(node);
+                        }
+                      ],
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setWidth(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: ScreenUtil().setHeight(25),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        controller: _productosController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Nombre producto(s)',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
+                        Text(
+                          ' Producto(s)',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
                           ),
-                          enabledBorder: OutlineInputBorder(
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        TextField(
+                          controller: _productosController,
+                          focusNode: _focusProductos,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Nombre producto(s)',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Monto total',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        TextField(
+                          controller: _montoTotalController,
+                          focusNode: _focusMontoTotal,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Monto total',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Fecha de pago',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        TextField(
+                          controller: _fechaPagoController,
+                          focusNode: _focusFechaPago,
+                          keyboardType: TextInputType.text,
+                          maxLines: 2,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Fecha de pago',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Fecha de compra',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            border: Border.all(
                               color: Colors.grey.shade300,
-                              width: 1.0,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
-                            ),
+                          padding: EdgeInsets.only(
+                            right: ScreenUtil().setWidth(5),
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Monto total',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        controller: _montoTotalController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Monto total',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Fecha de pago',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        controller: _fechaPagoController,
-                        keyboardType: TextInputType.text,
-                        maxLines: 2,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Fecha de pago',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Fecha de compra',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        padding: EdgeInsets.only(
-                          right: ScreenUtil().setWidth(5),
-                        ),
-                        height: ScreenUtil().setHeight(50),
-                        child: InkWell(
-                          onTap: () {
-                            _selectdate(context);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  fechaCompraDato,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: (fechaCompraDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
-                                    fontSize: ScreenUtil().setSp(16),
-                                    fontWeight: FontWeight.w400,
+                          height: ScreenUtil().setHeight(50),
+                          child: InkWell(
+                            onTap: () {
+                              _selectdate(context);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    fechaCompraDato,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: (fechaCompraDato != 'Seleccionar Todos') ? Color(0xff5a5a5a) : colorPrimary,
+                                      fontSize: ScreenUtil().setSp(16),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ),
+                                Icon(
+                                  Icons.calendar_today,
+                                  color: colorPrimary,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        Text(
+                          ' Observación',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(6),
+                        ),
+                        TextField(
+                          maxLines: 3,
+                          keyboardType: TextInputType.multiline,
+                          controller: _observacionController,
+                          focusNode: _focusObservacion,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'Observación ',
+                            hintStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(14),
+                              color: Colors.grey[600],
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
                               ),
-                              Icon(
-                                Icons.calendar_today,
-                                color: colorPrimary,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 2.0,
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        ' Observación',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(6),
-                      ),
-                      TextField(
-                        maxLines: 3,
-                        keyboardType: TextInputType.multiline,
-                        controller: _observacionController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Observación ',
-                          hintStyle: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.grey[600],
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
                             ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 2.0,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              ScreenUtil().setWidth(10),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setWidth(10),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          color: colorPrimary,
-                          onPressed: () async {
-                            if (_productosController.text.isNotEmpty) {
-                              if (_montoTotalController.text.isNotEmpty) {
-                                if (_fechaPagoController.text.isNotEmpty) {
-                                  if (fechaCompraDato != 'Seleccionar') {
-                                    if (_observacionController.text.isNotEmpty) {
-                                      _cargando.value = true;
-                                      final clienteApi = ClienteApi();
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            color: colorPrimary,
+                            onPressed: () async {
+                              if (_productosController.text.isNotEmpty) {
+                                if (_montoTotalController.text.isNotEmpty) {
+                                  if (_fechaPagoController.text.isNotEmpty) {
+                                    if (fechaCompraDato != 'Seleccionar') {
+                                      if (_observacionController.text.isNotEmpty) {
+                                        _cargando.value = true;
+                                        final clienteApi = ClienteApi();
 
-                                      ComprasModel compra = ComprasModel();
-                                      compra.idCliente = widget.clienteData.idCliente.toString();
-                                      compra.idProducto = _productosController.text;
-                                      compra.montoCuotaCompra = _montoTotalController.text;
-                                      compra.fechaPagoCompra = _fechaPagoController.text;
-                                      compra.fechaCompra = '$fechaCompraDato';
-                                      compra.observacionCompra = _observacionController.text;
+                                        ComprasModel compra = ComprasModel();
+                                        compra.idCliente = widget.clienteData.idCliente.toString();
+                                        compra.idProducto = _productosController.text;
+                                        compra.montoCuotaCompra = _montoTotalController.text;
+                                        compra.fechaPagoCompra = _fechaPagoController.text;
+                                        compra.fechaCompra = '$fechaCompraDato';
+                                        compra.observacionCompra = _observacionController.text;
 
-                                      final res = await clienteApi.guardarCompra(compra);
+                                        final res = await clienteApi.guardarCompra(compra);
 
-                                      if (res) {
-                                        showToast2('Compra agregado correctamente', Colors.green);
+                                        if (res) {
+                                          showToast2('Compra agregado correctamente', Colors.green);
 
-                                        final comprasBloc = ProviderBloc.compras(context);
-                                        comprasBloc.obtenerComprasByIdCliente(widget.clienteData.idCliente.toString());
+                                          final comprasBloc = ProviderBloc.compras(context);
+                                          comprasBloc.obtenerComprasByIdCliente(widget.clienteData.idCliente.toString());
 
-                                        Navigator.pop(context);
-                                        _cargando.value = false;
+                                          Navigator.pop(context);
+                                          _cargando.value = false;
+                                        } else {
+                                          showToast2('Ocurrió un error', Colors.red);
+                                          _cargando.value = false;
+                                        }
                                       } else {
-                                        showToast2('Ocurrió un error', Colors.red);
-                                        _cargando.value = false;
+                                        showToast2('Por favor ingrese una observacion de la compra', Colors.red);
                                       }
                                     } else {
-                                      showToast2('Por favor ingrese una observacion de la compra', Colors.red);
+                                      showToast2('Por favor seleccione la fecha de compra', Colors.red);
                                     }
                                   } else {
-                                    showToast2('Por favor seleccione la fecha de compra', Colors.red);
+                                    showToast2('Por favor seleccione la fecha de pago', Colors.red);
                                   }
                                 } else {
-                                  showToast2('Por favor seleccione la fecha de pago', Colors.red);
+                                  showToast2('Por favor ingrese el monto de pago por cuota', Colors.red);
                                 }
                               } else {
-                                showToast2('Por favor ingrese el monto de pago por cuota', Colors.red);
+                                showToast2('Por favor ingrese producto(s)', Colors.red);
                               }
-                            } else {
-                              showToast2('Por favor ingrese producto(s)', Colors.red);
-                            }
-                          },
-                          child: Text(
-                            'Guardar',
-                            style: TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(17)),
+                            },
+                            child: Text(
+                              'Guardar',
+                              style: TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(17)),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(50),
-                      ),
-                    ],
+                        SizedBox(
+                          height: ScreenUtil().setHeight(50),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
