@@ -106,7 +106,7 @@ class AgendaPage extends StatelessWidget {
                 return _itemFechaAlert(context, alertas.data!);
               } else {
                 return Center(
-                  child: Text('Sin agendas registradas'),
+                  child: Text('No tiene ningún pendiente para hoy en la agenda'),
                 );
               }
             } else {
