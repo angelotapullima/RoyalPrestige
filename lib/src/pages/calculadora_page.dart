@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 import 'package:royal_prestige/bloc_provider/calculator_bloc.dart';
 import 'package:royal_prestige/src/bloc/cuota_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:royal_prestige/src/model/producto_model.dart';
 import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
+import 'package:royal_prestige/src/utils/utils.dart';
 
 class CalculaDoraPage extends StatefulWidget {
   final double monto;
@@ -21,20 +23,24 @@ class CalculaDoraPage extends StatefulWidget {
 
 class _CalculaDoraPageState extends State<CalculaDoraPage> {
   final TextEditingController _depositoController = TextEditingController();
+  FocusNode _focusDeposito = FocusNode();
 
   late ControllerCalculo _controller;
+
   @override
   void initState() {
     _controller = Provider.of<ControllerCalculo>(context, listen: false);
-    _controller.limpiar();
-    _controller.calcularProducto(widget.monto.toString());
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _controller.limpiar();
+      _controller.calcularProducto(widget.monto.toString());
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    final cuotaBloc=ProviderBloc.cuota(context);
+    final cuotaBloc = ProviderBloc.cuota(context);
     cuotaBloc.getCuotasMostar();
     final responsive = Responsive.of(context);
     return Scaffold(
@@ -47,36 +53,52 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: ScreenUtil().setWidth(21),
-            right: ScreenUtil().setWidth(21),
-          ),
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (_, c) {
-              return Column(
-                children: [
-                  _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(), 1),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(14),
-                  ),
-                  _expandedContainer('PRODUCTO', _controller.expanded2, _contenido2(), 2),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(14),
-                  ),
-                  _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(responsive,cuotaBloc), 3),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(24),
-                  ),
-                  _expandedContainer('INFORMACIÓN ADICIONAL', _controller.expanded4, _contenido4(_controller, widget.cart), 4),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(24),
-                  ),
-                ],
-              );
-            },
+      body: KeyboardActions(
+        config: KeyboardActionsConfig(
+          keyboardSeparatorColor: Colors.white,
+          keyboardBarColor: Colors.white,
+          actions: [
+            KeyboardActionsItem(
+              focusNode: _focusDeposito,
+              toolbarButtons: [
+                (node) {
+                  return closeNode(node);
+                }
+              ],
+            ),
+          ],
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: ScreenUtil().setWidth(21),
+              right: ScreenUtil().setWidth(21),
+            ),
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (_, c) {
+                return Column(
+                  children: [
+                    _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(), 1),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(14),
+                    ),
+                    _expandedContainer('PRODUCTO', _controller.expanded2, _contenido2(), 2),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(14),
+                    ),
+                    _expandedContainer('CUOTAS', _controller.expanded3, _contenido3(responsive, cuotaBloc), 3),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(24),
+                    ),
+                    _expandedContainer('INFORMACIÓN ADICIONAL', _controller.expanded4, _contenido4(_controller, widget.cart), 4),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(24),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -305,6 +327,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
             maxLines: 1,
             controller: _depositoController,
             keyboardType: TextInputType.number,
+            focusNode: _focusDeposito,
             onChanged: (value) {
               _controller.calcularCuotas(widget.monto.toString(), value);
             },

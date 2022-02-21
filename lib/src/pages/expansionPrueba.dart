@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cuota_model.dart';
 
@@ -18,10 +18,9 @@ class ExpansionPrueba extends StatefulWidget {
 
 class _ExpansionPruebaState extends State<ExpansionPrueba> {
   //final _controller = ControllerCalculo();
-   
+
   @override
   void initState() {
-    
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _ExpansionPruebaState extends State<ExpansionPrueba> {
               List<Widget> cuotass = [];
 
               for (var i = 0; i < snapshot.data!.length; i++) {
-                var cuotacsmare =(double.parse('${snapshot.data![i].cuotaMultiplicador}')*double.parse('${widget.monto}')).round() ;
+                var cuotacsmare = (double.parse('${snapshot.data![i].cuotaMultiplicador}') * double.parse('${widget.monto}')).round();
                 var otro = item('${snapshot.data![i].cuotaNombre}', cuotacsmare.toString());
                 cuotass.add(otro);
               }
@@ -128,7 +127,8 @@ class _ExpansionPruebaState extends State<ExpansionPrueba> {
                 ),
               ),
             ],
-          ),Divider()
+          ),
+          Divider()
         ],
       ),
     );
