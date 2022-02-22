@@ -9,6 +9,8 @@ class AlertModel {
   String? alertStatus;
   String? nombreCLiente;
   String? telefonoCliente;
+  String? alertDate2;
+  String? alertHour2;
 
   AlertModel({
     this.idAlert,
@@ -21,6 +23,8 @@ class AlertModel {
     this.alertStatus,
     this.nombreCLiente,
     this.telefonoCliente,
+    this.alertDate2,
+    this.alertHour2,
   });
 
   static List<AlertModel> fromJsonList(List<dynamic> json) => json.map((i) => AlertModel.fromJson(i)).toList();

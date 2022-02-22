@@ -47,15 +47,17 @@ class AlertBloc {
 
         AlertModel alertModel = AlertModel();
 
-        alertModel.nombreCLiente = (client.length>0)?client[0].nombreCliente:'';
-        alertModel.telefonoCliente = (client.length>0)?client[0].telefonoCliente:'';
+        alertModel.nombreCLiente = (client.length > 0) ? client[0].nombreCliente : '';
+        alertModel.telefonoCliente = (client.length > 0) ? client[0].telefonoCliente : '';
         alertModel.idAlert = listdd[i].idAlert;
         alertModel.idUsuario = listdd[i].idUsuario;
         alertModel.idClient = listdd[i].idClient;
         alertModel.alertTitle = listdd[i].alertTitle;
         alertModel.alertDetail = listdd[i].alertDetail;
         alertModel.alertDate = obtenerFecha(listdd[i].alertDate.toString());
+        alertModel.alertDate2 = listdd[i].alertDate;
         alertModel.alertHour = obtenerHora(listdd[i].alertHour.toString());
+        alertModel.alertHour2 = listdd[i].alertHour;
         alertModel.alertStatus = listdd[i].alertStatus;
         listReturn.add(alertModel);
       }
@@ -84,15 +86,17 @@ class AlertBloc {
       if (client.length > 0) {
         AlertModel alertModel = AlertModel();
 
-        alertModel.nombreCLiente = (client.length>0)?client[0].nombreCliente:'';
-        alertModel.telefonoCliente = (client.length>0)?client[0].telefonoCliente:'';
+        alertModel.nombreCLiente = (client.length > 0) ? client[0].nombreCliente : '';
+        alertModel.telefonoCliente = (client.length > 0) ? client[0].telefonoCliente : '';
         alertModel.idAlert = alertDB[0].idAlert;
         alertModel.idUsuario = alertDB[0].idUsuario;
         alertModel.idClient = alertDB[0].idClient;
         alertModel.alertTitle = alertDB[0].alertTitle;
         alertModel.alertDetail = alertDB[0].alertDetail;
         alertModel.alertDate = obtenerFecha(alertDB[0].alertDate.toString());
+        alertModel.alertDate2 = alertDB[0].alertDate;
         alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
+        alertModel.alertHour2 = alertDB[0].alertHour;
         alertModel.alertStatus = alertDB[0].alertStatus;
         listReturn.add(alertModel);
       } else if (alertDB[0].idClient == '0') {
@@ -104,7 +108,9 @@ class AlertBloc {
         alertModel.alertTitle = alertDB[0].alertTitle;
         alertModel.alertDetail = alertDB[0].alertDetail;
         alertModel.alertDate = obtenerFecha(alertDB[0].alertDate.toString());
+        alertModel.alertDate2 = alertDB[0].alertDate;
         alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
+        alertModel.alertHour2 = alertDB[0].alertHour;
         alertModel.alertStatus = alertDB[0].alertStatus;
         listReturn.add(alertModel);
       }
