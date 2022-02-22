@@ -1,4 +1,4 @@
-package com.example.royal_prestige
+package com.bufeotec.sethi
 
 import io.flutter.embedding.android.FlutterActivity
 
