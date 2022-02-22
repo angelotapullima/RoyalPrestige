@@ -40,7 +40,45 @@ class AlertApi {
       print(e);
       return false;
     }
-  } /* 
+  }
+
+  Future<bool> editAlert(AlertModel alertModel) async {
+    try {
+      final url = Uri.parse('$apiBaseURL/api/Productos/guardar_alerta');
+      String? token = await StorageManager.readData('token');
+      String? idUsuario = await StorageManager.readData('idUser');
+
+      final resp = await http.post(url, body: {
+        'tn': token,
+        'app': 'true',
+        'id_alerta': '${alertModel.idAlert}',
+        'alerta_titulo': '${alertModel.alertTitle}',
+        'id_usuario': '$idUsuario',
+        'id_cliente': '${alertModel.idClient}',
+        'alerta_detalle': '${alertModel.alertDetail}',
+        'alerta_fecha': '${alertModel.alertDate}',
+        'alerta_hora': '${alertModel.alertHour}',
+        'alerta_estado': '1',
+      });
+
+      final decodedData = json.decode(resp.body);
+
+      print(decodedData);
+
+      if (resp.statusCode == 200) {
+        print(resp.body.toString());
+
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  /* 
 Future<bool> editCLient(ClienteModel clienteModel) async {
     try {
       final url = Uri.parse('$apiBaseURL/api/Productos/guardar_cliente');

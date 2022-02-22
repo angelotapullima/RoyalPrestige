@@ -37,7 +37,6 @@ class ClienteApi {
 
       final decodedData = json.decode(resp.body);
 
-      print(decodedData);
       ApiModel api = ApiModel();
 
       api.code = decodedData['result']['code'].toString();

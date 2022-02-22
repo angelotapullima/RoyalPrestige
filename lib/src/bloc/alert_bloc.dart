@@ -147,6 +147,7 @@ class AlertBloc {
 
             if (fechita.isAfter(DateTime.now())) {
               Duration _horas = fechita.difference(DateTime.now());
+              
 
               if (_horas.inHours < 1) {
                 LocalNotificationApi.showAlertProgramado(
@@ -158,7 +159,7 @@ class AlertBloc {
                     Duration(seconds: 2),
                   ),
                 );
-              } else {
+              } else{
                 LocalNotificationApi.showAlertProgramado(
                   id: y,
                   title: '${fechix[y].alertTitle}',
@@ -172,18 +173,7 @@ class AlertBloc {
                   ),
                 );
               }
-              LocalNotificationApi.showAlertProgramado(
-                id: y,
-                title: '${fechix[y].alertTitle}',
-                body: '${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas 3',
-                playLoad: '${fechix[y].idAlert}',
-                time: DateTime.now().add(
-                  Duration(
-                    hours: _horas.inHours,
-                    minutes: _horas.inMinutes,
-                  ),
-                ),
-              );
+
               AlertModel alertModel = AlertModel();
 
               alertModel.nombreCLiente = (clients.length > 0) ? clients[0].nombreCliente : '';
