@@ -44,6 +44,7 @@ class AlertBloc {
     if (listdd.length > 0) {
       for (var i = 0; i < listdd.length; i++) {
         DateTime fechita = DateTime.parse('${listdd[i].alertDate} ${listdd[i].alertHour}');
+
         if (fechita.isAfter(DateTime.now())) {
           final client = await clienteDatabase.getClientPorIdCliente(listdd[i].idClient.toString());
 
@@ -57,7 +58,9 @@ class AlertBloc {
           alertModel.alertTitle = listdd[i].alertTitle;
           alertModel.alertDetail = listdd[i].alertDetail;
           alertModel.alertDate = obtenerFecha(listdd[i].alertDate.toString());
+          alertModel.alertDate2 = listdd[i].alertDate;
           alertModel.alertHour = obtenerHora(listdd[i].alertHour.toString());
+          alertModel.alertHour2 = listdd[i].alertHour;
           alertModel.alertStatus = listdd[i].alertStatus;
           listReturn.add(alertModel);
         }
@@ -95,7 +98,9 @@ class AlertBloc {
         alertModel.alertTitle = alertDB[0].alertTitle;
         alertModel.alertDetail = alertDB[0].alertDetail;
         alertModel.alertDate = obtenerFecha(alertDB[0].alertDate.toString());
+        alertModel.alertDate2 = alertDB[0].alertDate;
         alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
+        alertModel.alertHour2 = alertDB[0].alertHour;
         alertModel.alertStatus = alertDB[0].alertStatus;
         listReturn.add(alertModel);
       } else if (alertDB[0].idClient == '0') {
@@ -107,7 +112,9 @@ class AlertBloc {
         alertModel.alertTitle = alertDB[0].alertTitle;
         alertModel.alertDetail = alertDB[0].alertDetail;
         alertModel.alertDate = obtenerFecha(alertDB[0].alertDate.toString());
+        alertModel.alertDate2 = alertDB[0].alertDate;
         alertModel.alertHour = obtenerHora(alertDB[0].alertHour.toString());
+        alertModel.alertHour2 = alertDB[0].alertHour;
         alertModel.alertStatus = alertDB[0].alertStatus;
         listReturn.add(alertModel);
       }
@@ -147,29 +154,23 @@ class AlertBloc {
 
             if (fechita.isAfter(DateTime.now())) {
               Duration _horas = fechita.difference(DateTime.now());
-              
 
               if (_horas.inHours < 1) {
                 LocalNotificationApi.showAlertProgramado(
                   id: y,
                   title: '${fechix[y].alertTitle}',
-                  body: "${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas 2",
+                  body: "${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas",
                   playLoad: '${fechix[y].idAlert}',
-                  time: DateTime.now().add(
-                    Duration(seconds: 2),
-                  ),
+                  time: DateTime.now().add(Duration(seconds: 2)),
                 );
-              } else{
+              } else {
                 LocalNotificationApi.showAlertProgramado(
                   id: y,
                   title: '${fechix[y].alertTitle}',
-                  body: '${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas 3',
+                  body: '${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas',
                   playLoad: '${fechix[y].idAlert}',
                   time: DateTime.now().add(
-                    Duration(
-                      hours: _horas.inHours,
-                      minutes: _horas.inMinutes,
-                    ),
+                    Duration(hours: _horas.inHours, minutes: _horas.inMinutes),
                   ),
                 );
               }
