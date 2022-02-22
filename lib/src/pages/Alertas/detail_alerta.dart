@@ -174,12 +174,29 @@ class DetalleAlerta extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Padding(
-                          padding: EdgeInsets.only(right: ScreenUtil().setWidth(10)),
-                          child: Icon(
-                            Icons.edit_outlined,
-                            color: Colors.grey,
-                            size: ScreenUtil().setHeight(20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: ScreenUtil().setHeight(3),
+                            horizontal: ScreenUtil().setWidth(10),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Editar',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Icon(
+                                Icons.edit_outlined,
+                                color: Colors.white,
+                                size: ScreenUtil().setHeight(20),
+                              ),
+                            ],
                           ),
                         ),
                       ),
