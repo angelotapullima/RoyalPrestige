@@ -28,120 +28,131 @@ class DetalleAlerta extends StatelessWidget {
               var alert = snapshot.data![0];
               return Stack(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Icon(
-                          Icons.notifications_active_outlined,
-                          color: Colors.red,
-                          size: ScreenUtil().setSp(150),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setWidth(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Icon(
+                            Icons.notifications_active_outlined,
+                            color: Colors.red,
+                            size: ScreenUtil().setSp(150),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      Text(
-                        '${alert.alertTitle}',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(20),
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red,
+                        SizedBox(
+                          height: ScreenUtil().setHeight(20),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(12),
-                      ),
-                      Text(
-                        '${alert.alertDetail}',
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(16),
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
+                        Text(
+                          '${alert.alertTitle}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(20),
+                            fontWeight: FontWeight.w700,
+                            color: Colors.red,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(12),
-                      ),
-                      (alert.idClient != '0')
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.person_outlined, color: Colors.red),
-                                SizedBox(
-                                  width: ScreenUtil().setWidth(8),
-                                ),
-                                Text(
-                                  '${alert.nombreCLiente}',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(14),
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
+                        SizedBox(
+                          height: ScreenUtil().setHeight(12),
+                        ),
+                        Text(
+                          '${alert.alertDetail}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(12),
+                        ),
+                        (alert.idClient != '0')
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.person_outlined, color: Colors.red),
+                                  SizedBox(
+                                    width: ScreenUtil().setWidth(8),
                                   ),
-                                ),
-                              ],
-                            )
-                          : Container(),
-                      (alert.idClient != '0')
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.phone_outlined, color: Colors.red),
-                                SizedBox(
-                                  width: ScreenUtil().setWidth(8),
-                                ),
-                                Text(
-                                  '${alert.telefonoCliente}',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(14),
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
+                                  Text(
+                                    '${alert.nombreCLiente}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(14),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
-                          : Container(),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(12),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.calendar_today, color: Colors.red),
-                          SizedBox(
-                            width: ScreenUtil().setWidth(8),
-                          ),
-                          Text(
-                            '${alert.alertDate}',
-                            style: TextStyle(
-                              fontSize: ScreenUtil().setSp(18),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.red,
+                                ],
+                              )
+                            : Container(),
+                        (alert.idClient != '0')
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.phone_outlined, color: Colors.red),
+                                  SizedBox(
+                                    width: ScreenUtil().setWidth(8),
+                                  ),
+                                  Text(
+                                    '${alert.telefonoCliente}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(14),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(12),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.calendar_today, color: Colors.red),
+                            SizedBox(
+                              width: ScreenUtil().setWidth(8),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(8),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.lock_clock, color: Colors.red),
-                          SizedBox(
-                            width: ScreenUtil().setWidth(8),
-                          ),
-                          Text(
-                            '${alert.alertHour}',
-                            style: TextStyle(
-                              fontSize: ScreenUtil().setSp(18),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.red,
+                            Text(
+                              '${alert.alertDate}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: ScreenUtil().setSp(18),
+                                fontWeight: FontWeight.w700,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(8),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.lock_clock, color: Colors.red),
+                            SizedBox(
+                              width: ScreenUtil().setWidth(8),
+                            ),
+                            Text(
+                              '${alert.alertHour}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: ScreenUtil().setSp(18),
+                                fontWeight: FontWeight.w700,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   Positioned(
                       child: Row(
