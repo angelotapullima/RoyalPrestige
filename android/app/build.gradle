@@ -46,8 +46,8 @@ android {
         applicationId "com.bufeotec.sethi"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 1
+        versionName '1.0.0'
     }
 
     signingConfigs {
