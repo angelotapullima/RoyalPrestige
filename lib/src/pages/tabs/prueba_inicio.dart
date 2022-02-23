@@ -775,12 +775,41 @@ class PruebaInicio extends StatelessWidget {
                               ),
                             )
                       : Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: Center(
-                            child: Icon(Icons.error),
-                          ),
-                        ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Stack(
+                                  children: [
+                                    CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: CupertinoActivityIndicator(),
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: Center(
+                                          child: Icon(Icons.error),
+                                        ),
+                                      ),
+                                      imageUrl: '$apiBaseURL/${producto.fotoProducto}',
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                     
                 ),
                 SizedBox(
                   height: ScreenUtil().setHeight(10),

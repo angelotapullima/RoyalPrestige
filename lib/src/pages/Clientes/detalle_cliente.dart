@@ -533,8 +533,9 @@ class _DetalleClienteState extends State<DetalleCliente> {
       },
       child: Stack(
         children: [
-          Container(
-            height: height,
+          
+          Container( 
+            height: height,width: double.infinity,
             padding: EdgeInsets.symmetric(
               horizontal: ScreenUtil().setWidth(16),
               vertical: ScreenUtil().setHeight(16),
@@ -560,6 +561,8 @@ class _DetalleClienteState extends State<DetalleCliente> {
                 ),
                 Text(
                   '${compra.idProducto}',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 4,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: ScreenUtil().setSp(15),

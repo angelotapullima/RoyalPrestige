@@ -326,7 +326,7 @@ class _CarritoTabState extends State<CarritoTab> {
                                               borderRadius: BorderRadius.circular(8),
                                             ),
                                             child: Text(
-                                              'S/. ${snapshot.data![index].subtotal}',
+                                              'S/. ${snapshot.data![index].subtotal}0',
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,

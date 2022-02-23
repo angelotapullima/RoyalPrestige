@@ -128,6 +128,8 @@ class DetalleCompra extends StatelessWidget {
                     ),
                   ),
                 ],
+              ), SizedBox(
+                height: ScreenUtil().setHeight(60),
               ),
             ],
           ),

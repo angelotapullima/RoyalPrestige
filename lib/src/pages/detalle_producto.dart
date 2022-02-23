@@ -219,13 +219,65 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                         ),
                                       ),
                                     )
-                              : Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  child: Center(
-                                    child: Icon(Icons.error),
-                                  ),
-                                ),
+                              : InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation, secondaryAnimation) {
+                                              return DetailPromoVista(foto: '${snapshot.data![0].galery![0].file}');
+                                            },
+                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                              var begin = Offset(0.0, 1.0);
+                                              var end = Offset.zero;
+                                              var curve = Curves.ease;
+
+                                              var tween = Tween(begin: begin, end: end).chain(
+                                                CurveTween(curve: curve),
+                                              );
+
+                                              return SlideTransition(
+                                                position: animation.drive(tween),
+                                                child: child,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                        //DetailPromoVista
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) => Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              child: CupertinoActivityIndicator(),
+                                            ),
+                                            errorWidget: (context, url, error) => Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              child: Center(
+                                                child: Icon(Icons.error),
+                                              ),
+                                            ),
+                                            imageUrl: '$apiBaseURL/${snapshot.data![0].fotoProducto}',
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                             
                         ),
                         Positioned(
                           top: ScreenUtil().setHeight(10),
@@ -1495,7 +1547,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
             ),
             Text(
-              'S/. $compra',
+              'S/. ${compra}0',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.w400,
@@ -1515,7 +1567,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
             ),
             Text(
-              'S$igv}',
+              'S./ ${igv}0',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.w400,

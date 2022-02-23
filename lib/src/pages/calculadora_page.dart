@@ -502,7 +502,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
                       width: ScreenUtil().setWidth(10),
                     ),
                     Text(
-                      'S/.${cart[index].precioRegaloProducto}',
+                      'S/.${cart[index].precioRegaloProducto}.00',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: ScreenUtil().setSp(15),
