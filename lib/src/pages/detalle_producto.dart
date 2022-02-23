@@ -357,7 +357,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: ScreenUtil().setWidth(24),
                                   ),
-                                  child: _expandedContainer('Precio S/. ${snapshot.data![0].precioProducto}', _controller.expanded, _contenido()),
+                                  child: _expandedContainer('Precio S/. ${snapshot.data![0].precioProducto}', _controller.expanded, _contenido(snapshot.data![0])),
                                 ),
                                 SizedBox(
                                   height: ScreenUtil().setHeight(16),
@@ -1479,7 +1479,9 @@ class _DetalleProductoState extends State<DetalleProducto> {
     );
   }
 
-  Widget _contenido() {
+  Widget _contenido(ProductoModel productoModel){
+    var igv = double.parse('${productoModel.precioProducto}') * 0.18;
+    var compra = double.parse('${productoModel.precioProducto}') -igv;
     return Column(
       children: [
         Row(
@@ -1493,7 +1495,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
             ),
             Text(
-              'S/. 12 250.80',
+              'S/. $compra',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.w400,
@@ -1513,7 +1515,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
             ),
             Text(
-              'S/. 2 689.20',
+              'S$igv}',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.w400,

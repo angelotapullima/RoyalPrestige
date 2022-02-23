@@ -12,6 +12,7 @@
         android:label="Sethi"
         android:icon="@mipmap/launcher_icon">
         <activity
+            android:exported="true"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:requestLegacyExternalStorage="true"
