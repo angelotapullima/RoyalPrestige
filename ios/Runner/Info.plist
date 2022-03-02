@@ -24,8 +24,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSDocumentsFolderUsageDescription</key>
-	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceso a la Galería de fotos para guardar las capturas de pantalla y compartirla con tus amigos.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

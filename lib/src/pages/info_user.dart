@@ -118,6 +118,16 @@ class _InfoUserState extends State<InfoUser> {
               },
             ),
             Spacer(),
+            Text(
+              '#${user.userCodigo}',
+              style: GoogleFonts.poppins(
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w500,
+                color: NewColors.grayCarnet,
+                fontSize: ScreenUtil().setSp(18),
+              ),
+            ),
+            Spacer(),
             IconButton(
               icon: Icon(
                 Icons.share_outlined,
@@ -133,24 +143,6 @@ class _InfoUserState extends State<InfoUser> {
         ),
         SizedBox(
           height: ScreenUtil().setHeight(16),
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Spacer(),
-            Text(
-              '#${user.userCodigo}',
-              style: GoogleFonts.poppins(
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500,
-                color: NewColors.grayCarnet,
-                fontSize: ScreenUtil().setSp(18),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: ScreenUtil().setHeight(0),
         ),
         Center(
           child: Container(
@@ -225,9 +217,6 @@ class _InfoUserState extends State<InfoUser> {
         _data('Cargo:', '${user.personCargo}'),
         SizedBox(
           height: ScreenUtil().setHeight(12.5),
-        ),
-        SizedBox(
-          height: ScreenUtil().setHeight(18),
         ),
         Spacer(),
         Center(
