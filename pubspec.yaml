@@ -36,10 +36,10 @@ dependencies:
   sqflite: ^2.0.0+3
   path_provider: ^2.0.1
   google_fonts: ^2.0.0
-  after_layout: ^1.1.0
   flutter_screenutil: ^5.0.0+2
   flutter_svg: ^1.0.0
   platform_date_picker: ^0.2.0-nullsafety.0+1
+  after_layout: ^1.1.0
   date_format: ^2.0.2
   provider:
   fluttertoast: ^8.0.8
