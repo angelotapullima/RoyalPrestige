@@ -33,4 +33,12 @@ class InfoProductoDatabase {
     }
   } 
 
+
+  deleteInfoProduct( ) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM InfoProduct");
+
+    return res;
+  }
 }

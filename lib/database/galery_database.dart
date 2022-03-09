@@ -46,4 +46,15 @@ class GaleryDatabase {
       return [];
     }
   }
+  
+
+
+
+  deleteGalery( ) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Galery");
+
+    return res;
+  }
 }

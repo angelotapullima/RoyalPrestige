@@ -33,4 +33,17 @@ class PromocionDatabase {
       return [];
     }
   }
+  
+
+
+
+
+
+  deletePromocion( ) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Promocion");
+
+    return res;
+  }
 }

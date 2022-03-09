@@ -64,4 +64,14 @@ class CartDatabase {
 
     return res;
   }
+
+
+
+  deleteCart() async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Cart");
+
+    return res;
+  }
 }

@@ -76,4 +76,14 @@ class AlertDatabase {
       return [];
     }
   }
+
+
+
+  deleteAlert( ) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Alert");
+
+    return res;
+  }
 }

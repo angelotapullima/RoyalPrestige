@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/database/alert_database.dart';
+import 'package:royal_prestige/database/cart_database.dart';
+import 'package:royal_prestige/database/categoria_database.dart';
+import 'package:royal_prestige/database/cliente_database.dart';
+import 'package:royal_prestige/database/compras_database.dart';
+import 'package:royal_prestige/database/cuotas_database.dart';
+import 'package:royal_prestige/database/document_database.dart';
+import 'package:royal_prestige/database/galery_database.dart';
+import 'package:royal_prestige/database/info_product_database.dart';
+import 'package:royal_prestige/database/producto_database.dart';
+import 'package:royal_prestige/database/promocion_database.dart';
 import 'package:royal_prestige/src/api/logout_api.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
@@ -92,6 +103,30 @@ class _LogoutState extends State<Logout> {
                           final res = await logoutApi.logoutUsuario();
 
                           if (res) {
+                            final alertDatabase = AlertDatabase();
+                            final cartDatabase = CartDatabase();
+                            final categoriaDatabase = CategoriaDatabase();
+                            final clienteDatabase = ClienteDatabase();
+                            final comprasDatabase = ComprasDatabase();
+                            final cuotasDatabase = CuotaDatabase();
+                            final documentDatabase = DocumentDatabase();
+                            final galeryDatabase = GaleryDatabase();
+                            final infoProductoDatabase = InfoProductoDatabase();
+                            final productDatabase = ProductoDatabase();
+                            final promocionDatabase = PromocionDatabase();
+
+                            await alertDatabase.deleteAlert();
+                            await cartDatabase.deleteCart();
+                            await categoriaDatabase.deleteCategoria();
+                            await clienteDatabase.deleteCliente();
+                            await comprasDatabase.deleteCompras();
+                            await cuotasDatabase.deleteCuotas();
+                            await documentDatabase.deleteDocument();
+                            await galeryDatabase.deleteGalery();
+                            await infoProductoDatabase.deleteInfoProduct();
+                            await productDatabase.deleteProducto();
+                            await promocionDatabase.deletePromocion();
+
                             await StorageManager.deleteAllData();
                             Navigator.of(context).pushNamedAndRemoveUntil('login', (Route<dynamic> route) => true);
                           } else {

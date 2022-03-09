@@ -33,4 +33,17 @@ class DocumentDatabase {
       return [];
     }
   }
+
+
+
+
+
+
+  deleteDocument( ) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Document");
+
+    return res;
+  }
 }

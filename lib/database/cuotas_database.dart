@@ -47,4 +47,15 @@ class CuotaDatabase {
       return [];
     }
   }
+  
+
+
+
+  deleteCuotas( ) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Cuotas");
+
+    return res;
+  }
 }
