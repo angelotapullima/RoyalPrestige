@@ -659,158 +659,156 @@ class PruebaInicio extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: height * .55,
-                  child: (producto.galery!.length > 0)
-                      ? (producto.galery!.length != 1)
-                          ? CarouselSlider.builder(
-                              itemCount: producto.galery!.length,
-                              itemBuilder: (context, x, y) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                          return DetalleProducto(
-                                            idProducto: producto.idProducto.toString(),
-                                          );
-                                        },
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          var begin = Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
+                    height: height * .55,
+                    child: (producto.galery!.length > 0)
+                        ? (producto.galery!.length != 1)
+                            ? CarouselSlider.builder(
+                                itemCount: producto.galery!.length,
+                                itemBuilder: (context, x, y) {
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation, secondaryAnimation) {
+                                            return DetalleProducto(
+                                              idProducto: producto.idProducto.toString(),
+                                            );
+                                          },
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                            var begin = Offset(0.0, 1.0);
+                                            var end = Offset.zero;
+                                            var curve = Curves.ease;
 
-                                          var tween = Tween(begin: begin, end: end).chain(
-                                            CurveTween(curve: curve),
-                                          );
+                                            var tween = Tween(begin: begin, end: end).chain(
+                                              CurveTween(curve: curve),
+                                            );
 
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
+                                            return SlideTransition(
+                                              position: animation.drive(tween),
+                                              child: child,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: Stack(
-                                        children: [
-                                          CachedNetworkImage(
-                                            placeholder: (context, url) => Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              child: CupertinoActivityIndicator(),
-                                            ),
-                                            errorWidget: (context, url, error) => Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              child: Center(
-                                                child: Icon(Icons.error),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        child: Stack(
+                                          children: [
+                                            CachedNetworkImage(
+                                              placeholder: (context, url) => Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                child: CupertinoActivityIndicator(),
                                               ),
-                                            ),
-                                            imageUrl: '$apiBaseURL/${producto.galery![x].file}',
-                                            imageBuilder: (context, imageProvider) => Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
+                                              errorWidget: (context, url, error) => Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                child: Center(
+                                                  child: Icon(Icons.error),
+                                                ),
+                                              ),
+                                              imageUrl: '$apiBaseURL/${producto.galery![x].file}',
+                                              imageBuilder: (context, imageProvider) => Container(
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                             ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                options: CarouselOptions(
+                                    height: ScreenUtil().setHeight(552),
+                                    onPageChanged: (index, page) {},
+                                    enlargeCenterPage: true,
+                                    autoPlay: true,
+                                    autoPlayCurve: Curves.fastOutSlowIn,
+                                    autoPlayInterval: Duration(seconds: 6),
+                                    autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                    viewportFraction: 1),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Stack(
+                                    children: [
+                                      CachedNetworkImage(
+                                        placeholder: (context, url) => Container(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          child: CupertinoActivityIndicator(),
+                                        ),
+                                        errorWidget: (context, url, error) => Container(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          child: Center(
+                                            child: Icon(Icons.error),
                                           ),
-                                        ],
+                                        ),
+                                        imageUrl: '$apiBaseURL/${producto.galery![0].file}',
+                                        imageBuilder: (context, imageProvider) => Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                        : Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Stack(
+                                children: [
+                                  CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      child: CupertinoActivityIndicator(),
+                                    ),
+                                    errorWidget: (context, url, error) => Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      child: Center(
+                                        child: Icon(Icons.error),
+                                      ),
+                                    ),
+                                    imageUrl: '$apiBaseURL/${producto.fotoProducto}',
+                                    imageBuilder: (context, imageProvider) => Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                              options: CarouselOptions(
-                                  height: ScreenUtil().setHeight(552),
-                                  onPageChanged: (index, page) {},
-                                  enlargeCenterPage: true,
-                                  autoPlay: true,
-                                  autoPlayCurve: Curves.fastOutSlowIn,
-                                  autoPlayInterval: Duration(seconds: 6),
-                                  autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                                  viewportFraction: 1),
-                            )
-                          : Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
+                                ],
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Stack(
-                                  children: [
-                                    CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        child: CupertinoActivityIndicator(),
-                                      ),
-                                      errorWidget: (context, url, error) => Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        child: Center(
-                                          child: Icon(Icons.error),
-                                        ),
-                                      ),
-                                      imageUrl: '$apiBaseURL/${producto.galery![0].file}',
-                                      imageBuilder: (context, imageProvider) => Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                      : Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Stack(
-                                  children: [
-                                    CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        child: CupertinoActivityIndicator(),
-                                      ),
-                                      errorWidget: (context, url, error) => Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        child: Center(
-                                          child: Icon(Icons.error),
-                                        ),
-                                      ),
-                                      imageUrl: '$apiBaseURL/${producto.fotoProducto}',
-                                      imageBuilder: (context, imageProvider) => Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                     
-                ),
+                            ),
+                          )),
                 SizedBox(
                   height: ScreenUtil().setHeight(10),
                 ),
@@ -984,11 +982,36 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                         child: CircleAvatar(
                           radius: responsive.ip(2),
                           child: ClipOval(
-                            child: Image.network(
-                              '$apiBaseURL/${widget.user.userImage}',
-                              width: responsive.ip(4),
-                              height: responsive.ip(4),
-                              fit: BoxFit.contain,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: Image(image: AssetImage('assets/img/profile.png'), fit: BoxFit.cover),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  child: Container(
+                                    child: Image.asset(
+                                      'assets/img/profile.png',
+                                      fit: BoxFit.cover,
+                                      width: ScreenUtil().setWidth(150),
+                                      height: ScreenUtil().setHeight(150),
+                                    ),
+                                  ),
+                                ),
+                                imageUrl: '$apiBaseURL/${widget.user.userImage}',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                    //border: Border.all(color: Colors.red, width: ScreenUtil().setWidth(3)),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),

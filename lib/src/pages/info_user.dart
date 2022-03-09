@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/logout.dart';
+import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
 import 'package:royal_prestige/src/widget/show_loading.dart';
@@ -178,7 +179,7 @@ class _InfoUserState extends State<InfoUser> {
                     ),
                   ),
                 ),
-                imageUrl: '${user.userImage}',
+                imageUrl: '$apiBaseURL/${user.userImage}',
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.red, width: ScreenUtil().setWidth(3)),

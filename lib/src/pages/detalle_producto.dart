@@ -320,9 +320,17 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          '${snapshot.data![0].nombreProducto}',
-                                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${snapshot.data![0].nombreProducto}',
+                                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
+                                            ),Text(
+                                              'Cod: ${snapshot.data![0].codigoProducto}',
+                                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(18)),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       InkWell(
