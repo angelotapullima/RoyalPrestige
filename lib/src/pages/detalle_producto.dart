@@ -71,214 +71,212 @@ class _DetalleProductoState extends State<DetalleProducto> {
                           height: double.infinity,
                         ),
                         Container(
-                          height: ScreenUtil().setHeight(290),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(30),
-                              bottomLeft: Radius.circular(30),
+                            height: ScreenUtil().setHeight(290),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(30),
+                                bottomLeft: Radius.circular(30),
+                              ),
                             ),
-                          ),
-                          child: (snapshot.data![0].galery!.length > 0)
-                              ? (snapshot.data![0].galery!.length != 1)
-                                  ? CarouselSlider.builder(
-                                      itemCount: snapshot.data![0].galery!.length,
-                                      itemBuilder: (context, x, y) {
-                                        return InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                pageBuilder: (context, animation, secondaryAnimation) {
-                                                  return DetailPicture(
-                                                    index: x.toString(),
-                                                    idProducto: snapshot.data![0].galery![x].idProduct.toString(),
-                                                  );
-                                                },
-                                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                                  var begin = Offset(0.0, 1.0);
-                                                  var end = Offset.zero;
-                                                  var curve = Curves.ease;
+                            child: (snapshot.data![0].galery!.length > 0)
+                                ? (snapshot.data![0].galery!.length != 1)
+                                    ? CarouselSlider.builder(
+                                        itemCount: snapshot.data![0].galery!.length,
+                                        itemBuilder: (context, x, y) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                                    return DetailPicture(
+                                                      index: x.toString(),
+                                                      idProducto: snapshot.data![0].galery![x].idProduct.toString(),
+                                                    );
+                                                  },
+                                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                                    var begin = Offset(0.0, 1.0);
+                                                    var end = Offset.zero;
+                                                    var curve = Curves.ease;
 
-                                                  var tween = Tween(begin: begin, end: end).chain(
-                                                    CurveTween(curve: curve),
-                                                  );
+                                                    var tween = Tween(begin: begin, end: end).chain(
+                                                      CurveTween(curve: curve),
+                                                    );
 
-                                                  return SlideTransition(
-                                                    position: animation.drive(tween),
-                                                    child: child,
-                                                  );
-                                                },
-                                              ),
-                                            );
+                                                    return SlideTransition(
+                                                      position: animation.drive(tween),
+                                                      child: child,
+                                                    );
+                                                  },
+                                                ),
+                                              );
 //DetailPicture
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.symmetric(
-                                              horizontal: ScreenUtil().setWidth(0),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(10.0),
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10.0),
-                                              child: Stack(
-                                                children: [
-                                                  CachedNetworkImage(
-                                                    placeholder: (context, url) => Container(
-                                                        width: double.infinity, height: double.infinity, child: CupertinoActivityIndicator()),
-                                                    errorWidget: (context, url, error) => Container(
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      child: Center(
-                                                        child: Icon(Icons.error),
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: ScreenUtil().setWidth(0),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(10.0),
+                                                child: Stack(
+                                                  children: [
+                                                    CachedNetworkImage(
+                                                      placeholder: (context, url) => Container(
+                                                          width: double.infinity, height: double.infinity, child: CupertinoActivityIndicator()),
+                                                      errorWidget: (context, url, error) => Container(
+                                                        width: double.infinity,
+                                                        height: double.infinity,
+                                                        child: Center(
+                                                          child: Icon(Icons.error),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    imageUrl: '$apiBaseURL/${snapshot.data![0].galery![x].file}',
-                                                    imageBuilder: (context, imageProvider) => Container(
-                                                      decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.cover,
+                                                      imageUrl: '$apiBaseURL/${snapshot.data![0].galery![x].file}',
+                                                      imageBuilder: (context, imageProvider) => Container(
+                                                        decoration: BoxDecoration(
+                                                          image: DecorationImage(
+                                                            image: imageProvider,
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        options: CarouselOptions(
+                                            height: ScreenUtil().setHeight(552),
+                                            onPageChanged: (index, page) {},
+                                            enlargeCenterPage: true,
+                                            autoPlay: true,
+                                            autoPlayCurve: Curves.fastOutSlowIn,
+                                            autoPlayInterval: Duration(seconds: 6),
+                                            autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                            viewportFraction: 1),
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              pageBuilder: (context, animation, secondaryAnimation) {
+                                                return DetailPromoVista(foto: '${snapshot.data![0].fotoProducto}');
+                                              },
+                                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                                var begin = Offset(0.0, 1.0);
+                                                var end = Offset.zero;
+                                                var curve = Curves.ease;
+
+                                                var tween = Tween(begin: begin, end: end).chain(
+                                                  CurveTween(curve: curve),
+                                                );
+
+                                                return SlideTransition(
+                                                  position: animation.drive(tween),
+                                                  child: child,
+                                                );
+                                              },
+                                            ),
+                                          );
+                                          //DetailPromoVista
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            child: CachedNetworkImage(
+                                              placeholder: (context, url) => Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                child: CupertinoActivityIndicator(),
+                                              ),
+                                              errorWidget: (context, url, error) => Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                child: Center(
+                                                  child: Icon(Icons.error),
+                                                ),
+                                              ),
+                                              imageUrl: '$apiBaseURL/${snapshot.data![0].galery![0].file}',
+                                              imageBuilder: (context, imageProvider) => Container(
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      options: CarouselOptions(
-                                          height: ScreenUtil().setHeight(552),
-                                          onPageChanged: (index, page) {},
-                                          enlargeCenterPage: true,
-                                          autoPlay: true,
-                                          autoPlayCurve: Curves.fastOutSlowIn,
-                                          autoPlayInterval: Duration(seconds: 6),
-                                          autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                                          viewportFraction: 1),
-                                    )
-                                  : InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            pageBuilder: (context, animation, secondaryAnimation) {
-                                              return DetailPromoVista(foto: '${snapshot.data![0].galery![0].file}');
-                                            },
-                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                              var begin = Offset(0.0, 1.0);
-                                              var end = Offset.zero;
-                                              var curve = Curves.ease;
-
-                                              var tween = Tween(begin: begin, end: end).chain(
-                                                CurveTween(curve: curve),
-                                              );
-
-                                              return SlideTransition(
-                                                position: animation.drive(tween),
-                                                child: child,
-                                              );
-                                            },
-                                          ),
-                                        );
-                                        //DetailPromoVista
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) => Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              child: CupertinoActivityIndicator(),
-                                            ),
-                                            errorWidget: (context, url, error) => Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              child: Center(
-                                                child: Icon(Icons.error),
-                                              ),
-                                            ),
-                                            imageUrl: '$apiBaseURL/${snapshot.data![0].galery![0].file}',
-                                            imageBuilder: (context, imageProvider) => Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                              : InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            pageBuilder: (context, animation, secondaryAnimation) {
-                                              return DetailPromoVista(foto: '${snapshot.data![0].galery![0].file}');
-                                            },
-                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                              var begin = Offset(0.0, 1.0);
-                                              var end = Offset.zero;
-                                              var curve = Curves.ease;
+                                      )
+                                : InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation, secondaryAnimation) {
+                                            return DetailPromoVista(foto: '${snapshot.data![0].fotoProducto}');
+                                          },
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                            var begin = Offset(0.0, 1.0);
+                                            var end = Offset.zero;
+                                            var curve = Curves.ease;
 
-                                              var tween = Tween(begin: begin, end: end).chain(
-                                                CurveTween(curve: curve),
-                                              );
+                                            var tween = Tween(begin: begin, end: end).chain(
+                                              CurveTween(curve: curve),
+                                            );
 
-                                              return SlideTransition(
-                                                position: animation.drive(tween),
-                                                child: child,
-                                              );
-                                            },
-                                          ),
-                                        );
-                                        //DetailPromoVista
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                            return SlideTransition(
+                                              position: animation.drive(tween),
+                                              child: child,
+                                            );
+                                          },
                                         ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) => Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              child: CupertinoActivityIndicator(),
+                                      );
+                                      //DetailPromoVista
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) => Container(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            child: CupertinoActivityIndicator(),
+                                          ),
+                                          errorWidget: (context, url, error) => Container(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            child: Center(
+                                              child: Icon(Icons.error),
                                             ),
-                                            errorWidget: (context, url, error) => Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              child: Center(
-                                                child: Icon(Icons.error),
-                                              ),
-                                            ),
-                                            imageUrl: '$apiBaseURL/${snapshot.data![0].fotoProducto}',
-                                            imageBuilder: (context, imageProvider) => Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
+                                          ),
+                                          imageUrl: '$apiBaseURL/${snapshot.data![0].fotoProducto}',
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    )
-                             
-                        ),
+                                    ),
+                                  )),
                         Positioned(
                           top: ScreenUtil().setHeight(10),
                           right: ScreenUtil().setWidth(25),
@@ -326,7 +324,8 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                             Text(
                                               '${snapshot.data![0].nombreProducto}',
                                               style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(24)),
-                                            ),Text(
+                                            ),
+                                            Text(
                                               'Cod: ${snapshot.data![0].codigoProducto}',
                                               style: TextStyle(fontWeight: FontWeight.w600, fontSize: ScreenUtil().setSp(18)),
                                             ),
@@ -417,7 +416,8 @@ class _DetalleProductoState extends State<DetalleProducto> {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: ScreenUtil().setWidth(24),
                                   ),
-                                  child: _expandedContainer('Precio S/. ${snapshot.data![0].precioProducto}', _controller.expanded, _contenido(snapshot.data![0])),
+                                  child: _expandedContainer(
+                                      'Precio S/. ${snapshot.data![0].precioProducto}', _controller.expanded, _contenido(snapshot.data![0])),
                                 ),
                                 SizedBox(
                                   height: ScreenUtil().setHeight(16),
@@ -1539,9 +1539,16 @@ class _DetalleProductoState extends State<DetalleProducto> {
     );
   }
 
-  Widget _contenido(ProductoModel productoModel){
+  Widget _contenido(ProductoModel productoModel) {
     var igv = double.parse('${productoModel.precioProducto}') * 0.18;
-    var compra = double.parse('${productoModel.precioProducto}') -igv;
+    var compra = double.parse('${productoModel.precioProducto}') - igv;
+
+    var valorigv = double.parse(
+      (igv).toStringAsFixed(1),
+    );
+    var valorCompra = double.parse(
+      (compra).toStringAsFixed(1),
+    );
     return Column(
       children: [
         Row(
@@ -1555,7 +1562,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
             ),
             Text(
-              'S/. ${compra}0',
+              'S/. ${valorCompra}0',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.w400,
@@ -1575,7 +1582,7 @@ class _DetalleProductoState extends State<DetalleProducto> {
               ),
             ),
             Text(
-              'S./ ${igv}0',
+              'S./ ${valorigv}0',
               style: TextStyle(
                 fontSize: ScreenUtil().setSp(14),
                 fontWeight: FontWeight.w400,

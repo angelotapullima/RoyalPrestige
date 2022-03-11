@@ -177,11 +177,13 @@ class PruebaInicio extends StatelessWidget {
                                                     return GridView.builder(
                                                       physics: NeverScrollableScrollPhysics(),
                                                       shrinkWrap: true,
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: ScreenUtil().setWidth(5),
+                                                      padding: EdgeInsets.only(
+                                                        left: ScreenUtil().setWidth(5),
+                                                        right: ScreenUtil().setWidth(5),
+                                                        bottom: ScreenUtil().setHeight(15),
                                                       ),
                                                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                        childAspectRatio: .7,
+                                                        childAspectRatio: .78,
                                                         crossAxisCount: 2,
                                                         mainAxisSpacing: responsive.hp(2),
                                                         crossAxisSpacing: responsive.wp(3),
@@ -607,6 +609,10 @@ class PruebaInicio extends StatelessWidget {
   }
 
   Widget itemProduct(BuildContext context, ProductoModel producto, var valorHero, double height) {
+    var precio = double.parse('${producto.precioProducto}');
+    var valorPrecio = double.parse(
+      (precio).toStringAsFixed(1),
+    );
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -659,7 +665,7 @@ class PruebaInicio extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                    height: height * .55,
+                    height: height * .57,
                     child: (producto.galery!.length > 0)
                         ? (producto.galery!.length != 1)
                             ? CarouselSlider.builder(
@@ -822,8 +828,8 @@ class PruebaInicio extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${producto.regaloProducto}',
-                  maxLines: 2,
+                  'Cod: ${producto.codigoProducto}',
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.w300,
@@ -849,7 +855,7 @@ class PruebaInicio extends StatelessWidget {
                     ),
                     padding: EdgeInsets.all(8),
                     child: Text(
-                      'S/ ${producto.precioProducto}',
+                      'S/ ${valorPrecio}0',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
