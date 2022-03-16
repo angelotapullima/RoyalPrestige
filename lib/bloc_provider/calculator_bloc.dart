@@ -32,8 +32,8 @@ class ControllerCalculo extends ChangeNotifier {
     tenpercent = (precioProduct * .1).round();
     fifteenpercent = (precioProduct * .15).round();
 
-    igv = precioProduct * 0.18;
-    precioCompra = precioProduct - igv;
+    precioCompra = precioProduct / 1.18;
+    igv = precioCompra * 0.18;
     total = precioCompra + igv;
     despacho = '-';
 
