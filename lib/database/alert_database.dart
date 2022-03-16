@@ -39,7 +39,7 @@ class AlertDatabase {
     try {
       final Database db = await dbprovider.getDatabase();
       List<AlertModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM Alert WHERE alertDate='$date' and idUsuario = '$idUsuario' ");
+      List<Map> maps = await db.rawQuery("SELECT * FROM Alert WHERE alertDate='$date' and idUsuario = '$idUsuario' and alertStatus = '1' ");
 
       if (maps.length > 0) list = AlertModel.fromJsonList(maps);
       return list;
@@ -67,7 +67,8 @@ class AlertDatabase {
     try {
       final Database db = await dbprovider.getDatabase();
       List<AlertModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM Alert WHERE date(alertDate) >= '$date' and idUsuario = '$idUsuario' group by alertDate");
+      List<Map> maps = await db
+          .rawQuery("SELECT * FROM Alert WHERE date(alertDate) >= '$date' and idUsuario = '$idUsuario' and alertStatus = '1' group by alertDate");
 
       if (maps.length > 0) list = AlertModel.fromJsonList(maps);
       return list;
@@ -77,12 +78,18 @@ class AlertDatabase {
     }
   }
 
-
-
-  deleteAlert( ) async {
+  deleteAlert() async {
     final db = await dbprovider.database;
 
     final res = await db.rawDelete("DELETE FROM Alert");
+
+    return res;
+  }
+
+  deleteAlertByIdAlerta(String idAlerta) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Alert WHERE idAlert='$idAlerta'");
 
     return res;
   }

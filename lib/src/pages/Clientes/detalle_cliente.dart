@@ -6,6 +6,7 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/cliente_model.dart';
 import 'package:royal_prestige/src/model/compras_model.dart';
 import 'package:royal_prestige/src/pages/Clientes/editar_cliente.dart';
+import 'package:royal_prestige/src/pages/Clientes/eliminar_cliente.dart';
 import 'package:royal_prestige/src/pages/Compras/agregar_compra.dart';
 import 'package:royal_prestige/src/pages/Compras/detalle_compra.dart';
 import 'package:royal_prestige/src/pages/Compras/search_product.dart';
@@ -75,7 +76,33 @@ class _DetalleClienteState extends State<DetalleCliente> {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  opaque: false,
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return EliminarCliente(
+                      cliente: widget.clienteModel,
+                    );
+                  },
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    var begin = Offset(0.0, 1.0);
+                    var end = Offset.zero;
+                    var curve = Curves.ease;
+
+                    var tween = Tween(begin: begin, end: end).chain(
+                      CurveTween(curve: curve),
+                    );
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
             child: Padding(
               padding: EdgeInsets.only(right: ScreenUtil().setWidth(10)),
               child: Icon(
@@ -533,9 +560,9 @@ class _DetalleClienteState extends State<DetalleCliente> {
       },
       child: Stack(
         children: [
-          
-          Container( 
-            height: height,width: double.infinity,
+          Container(
+            height: height,
+            width: double.infinity,
             padding: EdgeInsets.symmetric(
               horizontal: ScreenUtil().setWidth(16),
               vertical: ScreenUtil().setHeight(16),

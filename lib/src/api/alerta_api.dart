@@ -78,6 +78,36 @@ class AlertApi {
     }
   }
 
+  Future<bool> eliminarAlert(String idAlerta) async {
+    try {
+      final url = Uri.parse('$apiBaseURL/api/Productos/eliminar_alerta');
+      String? token = await StorageManager.readData('token');
+
+      final resp = await http.post(url, body: {
+        'tn': token,
+        'app': 'true',
+        'id_alerta': '$idAlerta',
+      });
+
+      final decodedData = json.decode(resp.body);
+
+      print(decodedData);
+
+      if (resp.statusCode == 200) {
+        print(resp.body.toString());
+
+        await alertDatabase.deleteAlertByIdAlerta(idAlerta);
+
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   /* 
 Future<bool> editCLient(ClienteModel clienteModel) async {
     try {

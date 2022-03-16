@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/pages/Alertas/edit_alerta.dart';
+import 'package:royal_prestige/src/pages/Alertas/eliminar_alerta.dart';
 
 class DetalleAlerta extends StatelessWidget {
   const DetalleAlerta({Key? key, required this.idAlert}) : super(key: key);
@@ -204,6 +205,62 @@ class DetalleAlerta extends StatelessWidget {
                               ),
                               Icon(
                                 Icons.edit_outlined,
+                                color: Colors.white,
+                                size: ScreenUtil().setHeight(20),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: ScreenUtil().setWidth(12),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) {
+                                return EliminarAlerta(
+                                  alerta: alert,
+                                );
+                              },
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                var begin = Offset(0.0, 1.0);
+                                var end = Offset.zero;
+                                var curve = Curves.ease;
+
+                                var tween = Tween(begin: begin, end: end).chain(
+                                  CurveTween(curve: curve),
+                                );
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: ScreenUtil().setHeight(3),
+                            horizontal: ScreenUtil().setWidth(10),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Eliminar',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Icon(
+                                Icons.delete_outline,
                                 color: Colors.white,
                                 size: ScreenUtil().setHeight(20),
                               ),

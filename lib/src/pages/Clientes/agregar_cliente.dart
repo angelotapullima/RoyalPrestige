@@ -494,56 +494,67 @@ class _AgregarClienteState extends State<AgregarCliente> {
                             color: colorPrimary,
                             onPressed: () async {
                               if (_nombreController.text.isNotEmpty) {
-                                if (valueTipoDoc != 'Seleccionar') {
-                                  if (_nroDocController.text.isNotEmpty) {
-                                    if (valueSexo != 'Seleccionar') {
-                                      if (_telefonoController.text.isNotEmpty) {
-                                        if (fechaDato != 'Seleccionar') {
-                                          if (_direccionController.text.isNotEmpty) {
-                                            _cargando.value = true;
-                                            final clienteApi = ClienteApi();
+                                _cargando.value = true;
+                                final clienteApi = ClienteApi();
 
-                                            ClienteModel clienteModel = ClienteModel();
-                                            clienteModel.nombreCliente = _nombreController.text;
-                                            clienteModel.tipoDocCliente = valueTipoDoc;
-                                            clienteModel.nroDocCliente = _nroDocController.text;
-                                            clienteModel.codigoCliente = _codigoClienteController.text;
-                                            clienteModel.sexoCliente = valueSexo;
-                                            clienteModel.nacimientoCLiente = fechaDato;
-                                            clienteModel.telefonoCliente = _telefonoController.text;
-                                            clienteModel.direccionCliente = _direccionController.text;
+                                ClienteModel clienteModel = ClienteModel();
+                                clienteModel.nombreCliente = _nombreController.text;
 
-                                            final res = await clienteApi.saveClient(clienteModel);
-
-                                            if (res.code == '1') {
-                                              showToast2('Cliente agregado correctamente', Colors.green);
-                                              final clienteBloc = ProviderBloc.cliente(context);
-                                              clienteBloc.getClientForTipo('1');
-                                              clienteBloc.getClientForTipo('2');
-                                              Navigator.pop(context);
-                                              _cargando.value = false;
-                                            } else {
-                                              showToast2('${res.message}', Colors.red);
-                                              _cargando.value = false;
-                                            }
-                                          } else {
-                                            showToast2('Por favor ingrese una Dirección del cliente', Colors.red);
-                                          }
-                                        } else {
-                                          showToast2('Por favor ingrese la fecha de nacimiento del cliente', Colors.red);
-                                        }
-                                      } else {
-                                        showToast2('Por favor ingrese el nro de teléfono del cliente', Colors.red);
-                                      }
-                                    } else {
-                                      showToast2('Por favor seleccione el sexo del cliente', Colors.red);
-                                    }
-                                  } else {
-                                    showToast2('Por favor ingrese el nro de documento del cliente', Colors.red);
-                                  }
+                                if (valueTipoDoc == 'Seleccionar') {
+                                  clienteModel.tipoDocCliente = '';
                                 } else {
-                                  showToast2('Por favor seleccione el tipo de documento', Colors.red);
+                                  clienteModel.tipoDocCliente = valueTipoDoc;
                                 }
+                                clienteModel.nroDocCliente = _nroDocController.text;
+                                clienteModel.codigoCliente = _codigoClienteController.text;
+                                if (valueSexo == 'Seleccionar') {
+                                  clienteModel.sexoCliente = '';
+                                } else {
+                                  clienteModel.sexoCliente = valueSexo;
+                                }
+
+                                clienteModel.nacimientoCLiente = fechaDato;
+                                clienteModel.telefonoCliente = _telefonoController.text;
+                                clienteModel.direccionCliente = _direccionController.text;
+
+                                final res = await clienteApi.saveClient(clienteModel);
+
+                                if (res.code == '1') {
+                                  showToast2('Cliente agregado correctamente', Colors.green);
+                                  final clienteBloc = ProviderBloc.cliente(context);
+                                  clienteBloc.getClientForTipo('1');
+                                  clienteBloc.getClientForTipo('2');
+                                  Navigator.pop(context);
+                                  _cargando.value = false;
+                                } else {
+                                  showToast2('${res.message}', Colors.red);
+                                  _cargando.value = false;
+                                }
+                                // if (valueTipoDoc != 'Seleccionar') {
+                                //   if (_nroDocController.text.isNotEmpty) {
+                                //     if (valueSexo != 'Seleccionar') {
+                                //       if (_telefonoController.text.isNotEmpty) {
+                                //         if (fechaDato != 'Seleccionar') {
+                                //           if (_direccionController.text.isNotEmpty) {
+
+                                //           } else {
+                                //             showToast2('Por favor ingrese una Dirección del cliente', Colors.red);
+                                //           }
+                                //         } else {
+                                //           showToast2('Por favor ingrese la fecha de nacimiento del cliente', Colors.red);
+                                //         }
+                                //       } else {
+                                //         showToast2('Por favor ingrese el nro de teléfono del cliente', Colors.red);
+                                //       }
+                                //     } else {
+                                //       showToast2('Por favor seleccione el sexo del cliente', Colors.red);
+                                //     }
+                                //   } else {
+                                //     showToast2('Por favor ingrese el nro de documento del cliente', Colors.red);
+                                //   }
+                                // } else {
+                                //   showToast2('Por favor seleccione el tipo de documento', Colors.red);
+                                // }
                               } else {
                                 showToast2('Por favor ingrese el nombre del cliente', Colors.red);
                               }

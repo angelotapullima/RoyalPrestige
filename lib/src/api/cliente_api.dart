@@ -189,4 +189,35 @@ class ClienteApi {
       return false;
     }
   }
+
+  Future<bool> eliminarCliente(String idCliente) async {
+    try {
+      final url = Uri.parse('$apiBaseURL/api/Productos/eliminar_cliente');
+      String? token = await StorageManager.readData('token');
+      print('$idCliente');
+
+      final resp = await http.post(url, body: {
+        'tn': token,
+        'app': 'true',
+        'id_cliente': '$idCliente',
+      });
+
+      final decodedData = json.decode(resp.body);
+      print(decodedData);
+
+      if (resp.statusCode == 200) {
+        if (decodedData["result"]["code"] == 1) {
+          await clienteDatabase.deleteClienteById(idCliente);
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

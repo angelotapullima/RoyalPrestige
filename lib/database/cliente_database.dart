@@ -62,7 +62,6 @@ class ClienteDatabase {
       return [];
     }
   }
-  
 
   deleteCliente() async {
     final db = await dbprovider.database;
@@ -70,4 +69,13 @@ class ClienteDatabase {
     final res = await db.rawDelete("DELETE FROM Cliente");
 
     return res;
-  }}
+  }
+
+  deleteClienteById(String idCliente) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM Cliente WHERE idCliente = '$idCliente'");
+
+    return res;
+  }
+}

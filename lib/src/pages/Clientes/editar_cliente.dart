@@ -66,8 +66,14 @@ class _EditarClienteState extends State<EditarCliente> {
     _direccionController.text = widget.clienteModel.direccionCliente.toString();
     _codClienteController.text = widget.clienteModel.codigoCliente.toString();
     fechaDato = widget.clienteModel.nacimientoCLiente.toString();
-    valueTipoDoc = widget.clienteModel.tipoDocCliente.toString();
-    valueSexo = widget.clienteModel.sexoCliente.toString();
+
+    if (widget.clienteModel.tipoDocCliente.toString() != '') {
+      valueTipoDoc = widget.clienteModel.tipoDocCliente.toString();
+    }
+    if (widget.clienteModel.sexoCliente.toString() != '') {
+      valueSexo = widget.clienteModel.sexoCliente.toString();
+    }
+
     super.initState();
   }
 
@@ -508,57 +514,69 @@ class _EditarClienteState extends State<EditarCliente> {
                             color: colorPrimary,
                             onPressed: () async {
                               if (_nombreController.text.isNotEmpty) {
-                                if (valueTipoDoc != 'Seleccionar') {
-                                  if (_nroDocController.text.isNotEmpty) {
-                                    if (valueSexo != 'Seleccionar') {
-                                      if (_telefonoController.text.isNotEmpty) {
-                                        if (fechaDato != 'Seleccionar') {
-                                          if (_direccionController.text.isNotEmpty) {
-                                            _cargando.value = true;
-                                            final clienteApi = ClienteApi();
+                                _cargando.value = true;
+                                final clienteApi = ClienteApi();
 
-                                            ClienteModel clienteModel = ClienteModel();
-                                            clienteModel.nombreCliente = _nombreController.text;
-                                            clienteModel.tipoDocCliente = valueTipoDoc;
-                                            clienteModel.nroDocCliente = _nroDocController.text;
-                                            clienteModel.sexoCliente = valueSexo;
-                                            clienteModel.nacimientoCLiente = fechaDato;
-                                            clienteModel.telefonoCliente = _telefonoController.text;
-                                            clienteModel.direccionCliente = _direccionController.text;
-                                            clienteModel.idCliente = widget.clienteModel.idCliente;
-                                            clienteModel.codigoCliente = _codClienteController.text;
+                                ClienteModel clienteModel = ClienteModel();
+                                clienteModel.nombreCliente = _nombreController.text;
 
-                                            final res = await clienteApi.editCLient(clienteModel);
-
-                                            if (res) {
-                                              showToast2('Cliente editado correctamente', Colors.green);
-                                              final clienteBloc = ProviderBloc.cliente(context);
-                                              clienteBloc.getClientForTipo('1');
-                                              clienteBloc.getClientForTipo('2');
-                                              Navigator.pop(context);
-                                              _cargando.value = false;
-                                            } else {
-                                              showToast2('Ocurrió un error', Colors.red);
-                                              _cargando.value = false;
-                                            }
-                                          } else {
-                                            showToast2('Por favor ingrese una Dirección del cliente', Colors.red);
-                                          }
-                                        } else {
-                                          showToast2('Por favor ingrese la fecha de nacimiento del cliente', Colors.red);
-                                        }
-                                      } else {
-                                        showToast2('Por favor ingrese el nro de teléfono del cliente', Colors.red);
-                                      }
-                                    } else {
-                                      showToast2('Por favor seleccione el sexo del cliente', Colors.red);
-                                    }
-                                  } else {
-                                    showToast2('Por favor ingrese el nro de documento del cliente', Colors.red);
-                                  }
+                                if (valueTipoDoc == 'Seleccionar') {
+                                  clienteModel.tipoDocCliente = '';
                                 } else {
-                                  showToast2('Por favor seleccione el tipo de documento', Colors.red);
+                                  clienteModel.tipoDocCliente = valueTipoDoc;
                                 }
+                                clienteModel.nroDocCliente = _nroDocController.text;
+
+                                if (valueSexo == 'Seleccionar') {
+                                  clienteModel.sexoCliente = '';
+                                } else {
+                                  clienteModel.sexoCliente = valueSexo;
+                                }
+
+                                clienteModel.nacimientoCLiente = fechaDato;
+                                clienteModel.telefonoCliente = _telefonoController.text;
+                                clienteModel.direccionCliente = _direccionController.text;
+                                clienteModel.idCliente = widget.clienteModel.idCliente;
+                                clienteModel.codigoCliente = _codClienteController.text;
+
+                                final res = await clienteApi.editCLient(clienteModel);
+
+                                if (res) {
+                                  showToast2('Cliente editado correctamente', Colors.green);
+                                  final clienteBloc = ProviderBloc.cliente(context);
+                                  clienteBloc.getClientForTipo('1');
+                                  clienteBloc.getClientForTipo('2');
+                                  Navigator.pop(context);
+                                  _cargando.value = false;
+                                } else {
+                                  showToast2('Ocurrió un error', Colors.red);
+                                  _cargando.value = false;
+                                }
+                                // if (valueTipoDoc != 'Seleccionar') {
+                                //   if (_nroDocController.text.isNotEmpty) {
+                                //     if (valueSexo != 'Seleccionar') {
+                                //       if (_telefonoController.text.isNotEmpty) {
+                                //         if (fechaDato != 'Seleccionar') {
+                                //           if (_direccionController.text.isNotEmpty) {
+
+                                //           } else {
+                                //             showToast2('Por favor ingrese una Dirección del cliente', Colors.red);
+                                //           }
+                                //         } else {
+                                //           showToast2('Por favor ingrese la fecha de nacimiento del cliente', Colors.red);
+                                //         }
+                                //       } else {
+                                //         showToast2('Por favor ingrese el nro de teléfono del cliente', Colors.red);
+                                //       }
+                                //     } else {
+                                //       showToast2('Por favor seleccione el sexo del cliente', Colors.red);
+                                //     }
+                                //   } else {
+                                //     showToast2('Por favor ingrese el nro de documento del cliente', Colors.red);
+                                //   }
+                                // } else {
+                                //   showToast2('Por favor seleccione el tipo de documento', Colors.red);
+                                // }
                               } else {
                                 showToast2('Por favor ingrese el nombre del cliente', Colors.red);
                               }
