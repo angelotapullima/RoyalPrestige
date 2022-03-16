@@ -37,7 +37,7 @@ dependencies:
   path_provider: ^2.0.1
   google_fonts: ^2.0.0
   flutter_screenutil: ^5.0.0+2
-  flutter_svg: ^1.0.0
+  flutter_svg: ^1.0.3
   platform_date_picker: ^0.2.0-nullsafety.0+1
   after_layout: ^1.1.0
   date_format: ^2.0.2
@@ -49,10 +49,8 @@ dependencies:
   cached_network_image: ^3.2.0
   open_file: ^3.2.1
   permission_handler: ^8.3.0
-  image_picker: ^0.8.4+4
-  image_cropper: ^1.4.1
   percent_indicator: ^3.4.0
-  file_picker: ^4.3.0
+  #file_picker: ^4.5.1
   focused_menu: ^1.0.5
   flutter_slidable: ^1.2.0
   carousel_slider: ^4.0.0

@@ -60,9 +60,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<EstadoListener>(
           create: (_) => EstadoListener(),
         ),
-        ChangeNotifierProvider<UploapBloc>(
+        /* ChangeNotifierProvider<UploapBloc>(
           create: (_) => UploapBloc(),
-        ),
+        ), */
         ChangeNotifierProvider<DocumentsBloc>(
           create: (_) => DocumentsBloc(),
         ),
