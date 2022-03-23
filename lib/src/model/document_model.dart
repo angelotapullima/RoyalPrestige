@@ -3,6 +3,7 @@ class DocumentModel {
   String? documentTitulo;
   String? documentDescripcion;
   String? documentFile;
+  String? documentUrlInterno;
   String? documentEstado;
 
   DocumentModel({
@@ -10,6 +11,7 @@ class DocumentModel {
     this.documentTitulo,
     this.documentDescripcion,
     this.documentFile,
+    this.documentUrlInterno,
     this.documentEstado,
   });
 
@@ -20,6 +22,7 @@ class DocumentModel {
         'documentTitulo': documentTitulo,
         'documentDescripcion': documentDescripcion,
         'documentFile': documentFile,
+        'documentUrlInterno': documentUrlInterno,
         'documentEstado': documentEstado,
       };
 
@@ -28,6 +31,7 @@ class DocumentModel {
         documentTitulo: json["documentTitulo"],
         documentDescripcion: json["documentDescripcion"],
         documentFile: json["documentFile"],
+        documentUrlInterno: json["documentUrlInterno"],
         documentEstado: json["documentEstado"],
       );
 }
