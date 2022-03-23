@@ -8,7 +8,6 @@ import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/pages/Alertas/search_cliente.dart';
 import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
-import 'package:royal_prestige/src/pages/documento/nuevo_documento.dart';
 import 'package:royal_prestige/src/pages/home.dart';
 import 'package:royal_prestige/src/pages/login.dart';
 import 'package:royal_prestige/src/pages/splash.dart';

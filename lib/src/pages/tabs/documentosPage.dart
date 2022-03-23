@@ -383,9 +383,17 @@ class _DocumentosPageState extends State<DocumentosPage> {
                   },
                   file: File('/$testdir/${documento.documentFile}'),
                   progress: ProgressImplementation(),
-                  onDone: () {
-                    print('COMPLETE /$testdir/${documento.documentFile}');
+                  onDone: () async {
+                    DocumentModel documentModel = DocumentModel();
+                    documentModel.idDocument = documento.idDocument;
+                    documentModel.documentDescripcion = documento.documentDescripcion;
+                    documentModel.documentEstado = documento.documentEstado;
+                    documentModel.documentFile = documento.documentFile;
+                    documentModel.documentTitulo = documento.documentTitulo;
+                    documentModel.documentUrlInterno = '$testdir/${documento.documentFile}';
 
+                    await documentDatabase.insertDocument(documentModel);
+                    print('COMPLETE $testdir/${documento.documentFile}');
                     OpenFile.open('$testdir/${documento.documentFile}');
 
                     provider.changeFinish();
