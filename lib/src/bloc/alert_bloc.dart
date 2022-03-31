@@ -43,27 +43,27 @@ class AlertBloc {
     final listdd = await alertApi.alertDatabase.getAlertByFecha(fecha, idUser);
     if (listdd.length > 0) {
       for (var i = 0; i < listdd.length; i++) {
-      /*  DateTime fechita = DateTime.parse('${listdd[i].alertDate} ${listdd[i].alertHour}');
+        /*  DateTime fechita = DateTime.parse('${listdd[i].alertDate} ${listdd[i].alertHour}');
 
          if (fechita.isAfter(DateTime.now())) { */
-          final client = await clienteDatabase.getClientPorIdCliente(listdd[i].idClient.toString());
+        final client = await clienteDatabase.getClientPorIdCliente(listdd[i].idClient.toString());
 
-          AlertModel alertModel = AlertModel();
+        AlertModel alertModel = AlertModel();
 
-          alertModel.nombreCLiente = (client.length > 0) ? client[0].nombreCliente : '';
-          alertModel.telefonoCliente = (client.length > 0) ? client[0].telefonoCliente : '';
-          alertModel.idAlert = listdd[i].idAlert;
-          alertModel.idUsuario = listdd[i].idUsuario;
-          alertModel.idClient = listdd[i].idClient;
-          alertModel.alertTitle = listdd[i].alertTitle;
-          alertModel.alertDetail = listdd[i].alertDetail;
-          alertModel.alertDate = obtenerFecha(listdd[i].alertDate.toString());
-          alertModel.alertDate2 = listdd[i].alertDate;
-          alertModel.alertHour = obtenerHora(listdd[i].alertHour.toString());
-          alertModel.alertHour2 = listdd[i].alertHour;
-          alertModel.alertStatus = listdd[i].alertStatus;
-          listReturn.add(alertModel);
-        }
+        alertModel.nombreCLiente = (client.length > 0) ? client[0].nombreCliente : '';
+        alertModel.telefonoCliente = (client.length > 0) ? client[0].telefonoCliente : '';
+        alertModel.idAlert = listdd[i].idAlert;
+        alertModel.idUsuario = listdd[i].idUsuario;
+        alertModel.idClient = listdd[i].idClient;
+        alertModel.alertTitle = listdd[i].alertTitle;
+        alertModel.alertDetail = listdd[i].alertDetail;
+        alertModel.alertDate = obtenerFecha(listdd[i].alertDate.toString());
+        alertModel.alertDate2 = listdd[i].alertDate;
+        alertModel.alertHour = obtenerHora(listdd[i].alertHour.toString());
+        alertModel.alertHour2 = listdd[i].alertHour;
+        alertModel.alertStatus = listdd[i].alertStatus;
+        listReturn.add(alertModel);
+      }
       //}
     }
 
@@ -163,35 +163,36 @@ class AlertBloc {
                   playLoad: '${fechix[y].idAlert}',
                   time: DateTime.now().add(Duration(seconds: 2)),
                 );
-              } 
+              }
+
+              if (fechix[y].alertado == '0') {
                 LocalNotificationApi.showAlertProgramado(
                   id: y,
                   title: '${fechix[y].alertTitle}',
-                  body: '${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas',
+                  body: '${fechix[y].alertDetail} | Hoy a las ${fechix[y].alertHour} horas alerta programada',
                   playLoad: '${fechix[y].idAlert}',
                   time: DateTime.now().add(
                     Duration(hours: _horas.inHours, minutes: _horas.inMinutes),
                   ),
                 );
-              
-
-            
+                await alertApi.alertDatabase.updateAlertado();
+              }
             }
-              AlertModel alertModel = AlertModel();
+            AlertModel alertModel = AlertModel();
 
-              alertModel.nombreCLiente = (clients.length > 0) ? clients[0].nombreCliente : '';
-              alertModel.telefonoCliente = (clients.length > 0) ? clients[0].telefonoCliente : '';
-              alertModel.idAlert = fechix[y].idAlert;
-              alertModel.idUsuario = fechix[y].idUsuario;
-              alertModel.idClient = fechix[y].idClient;
-              alertModel.alertTitle = fechix[y].alertTitle;
-              alertModel.alertDetail = fechix[y].alertDetail;
-              alertModel.alertDate = fechix[y].alertDate;
-              alertModel.alertHour = obtenerHora(
-                fechix[y].alertHour.toString(),
-              );
-              alertModel.alertStatus = fechix[y].alertStatus;
-              alertSubList.add(alertModel);
+            alertModel.nombreCLiente = (clients.length > 0) ? clients[0].nombreCliente : '';
+            alertModel.telefonoCliente = (clients.length > 0) ? clients[0].telefonoCliente : '';
+            alertModel.idAlert = fechix[y].idAlert;
+            alertModel.idUsuario = fechix[y].idUsuario;
+            alertModel.idClient = fechix[y].idClient;
+            alertModel.alertTitle = fechix[y].alertTitle;
+            alertModel.alertDetail = fechix[y].alertDetail;
+            alertModel.alertDate = fechix[y].alertDate;
+            alertModel.alertHour = obtenerHora(
+              fechix[y].alertHour.toString(),
+            );
+            alertModel.alertStatus = fechix[y].alertStatus;
+            alertSubList.add(alertModel);
           }
         }
 

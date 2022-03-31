@@ -78,6 +78,18 @@ class AlertDatabase {
     }
   }
 
+  //acutalizar a la tabla si ya fue creada la alerta
+  updateAlertado() async {
+    try {
+      final db = await dbprovider.database;
+
+      final res = await db.rawUpdate("UPDATE Alert SET alertado='1'");
+      return res;
+    } catch (exception) {
+      print(exception);
+    }
+  }
+
   deleteAlert() async {
     final db = await dbprovider.database;
 

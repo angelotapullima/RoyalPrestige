@@ -9,7 +9,7 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await getDatabase();
 
   Future<Database> getDatabase() async {
-    final String path = join(await getDatabasesPath(), 'royalv2.db');
+    final String path = join(await getDatabasesPath(), 'royalv3.db');
     return openDatabase(path, onCreate: (db, version) {
       db.execute(tableCategoriaSql);
       db.execute(tableProductoSql);
@@ -73,7 +73,8 @@ class DatabaseHelper {
       ' alertDetail TEXT,'
       ' alertDate TEXT,'
       ' alertHour TEXT,'
-      ' alertStatus TEXT)';
+      ' alertStatus TEXT,'
+      ' alertado TEXT)';
 
   static const String tableCartSql = 'CREATE TABLE Cart('
       ' idProduct TEXT PRIMARY KEY,'

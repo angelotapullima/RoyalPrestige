@@ -169,6 +169,8 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
         alertModel.alertHour = decodedData[i]['alerta_hora'];
         alertModel.alertStatus = decodedData[i]['alerta_estado'];
 
+        final alerDato = await alertDatabase.getAlertByIdAlert(decodedData[i]['id_alerta']);
+        alertModel.alertado = (alerDato.isNotEmpty) ? alerDato[0].alertado : '0';
         await alertDatabase.insertAlert(alertModel);
 
         if (alertModel.idClient != '0') {
