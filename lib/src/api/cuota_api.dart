@@ -17,6 +17,7 @@ class CuotaApi {
         'app': 'true',
       });
 
+      print('getCuotas ${resp.body}');
       final decodedData = json.decode(resp.body);
 
       for (var i = 0; i < decodedData.length; i++) {

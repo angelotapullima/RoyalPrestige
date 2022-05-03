@@ -1,4 +1,4 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+/* import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest_all.dart' as tz2;
@@ -84,3 +84,4 @@ class LocalNotificationApi {
   //   return schuledDate.isBefore(now) ? schuledDate.add(Duration(days: 1)) : schuledDate;
   // }
 }
+ */

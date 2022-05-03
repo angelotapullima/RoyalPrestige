@@ -150,9 +150,9 @@ class AlertBloc {
           for (var y = 0; y < fechix.length; y++) {
             final clients = await clienteDatabase.getClientPorIdCliente(fechix[y].idClient.toString());
 
-            DateTime fechita = DateTime.parse('${fechix[y].alertDate} ${fechix[y].alertHour}');
+            /*  DateTime fechita = DateTime.parse('${fechix[y].alertDate} ${fechix[y].alertHour}');
 
-            if (fechita.isAfter(DateTime.now())) {
+           if (fechita.isAfter(DateTime.now())) {
               Duration _horas = fechita.difference(DateTime.now());
 
               if (_horas.inHours < 1) {
@@ -164,7 +164,7 @@ class AlertBloc {
                   time: DateTime.now().add(Duration(seconds: 2)),
                 );
               }
-
+/* 
               if (fechix[y].alertado == '0') {
                 LocalNotificationApi.showAlertProgramado(
                   id: y,
@@ -176,8 +176,8 @@ class AlertBloc {
                   ),
                 );
                 await alertApi.alertDatabase.updateAlertado();
-              }
-            }
+              } */
+            } */
             AlertModel alertModel = AlertModel();
 
             alertModel.nombreCLiente = (clients.length > 0) ? clients[0].nombreCliente : '';

@@ -30,6 +30,7 @@ class ProductosApi {
         'app': 'true',
       });
 
+      print('listarProductos ${resp.body}');
       final decodedData = json.decode(resp.body);
 
       for (var i = 0; i < decodedData.length; i++) {
@@ -124,6 +125,7 @@ class ProductosApi {
     );
 
     if (response.statusCode == 200) {
+      print('agregarGaleria ${response.data}');
       print(response.toString());
 
       return true; /* 
@@ -163,6 +165,7 @@ class ProductosApi {
       });
 
       if (resp.statusCode == 200) {
+        print('disabledGalery ${resp.body}');
         print(resp.toString());
 
         return true;

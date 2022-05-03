@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:royal_prestige/src/api/local_notification_api.dart';
 import 'package:royal_prestige/src/bloc/provider_bloc.dart';
 import 'package:royal_prestige/src/model/api_model.dart';
 import 'package:royal_prestige/src/pages/Alertas/detail_alerta.dart';
@@ -30,13 +29,13 @@ class _HomePageState extends State<HomePage> {
     pageList.add(const CalcularPage());
 
     super.initState();
-    LocalNotificationApi.init(initScheluded: true);
-    listenNotification();
+    /* LocalNotificationApi.init(initScheluded: true);
+    listenNotification(); */
   }
 
-  void listenNotification() {
+  /*  void listenNotification() {
     LocalNotificationApi.onNotifications.stream.listen(onClickNotifications);
-  }
+  } */
 
   void onClickNotifications(String? playLoad) => Navigator.of(context).push(
         MaterialPageRoute(
@@ -57,7 +56,7 @@ class _HomePageState extends State<HomePage> {
 
     final dataBloc = ProviderBloc.data(context);
     dataBloc.obtenerDatosUser();
-    
+
     return Scaffold(
       body: Stack(
         children: [

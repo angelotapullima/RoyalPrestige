@@ -17,6 +17,7 @@ class LoginApi {
         'app': 'true',
       });
 
+      print('login ${resp.body}');
       final decodedData = json.decode(resp.body);
       print(decodedData);
 
@@ -52,7 +53,7 @@ class LoginApi {
       ApiModel api = ApiModel();
       api.code = '2';
       api.message = 'Ocurrió un error';
-      print('Erro Api Login: $e');
+      print('Erro login: $e');
       return api;
     }
   }
@@ -67,6 +68,7 @@ class LoginApi {
         'app': 'true',
       });
 
+      print('consultarUsuario ${resp.body}');
       final decodedData = json.decode(resp.body);
       print(decodedData);
 
@@ -79,7 +81,7 @@ class LoginApi {
       ApiModel api = ApiModel();
       api.code = '2';
       api.message = 'Ocurrió un error';
-      print('Erro Api Login: $e');
+      print('Erro consultarUsuario: $e');
       print(e);
       return api;
     }
@@ -97,6 +99,7 @@ class LoginApi {
         'id_usuario': idUser,
       });
 
+      print('getDataUsuario ${resp.body}');
       final decodedData = json.decode(resp.body);
       //print(decodedData);
 
@@ -124,7 +127,7 @@ class LoginApi {
       ApiModel api = ApiModel();
       api.code = '2';
       api.message = 'Ocurrió un error';
-      print('Erro Api Login: $e');
+      print('Erro getDataUsuario: $e');
       print(e);
       return api;
     }
@@ -142,6 +145,7 @@ class LoginApi {
         'configuracion_texto': frase,
       });
 
+      print('editarFrase ${resp.body}');
       final decodedData = json.decode(resp.body);
       print(decodedData);
 
@@ -154,7 +158,7 @@ class LoginApi {
       ApiModel api = ApiModel();
       api.code = '2';
       api.message = 'Ocurrió un error';
-      print('Erro Api Login: $e');
+      print('Erro Api editarFrase: $e');
       print(e);
       return api;
     }

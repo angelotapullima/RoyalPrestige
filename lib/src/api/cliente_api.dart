@@ -35,6 +35,7 @@ class ClienteApi {
         'cliente_estado': '1',
       });
 
+      print('saveClient ${resp.body}');
       final decodedData = json.decode(resp.body);
 
       ApiModel api = ApiModel();
@@ -49,7 +50,7 @@ class ClienteApi {
         return api;
       }
     } catch (e) {
-      print(e);
+      print('saveClient $e');
       ApiModel api = ApiModel();
 
       api.code = '2';
@@ -82,21 +83,21 @@ class ClienteApi {
       });
 
       if (resp.statusCode == 200) {
-        print(resp.toString());
+        print('editCLient ${resp.body}');
 
         return true;
       } else {
         return false;
       }
     } catch (e) {
-      print(e);
+      print('editCLient $e');
       return false;
     }
   }
 
   Future<void> getClientForUser() async {
     try {
-      final url = Uri.parse('$apiBaseURL/api/Productos/listar_clientes_por_usuario');
+      final url = Uri.parse('$apiBaseURL/api/Productos/listar_clientes_usuario_nuevo');
       String? token = await StorageManager.readData('token');
 
       final resp = await http.post(url, body: {
@@ -104,53 +105,58 @@ class ClienteApi {
         'app': 'true',
       });
 
+      print('getClientForUser ${resp.body}');
       final decodedData = json.decode(resp.body);
 
-      for (var i = 0; i < decodedData.length; i++) {
-        ClienteModel clienteModel = ClienteModel();
+      if (decodedData['result']['code'] == '1') {
+        if (decodedData['data'].length > 0) {
+          for (var i = 0; i < decodedData['data'].length; i++) {
+            var datos = decodedData['data'][i];
+            ClienteModel clienteModel = ClienteModel();
+            clienteModel.idCliente = datos['id_cliente'];
+            clienteModel.idUsuario = decodedData['data'][i]['id_usuario'];
+            clienteModel.nombreCliente = decodedData['data'][i]['cliente_nombre'];
+            clienteModel.tipoDocCliente = decodedData['data'][i]['cliente_tipo_doc'];
+            clienteModel.nroDocCliente = decodedData['data'][i]['cliente_nro_doc'];
+            clienteModel.nacimientoCLiente = decodedData['data'][i]['cliente_nacimiento'];
+            clienteModel.sexoCliente = decodedData['data'][i]['cliente_sexo'];
+            clienteModel.direccionCliente = decodedData['data'][i]['cliente_direccion'];
+            clienteModel.telefonoCliente = decodedData['data'][i]['cliente_telefono'];
+            clienteModel.observacionesCliente = decodedData['data'][i]['cliente_observaciones'];
+            clienteModel.estadoCliente = decodedData['data'][i]['cliente_estado'];
+            clienteModel.codigoCliente = decodedData['data'][i]['cliente_codigo'];
 
-        clienteModel.idCliente = decodedData[i]['id_cliente'];
-        clienteModel.idUsuario = decodedData[i]['id_usuario'];
-        clienteModel.nombreCliente = decodedData[i]['cliente_nombre'];
-        clienteModel.tipoDocCliente = decodedData[i]['cliente_tipo_doc'];
-        clienteModel.nroDocCliente = decodedData[i]['cliente_nro_doc'];
-        clienteModel.nacimientoCLiente = decodedData[i]['cliente_nacimiento'];
-        clienteModel.sexoCliente = decodedData[i]['cliente_sexo'];
-        clienteModel.direccionCliente = decodedData[i]['cliente_direccion'];
-        clienteModel.telefonoCliente = decodedData[i]['cliente_telefono'];
-        clienteModel.observacionesCliente = decodedData[i]['cliente_observaciones'];
-        clienteModel.estadoCliente = decodedData[i]['cliente_estado'];
-        clienteModel.codigoCliente = decodedData[i]['cliente_codigo'];
+            if (decodedData['data'][i]['compras'].length > 0) {
+              //Tipo 1, es Cliente
+              clienteModel.tipo = '1';
 
-        if (decodedData[i]['compras'].length > 0) {
-          //Tipo 1, es Cliente
-          clienteModel.tipo = '1';
+              for (var x = 0; x < decodedData['data'][i]['compras'].length; x++) {
+                var compras = decodedData['data'][i]['compras'][x];
 
-          for (var x = 0; x < decodedData[i]['compras'].length; x++) {
-            var compras = decodedData[i]['compras'][x];
+                ComprasModel compra = ComprasModel();
+                compra.idCompra = compras["id_compra"];
+                compra.idUsuario = compras["id_usuario"];
+                compra.idCliente = compras["id_cliente"];
+                compra.idProducto = compras["id_producto"];
+                compra.montoCuotaCompra = compras["compra_monto_cuota"];
+                compra.fechaPagoCompra = compras["compra_fecha_pago"];
+                compra.fechaCompra = compras["compra_fecha"];
+                compra.observacionCompra = compras["compra_observacion"];
+                compra.estadoCompra = compras["compra_estado"];
 
-            ComprasModel compra = ComprasModel();
-            compra.idCompra = compras["id_compra"];
-            compra.idUsuario = compras["id_usuario"];
-            compra.idCliente = compras["id_cliente"];
-            compra.idProducto = compras["id_producto"];
-            compra.montoCuotaCompra = compras["compra_monto_cuota"];
-            compra.fechaPagoCompra = compras["compra_fecha_pago"];
-            compra.fechaCompra = compras["compra_fecha"];
-            compra.observacionCompra = compras["compra_observacion"];
-            compra.estadoCompra = compras["compra_estado"];
+                await comprasDatabase.insertCompra(compra);
+              }
+            } else {
+              //Tipo 2, es Prospecto
+              clienteModel.tipo = '2';
+            }
 
-            await comprasDatabase.insertCompra(compra);
+            await clienteDatabase.insertCliente(clienteModel);
           }
-        } else {
-          //Tipo 2, es Prospecto
-          clienteModel.tipo = '2';
         }
-
-        await clienteDatabase.insertCliente(clienteModel);
       }
     } catch (e) {
-      print(e);
+      print('getClientForUser $e');
     }
   }
 
@@ -172,6 +178,7 @@ class ClienteApi {
         'compra_estado': '1',
       });
 
+      print('guardarCompra ${resp.body}');
       final decodedData = json.decode(resp.body);
       print(decodedData);
 
@@ -185,7 +192,7 @@ class ClienteApi {
         return false;
       }
     } catch (e) {
-      print(e);
+      print('guardarCompra $e');
       return false;
     }
   }
@@ -202,6 +209,7 @@ class ClienteApi {
         'id_cliente': '$idCliente',
       });
 
+      print('eliminarCliente ${resp.body}');
       final decodedData = json.decode(resp.body);
       print(decodedData);
 
@@ -216,7 +224,7 @@ class ClienteApi {
         return false;
       }
     } catch (e) {
-      print(e);
+      print('eliminarCliente $e');
       return false;
     }
   }

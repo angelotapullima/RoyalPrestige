@@ -30,6 +30,7 @@ class AlertApi {
       });
 
       if (resp.statusCode == 200) {
+        print('saveAlert ${resp.body}');
         print(resp.body.toString());
 
         return true;
@@ -37,7 +38,7 @@ class AlertApi {
         return false;
       }
     } catch (e) {
-      print(e);
+      print('saveAlert $e');
       return false;
     }
   }
@@ -63,9 +64,8 @@ class AlertApi {
 
       final decodedData = json.decode(resp.body);
 
-      print(decodedData);
-
       if (resp.statusCode == 200) {
+        print('editAlert $decodedData');
         print(resp.body.toString());
 
         return true;
@@ -73,7 +73,7 @@ class AlertApi {
         return false;
       }
     } catch (e) {
-      print(e);
+      print('editAlert $e');
       return false;
     }
   }
@@ -94,6 +94,7 @@ class AlertApi {
       print(decodedData);
 
       if (resp.statusCode == 200) {
+        print('eliminarAlert ${resp.body}');
         print(resp.body.toString());
 
         await alertDatabase.deleteAlertByIdAlerta(idAlerta);
@@ -103,7 +104,7 @@ class AlertApi {
         return false;
       }
     } catch (e) {
-      print(e);
+      print('eliminarAlert $e');
       return false;
     }
   }
@@ -157,6 +158,8 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
 
       final decodedData = json.decode(resp.body);
 
+      print('getAlertForUser ${resp.body}');
+
       for (var i = 0; i < decodedData.length; i++) {
         AlertModel alertModel = AlertModel();
 
@@ -191,7 +194,7 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
         }
       }
     } catch (e) {
-      print(e);
+      print('getAlertForUser $e');
     }
   }
 }

@@ -18,22 +18,25 @@ class PromocionApi {
         'tn': token,
         'app': 'true',
       });
+      print('listarPromociones ${resp.body}');
 
       final decodedData = json.decode(resp.body);
 
-      for (var i = 0; i < decodedData.length; i++) {
-        PromocionModel promo = PromocionModel();
-        promo.idPromo = decodedData[i]["id_promocion"];
-        promo.promoTipo = decodedData[i]["promocion_tipo"];
-        promo.idProduct = decodedData[i]["id_producto"];
-        promo.idCategoria = decodedData[i]["id_categoria"];
-        promo.precioPromo = decodedData[i]["promocion_precio"];
-        promo.detallePromo = decodedData[i]["promocion_detalle"];
-        promo.fechaLimitePromo = decodedData[i]["promocion_fecha_limite"];
-        promo.imagenPromo = decodedData[i]["promocion_imagen"];
-        promo.estadoPromo = decodedData[i]["promocion_estado"];
+      if (decodedData.length > 0) {
+        for (var i = 0; i < decodedData.length; i++) {
+          PromocionModel promo = PromocionModel();
+          promo.idPromo = decodedData[i]["id_promocion"];
+          promo.promoTipo = decodedData[i]["promocion_tipo"];
+          promo.idProduct = decodedData[i]["id_producto"];
+          promo.idCategoria = decodedData[i]["id_categoria"];
+          promo.precioPromo = decodedData[i]["promocion_precio"];
+          promo.detallePromo = decodedData[i]["promocion_detalle"];
+          promo.fechaLimitePromo = decodedData[i]["promocion_fecha_limite"];
+          promo.imagenPromo = decodedData[i]["promocion_imagen"];
+          promo.estadoPromo = decodedData[i]["promocion_estado"];
 
-        await promoDatabase.insertPromocion(promo);
+          await promoDatabase.insertPromocion(promo);
+        }
       }
     } catch (e) {
       print(e);

@@ -2,6 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -26,6 +27,15 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Necesitamos acceso a la Galería de fotos para guardar las capturas de pantalla y compartirla con tus amigos.</string>
+	
+	<key>NSCalendarsUsageDescription</key>
+	<string>INSERT_REASON_HERE</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>es</string>
+		<string>ja</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

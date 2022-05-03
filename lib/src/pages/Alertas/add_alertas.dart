@@ -1,3 +1,4 @@
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -422,6 +423,10 @@ class _AddAlertasState extends State<AddAlertas> {
                                       final res = await alertApi.saveAlert(alertModel);
 
                                       if (res) {
+                                        Add2Calendar.addEvent2Cal(
+                                          buildEvent(_tituloController.text, _detalleController.text, horaDato, fechaDato),
+                                        );
+
                                         _cargando.value = false;
                                         final alertasBloc = ProviderBloc.alert(context);
                                         alertasBloc.getAlertsTodayPluss();
@@ -464,6 +469,28 @@ class _AddAlertasState extends State<AddAlertas> {
           );
         },
       ),
+    );
+  }
+
+  Event buildEvent(String title, String description, String hour, String date, {Recurrence? recurrence}) {
+    var parsedDate = DateTime.parse('$date $hour');
+
+    return Event(
+      title: title,
+      description: '$description | el ${obtenerFecha('date')} a las $hour horas',
+      location: '$description | el ${obtenerFecha('date')} a las $hour horas',
+      startDate: parsedDate,
+      endDate: parsedDate.add(
+        Duration(minutes: 60),
+      ),
+      allDay: false,
+      iosParams: IOSParams(
+        reminder: Duration(minutes: 10),
+      ),
+      androidParams: AndroidParams(
+          //emailInvites: ["test@example.com"],
+          ),
+      recurrence: recurrence,
     );
   }
 

@@ -248,7 +248,6 @@ class _DocumentosPageState extends State<DocumentosPage> {
               child: ValueListenableBuilder(
                 valueListenable: provider.cargando,
                 builder: (BuildContext context, double data, Widget? child) {
-                  print('data $data');
                   return (data == 0.0)
                       ? Container()
                       : (data == 100.0)

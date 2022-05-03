@@ -19,27 +19,29 @@ class DocumentApi {
         'app': 'true',
       });
 
+      print('listarDocument ${resp.body}');
       final decodedData = json.decode(resp.body);
+      if (decodedData.length > 0) {
+        for (var i = 0; i < decodedData.length; i++) {
+          final doc = await documentDatabase.getDocumentForId(decodedData[i]["id_documento"]);
 
-      for (var i = 0; i < decodedData.length; i++) {
-        final doc = await documentDatabase.getDocumentForId(decodedData[i]["id_documento"]);
+          var urlCache = '';
+          if (doc.length > 0) {
+            urlCache = '${doc[0].documentUrlInterno}';
+          }
+          DocumentModel documentModel = DocumentModel();
+          documentModel.idDocument = decodedData[i]["id_documento"];
+          documentModel.documentTitulo = decodedData[i]["documento_titulo"];
+          documentModel.documentDescripcion = decodedData[i]["documento_descripcion"];
+          documentModel.documentEstado = decodedData[i]["documento_estado"];
+          documentModel.documentUrlInterno = urlCache;
+          documentModel.documentFile = decodedData[i]["documento_file"];
 
-        var urlCache = '';
-        if (doc.length > 0) {
-          urlCache = '${doc[0].documentUrlInterno}';
+          await documentDatabase.insertDocument(documentModel);
         }
-        DocumentModel documentModel = DocumentModel();
-        documentModel.idDocument = decodedData[i]["id_documento"];
-        documentModel.documentTitulo = decodedData[i]["documento_titulo"];
-        documentModel.documentDescripcion = decodedData[i]["documento_descripcion"];
-        documentModel.documentEstado = decodedData[i]["documento_estado"];
-        documentModel.documentUrlInterno = urlCache;
-        documentModel.documentFile = decodedData[i]["documento_file"];
-
-        await documentDatabase.insertDocument(documentModel);
       }
     } catch (e) {
-      print(e);
+      print('listarDocument  $e');
     }
   }
 }
