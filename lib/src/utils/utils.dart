@@ -6,6 +6,16 @@ void showToast2(String texto, Color color) {
   Fluttertoast.showToast(msg: texto, toastLength: Toast.LENGTH_SHORT, timeInSecForIosWeb: 3, backgroundColor: color, textColor: Colors.white);
 }
 
+obtenerFecha3(String date) {
+  if (date == 'null' || date == '') {
+    return '';
+  }
+
+  var fecha = DateTime.parse(date);
+  print('judfbhf');
+  return fecha;
+}
+
 obtenerFecha(String date) {
   if (date == 'null' || date == '') {
     return '';

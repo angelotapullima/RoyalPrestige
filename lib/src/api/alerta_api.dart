@@ -30,9 +30,6 @@ class AlertApi {
       });
 
       if (resp.statusCode == 200) {
-        print('saveAlert ${resp.body}');
-        print(resp.body.toString());
-
         return true;
       } else {
         return false;
@@ -65,9 +62,6 @@ class AlertApi {
       final decodedData = json.decode(resp.body);
 
       if (resp.statusCode == 200) {
-        print('editAlert $decodedData');
-        print(resp.body.toString());
-
         return true;
       } else {
         return false;
@@ -91,12 +85,7 @@ class AlertApi {
 
       final decodedData = json.decode(resp.body);
 
-      print(decodedData);
-
       if (resp.statusCode == 200) {
-        print('eliminarAlert ${resp.body}');
-        print(resp.body.toString());
-
         await alertDatabase.deleteAlertByIdAlerta(idAlerta);
 
         return true;
@@ -157,8 +146,6 @@ Future<bool> editCLient(ClienteModel clienteModel) async {
       });
 
       final decodedData = json.decode(resp.body);
-
-      print('getAlertForUser ${resp.body}');
 
       for (var i = 0; i < decodedData.length; i++) {
         AlertModel alertModel = AlertModel();

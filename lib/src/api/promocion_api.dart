@@ -18,7 +18,6 @@ class PromocionApi {
         'tn': token,
         'app': 'true',
       });
-      print('listarPromociones ${resp.body}');
 
       final decodedData = json.decode(resp.body);
 

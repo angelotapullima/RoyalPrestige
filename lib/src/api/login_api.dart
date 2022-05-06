@@ -17,9 +17,8 @@ class LoginApi {
         'app': 'true',
       });
 
-      print('login ${resp.body}');
       final decodedData = json.decode(resp.body);
-      print(decodedData);
+      //   print(decodedData);
 
       final int code = decodedData['result']['code'];
       ApiModel loginModel = ApiModel();
@@ -68,7 +67,6 @@ class LoginApi {
         'app': 'true',
       });
 
-      print('consultarUsuario ${resp.body}');
       final decodedData = json.decode(resp.body);
       print(decodedData);
 
@@ -99,9 +97,7 @@ class LoginApi {
         'id_usuario': idUser,
       });
 
-      print('getDataUsuario ${resp.body}');
       final decodedData = json.decode(resp.body);
-      //print(decodedData);
 
       final int code = decodedData['respuesta']['code'];
       ApiModel loginModel = ApiModel();
@@ -145,9 +141,8 @@ class LoginApi {
         'configuracion_texto': frase,
       });
 
-      print('editarFrase ${resp.body}');
       final decodedData = json.decode(resp.body);
-      print(decodedData);
+      ////   print(decodedData);
 
       final int code = decodedData['result']['code'];
       ApiModel loginModel = ApiModel();

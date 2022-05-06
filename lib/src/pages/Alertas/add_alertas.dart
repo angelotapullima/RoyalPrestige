@@ -477,8 +477,8 @@ class _AddAlertasState extends State<AddAlertas> {
 
     return Event(
       title: title,
-      description: '$description | el ${obtenerFecha('date')} a las $hour horas',
-      location: '$description | el ${obtenerFecha('date')} a las $hour horas',
+      description: '$description | el ${obtenerFecha('$date')} a las $hour horas',
+      location: '$description | el ${obtenerFecha('$date')} a las $hour horas',
       startDate: parsedDate,
       endDate: parsedDate.add(
         Duration(minutes: 60),

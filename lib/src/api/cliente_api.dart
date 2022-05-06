@@ -35,7 +35,6 @@ class ClienteApi {
         'cliente_estado': '1',
       });
 
-      print('saveClient ${resp.body}');
       final decodedData = json.decode(resp.body);
 
       ApiModel api = ApiModel();
@@ -83,8 +82,6 @@ class ClienteApi {
       });
 
       if (resp.statusCode == 200) {
-        print('editCLient ${resp.body}');
-
         return true;
       } else {
         return false;
@@ -105,7 +102,6 @@ class ClienteApi {
         'app': 'true',
       });
 
-      print('getClientForUser ${resp.body}');
       final decodedData = json.decode(resp.body);
 
       if (decodedData['result']['code'] == '1') {
@@ -178,9 +174,7 @@ class ClienteApi {
         'compra_estado': '1',
       });
 
-      print('guardarCompra ${resp.body}');
       final decodedData = json.decode(resp.body);
-      print(decodedData);
 
       if (resp.statusCode == 200) {
         if (decodedData["result"]["code"] == 1) {
@@ -209,9 +203,8 @@ class ClienteApi {
         'id_cliente': '$idCliente',
       });
 
-      print('eliminarCliente ${resp.body}');
       final decodedData = json.decode(resp.body);
-      print(decodedData);
+      //   print(decodedData);
 
       if (resp.statusCode == 200) {
         if (decodedData["result"]["code"] == 1) {

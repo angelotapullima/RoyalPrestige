@@ -17,9 +17,8 @@ class LogoutApi {
         'id_usuario': idUser,
       });
 
-      print('logoutUsuario ${resp.body}');
       final decodedData = json.decode(resp.body);
-      print(decodedData);
+      //   print(decodedData);
 
       if (decodedData['result']['code'] == 1) {
         return true;

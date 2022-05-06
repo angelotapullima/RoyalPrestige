@@ -19,7 +19,6 @@ class DocumentApi {
         'app': 'true',
       });
 
-      print('listarDocument ${resp.body}');
       final decodedData = json.decode(resp.body);
       if (decodedData.length > 0) {
         for (var i = 0; i < decodedData.length; i++) {
