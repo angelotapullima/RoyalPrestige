@@ -32,7 +32,7 @@ class _CarritoTabState extends State<CarritoTab> {
   @override
   void initState() {
     print('Se ejecuta el init');
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final carritoBloc = ProviderBloc.cart(context);
       carritoBloc.getCart();
     });

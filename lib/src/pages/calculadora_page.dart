@@ -11,6 +11,7 @@ import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/utils/responsive.dart';
 import 'package:royal_prestige/src/utils/utils.dart';
+import 'package:royal_prestige/src/widget/percent_widget.dart';
 
 class CalculaDoraPage extends StatefulWidget {
   final double monto;
@@ -30,7 +31,9 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
   @override
   void initState() {
     _controller = Provider.of<ControllerCalculo>(context, listen: false);
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final percentBloc = ProviderBloc.pencert(context);
+      percentBloc.updateMontoPercentInit(widget.monto.toString());
       _controller.limpiar();
       _controller.calcularProducto(widget.monto.toString());
     });
@@ -79,7 +82,7 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
               builder: (_, c) {
                 return Column(
                   children: [
-                    _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(), 1),
+                    _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, PercentWidget(), 1),
                     SizedBox(
                       height: ScreenUtil().setHeight(14),
                     ),
@@ -167,73 +170,6 @@ class _CalculaDoraPageState extends State<CalculaDoraPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _contenido1() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '10%',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.tenpercent}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '15%',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.fifteenpercent}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '20%',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.twentyPercent}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-        Divider(),
-      ],
     );
   }
 

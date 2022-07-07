@@ -1,7 +1,7 @@
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
 import 'package:royal_prestige/database/cliente_database.dart';
 import 'package:royal_prestige/src/api/alerta_api.dart';
-import 'package:royal_prestige/src/api/local_notification_api.dart';
+//import 'package:royal_prestige/src/api/local_notification_api.dart';
 import 'package:royal_prestige/src/model/alert_model.dart';
 import 'package:royal_prestige/src/model/fecha_alert_model.dart';
 import 'package:royal_prestige/src/utils/utils.dart';

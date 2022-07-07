@@ -33,7 +33,7 @@ class _SearchCliente2PageState extends State<SearchCliente2Page> with TickerProv
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.addListener(() {
         csmare = _controller.index;
         setState(() {});

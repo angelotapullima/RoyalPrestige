@@ -1119,19 +1119,19 @@ class _DetalleProductoState extends State<DetalleProducto> {
     );
   }
 
-  Widget _mostrarAlert() {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      color: Color.fromRGBO(0, 0, 0, 0.5),
-      child: Center(
-        child: Container(
-          height: 150.0,
-          child: CupertinoActivityIndicator(),
-        ),
-      ),
-    );
-  }
+  // Widget _mostrarAlert() {
+  //   return Container(
+  //     height: double.infinity,
+  //     width: double.infinity,
+  //     color: Color.fromRGBO(0, 0, 0, 0.5),
+  //     child: Center(
+  //       child: Container(
+  //         height: 150.0,
+  //         child: CupertinoActivityIndicator(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _expandedContainer(String titulo, bool expanded, Widget contenido) {
     return Container(

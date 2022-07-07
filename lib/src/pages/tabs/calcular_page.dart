@@ -9,6 +9,7 @@ import 'package:royal_prestige/src/model/cuota_model.dart';
 import 'package:royal_prestige/src/pages/expansionPrueba.dart';
 import 'package:royal_prestige/src/utils/colors.dart';
 import 'package:royal_prestige/src/widget/carrito.dart';
+import 'package:royal_prestige/src/widget/percent_widget.dart';
 
 class CalcularPage extends StatefulWidget {
   const CalcularPage({Key? key}) : super(key: key);
@@ -32,9 +33,18 @@ class _CalcularPageState extends State<CalcularPage> {
     super.initState();
   }
 
+  int init = 0;
+
   @override
   Widget build(BuildContext context) {
     final cuotaBloc = ProviderBloc.cuota(context);
+    final percentBloc = ProviderBloc.pencert(context);
+    if (init == 0) {
+      percentBloc.cargarPercents();
+    }
+    init++;
+    percentBloc.cargarPercents();
+    init++;
     cuotaBloc.getCuotasMostar();
     return Scaffold(
       body: SafeArea(
@@ -120,9 +130,11 @@ class _CalcularPageState extends State<CalcularPage> {
                           onChanged: (value) {
                             if (value.isNotEmpty) {
                               _controller.calcularProducto(value);
+                              percentBloc.updateMontoPercent(value);
                             } else {
                               _controller.limpiar();
                               _depositoController.text = '';
+                              percentBloc.cargarPercents();
                             }
                           },
                           decoration: InputDecoration(
@@ -159,7 +171,7 @@ class _CalcularPageState extends State<CalcularPage> {
                       SizedBox(
                         height: ScreenUtil().setHeight(24),
                       ),
-                      _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, _contenido1(_controller), 1, _controller),
+                      _expandedContainer('MONTO INICIAL (%)', _controller.expanded1, PercentWidget(), 1, _controller),
                       SizedBox(
                         height: ScreenUtil().setHeight(14),
                       ),
@@ -247,72 +259,72 @@ class _CalcularPageState extends State<CalcularPage> {
     );
   }
 
-  Widget _contenido1(ControllerCalculo _controller) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '10%',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.tenpercent}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '15%',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.fifteenpercent}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-        Divider(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '20%',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'S/. ${_controller.twentyPercent}.00',
-              style: TextStyle(
-                fontSize: ScreenUtil().setSp(14),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-        Divider(),
-      ],
-    );
-  }
+  // Widget _contenido1(ControllerCalculo _controller) {
+  //   return Column(
+  //     children: [
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+  //             '10%',
+  //             style: TextStyle(
+  //               fontSize: ScreenUtil().setSp(14),
+  //               fontWeight: FontWeight.w400,
+  //             ),
+  //           ),
+  //           Text(
+  //             'S/. ${_controller.tenpercent}.00',
+  //             style: TextStyle(
+  //               fontSize: ScreenUtil().setSp(14),
+  //               fontWeight: FontWeight.w400,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       Divider(),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+  //             '15%',
+  //             style: TextStyle(
+  //               fontSize: ScreenUtil().setSp(14),
+  //               fontWeight: FontWeight.w400,
+  //             ),
+  //           ),
+  //           Text(
+  //             'S/. ${_controller.fifteenpercent}.00',
+  //             style: TextStyle(
+  //               fontSize: ScreenUtil().setSp(14),
+  //               fontWeight: FontWeight.w400,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       Divider(),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+  //             '20%',
+  //             style: TextStyle(
+  //               fontSize: ScreenUtil().setSp(14),
+  //               fontWeight: FontWeight.w400,
+  //             ),
+  //           ),
+  //           Text(
+  //             'S/. ${_controller.twentyPercent}.00',
+  //             style: TextStyle(
+  //               fontSize: ScreenUtil().setSp(14),
+  //               fontWeight: FontWeight.w400,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       Divider(),
+  //     ],
+  //   );
+  // }
 
   Widget _contenido2(ControllerCalculo _controller) {
     return Column(

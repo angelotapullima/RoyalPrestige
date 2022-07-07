@@ -9,6 +9,7 @@ import 'package:royal_prestige/src/bloc/cuota_bloc.dart';
 import 'package:royal_prestige/src/bloc/data_user.dart';
 import 'package:royal_prestige/src/bloc/document_bloc.dart';
 import 'package:royal_prestige/src/bloc/galeria_producto_bloc.dart';
+import 'package:royal_prestige/src/bloc/percent_bloc.dart';
 import 'package:royal_prestige/src/bloc/productos_bloc.dart';
 import 'package:royal_prestige/src/bloc/promocion_bloc.dart';
 
@@ -25,6 +26,7 @@ class ProviderBloc extends InheritedWidget {
   final busquedaGeneralTab = BusquedaGeneralTab();
   final comprasBloc = ComprasBloc();
   final cuotaBloc = CuotaBloc();
+  final percentBloc = PercenteBloc();
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
   @override
@@ -76,5 +78,9 @@ class ProviderBloc extends InheritedWidget {
 
   static CuotaBloc cuota(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.cuotaBloc;
+  }
+
+  static PercenteBloc pencert(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.percentBloc;
   }
 }

@@ -59,7 +59,7 @@ class AlertApi {
         'alerta_estado': '1',
       });
 
-      final decodedData = json.decode(resp.body);
+      //final decodedData = json.decode(resp.body);
 
       if (resp.statusCode == 200) {
         return true;
@@ -83,7 +83,7 @@ class AlertApi {
         'id_alerta': '$idAlerta',
       });
 
-      final decodedData = json.decode(resp.body);
+      //final decodedData = json.decode(resp.body);
 
       if (resp.statusCode == 200) {
         await alertDatabase.deleteAlertByIdAlerta(idAlerta);

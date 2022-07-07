@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:royal_prestige/core/sharedpreferences/storage_manager.dart';
+import 'package:royal_prestige/database/percent_calculate_database.dart';
 import 'package:royal_prestige/src/api/cuota_api.dart';
 import 'package:royal_prestige/src/model/api_model.dart';
+import 'package:royal_prestige/src/model/percent_calculate_model.dart';
 import 'package:royal_prestige/src/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
 class LoginApi {
+  final percentBD = PercentCalculateDatabase();
   Future<ApiModel> login(String user, String passwd) async {
     try {
       final url = Uri.parse('$apiBaseURL/api/Login/validar_sesion');
@@ -26,6 +29,18 @@ class LoginApi {
       loginModel.message = decodedData['result']['message'];
 
       if (code == 1) {
+        //Insertar porcentajes
+        percentBD.deletePercent();
+        for (var i = 0; i < decodedData['result']['porcentajes'].length; i++) {
+          var datito = decodedData['result']['porcentajes'][i];
+          final percent = PercentCaculateModel();
+          percent.id = datito["id_porcentaje"];
+          percent.value = datito["porcentaje_monto"];
+          percent.estado = datito["porcentaje_estado"];
+          percent.monto = "0.00";
+          await percentBD.insertarPercent(percent);
+        }
+
         final cuotaApi = CuotaApi();
 
         await cuotaApi.getCuotas();
@@ -68,9 +83,22 @@ class LoginApi {
       });
 
       final decodedData = json.decode(resp.body);
-      print(decodedData);
 
       final int code = decodedData['result']['code'];
+
+      if (code == 1) {
+        percentBD.deletePercent();
+        //Insertar porcentajes
+        for (var i = 0; i < decodedData['result']['porcentajes'].length; i++) {
+          var datito = decodedData['result']['porcentajes'][i];
+          final percent = PercentCaculateModel();
+          percent.id = datito["id_porcentaje"];
+          percent.value = datito["porcentaje_monto"];
+          percent.estado = datito["porcentaje_estado"];
+          percent.monto = "0.00";
+          await percentBD.insertarPercent(percent);
+        }
+      }
       ApiModel loginModel = ApiModel();
       loginModel.code = code.toString();
       loginModel.message = decodedData['result']['message'];

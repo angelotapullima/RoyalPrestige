@@ -938,8 +938,8 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
     return SliverPersistentHeader(
       floating: true,
       delegate: SliverCustomHeaderDelegate(
-        maxHeight: responsive.ip(14) + kToolbarHeight,
-        minHeight: responsive.ip(14) + kToolbarHeight,
+        maxHeight: responsive.ip(15) + kToolbarHeight,
+        minHeight: responsive.ip(15) + kToolbarHeight,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.red,
@@ -1038,50 +1038,46 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                     ],
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(
-                    left: responsive.wp(6),
-                    right: responsive.wp(10),
-                  ),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   PageRouteBuilder(
-                          //     pageBuilder: (context, animation, secondaryAnimation) {
-                          //       return EditFrase(
-                          //         frase: '${widget.user.frase}',
-                          //       );
-                          //     },
-                          //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          //       var begin = Offset(0.0, 1.0);
-                          //       var end = Offset.zero;
-                          //       var curve = Curves.ease;
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                    child: InkWell(
+                      onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   PageRouteBuilder(
+                        //     pageBuilder: (context, animation, secondaryAnimation) {
+                        //       return EditFrase(
+                        //         frase: '${widget.user.frase}',
+                        //       );
+                        //     },
+                        //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        //       var begin = Offset(0.0, 1.0);
+                        //       var end = Offset.zero;
+                        //       var curve = Curves.ease;
 
-                          //       var tween = Tween(begin: begin, end: end).chain(
-                          //         CurveTween(curve: curve),
-                          //       );
+                        //       var tween = Tween(begin: begin, end: end).chain(
+                        //         CurveTween(curve: curve),
+                        //       );
 
-                          //       return SlideTransition(
-                          //         position: animation.drive(tween),
-                          //         child: child,
-                          //       );
-                          //     },
-                          //   ),
-                          // );
-                        },
-                        child: Text(
-                          '" ${widget.user.frase} "',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: responsive.ip(2.1),
-                            fontWeight: FontWeight.w600,
-                          ),
+                        //       return SlideTransition(
+                        //         position: animation.drive(tween),
+                        //         child: child,
+                        //       );
+                        //     },
+                        //   ),
+                        // );
+                      },
+                      child: Text(
+                        '" ${widget.user.frase} "',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: responsive.ip(1.8),
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -1140,6 +1136,9 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                       ],
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: responsive.hp(1),
                 ),
               ],
             ),

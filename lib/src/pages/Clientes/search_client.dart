@@ -35,7 +35,7 @@ class _SearchClientePageState extends State<SearchClientePage> with TickerProvid
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.addListener(() {
         csmare = _controller.index;
         print('dentro ${_controller.index}');
