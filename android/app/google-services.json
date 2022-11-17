@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "485848979629",
+    "project_id": "sethi-81c78",
+    "storage_bucket": "sethi-81c78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485848979629:android:686f692f6f4bdcb783ce24",
+        "android_client_info": {
+          "package_name": "com.bufeotec.sethi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485848979629-1ej0mhndopl6tkqjkge114jg8lptfi90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp1h13pJxbXgd9NHw3jG6-5RfCYRPFdAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485848979629-1ej0mhndopl6tkqjkge114jg8lptfi90.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "485848979629-plg5bdjctggu5kql29re2bkttqea6il7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bufeotec.sethicompany"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
