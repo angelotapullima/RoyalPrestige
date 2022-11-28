@@ -28,7 +28,9 @@ import 'package:royal_prestige/src/widget/show_loading.dart';
 import 'dart:math' as math;
 
 class PruebaInicio extends StatelessWidget {
-  const PruebaInicio({Key? key}) : super(key: key);
+  const PruebaInicio({Key? key, required this.showPendientes})
+      : super(key: key);
+  final bool? showPendientes;
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +47,12 @@ class PruebaInicio extends StatelessWidget {
     final responsive = Responsive.of(context);
 
     final provider = Provider.of<PrincipalChangeBloc>(context, listen: false);
-
     return Scaffold(
       body: StreamBuilder(
           stream: alertasBloc.alertsDayStream,
           builder: (context, AsyncSnapshot<List<AlertModel>> snapshot) {
             if (snapshot.hasData) {
-              provider.setIndex(true);
+              provider.setIndex(showPendientes!);
               return Stack(
                 children: [
                   StreamBuilder(
@@ -60,57 +61,94 @@ class PruebaInicio extends StatelessWidget {
                       if (user.hasData) {
                         return StreamBuilder(
                           stream: categoriasBloc.categoriaStream,
-                          builder: (context, AsyncSnapshot<List<CategoriaModel>> cats) {
+                          builder: (context,
+                              AsyncSnapshot<List<CategoriaModel>> cats) {
                             if (cats.hasData) {
                               if (cats.data!.length > 0) {
-                                categoriasBloc.obtenerProductosByIdCategoria(cats.data![0].idCategoria.toString());
+                                categoriasBloc.obtenerProductosByIdCategoria(
+                                    cats.data![0].idCategoria.toString());
                                 return CustomScrollView(
                                   slivers: [
                                     CustomHeaderPrincipal(user: user.data!),
                                     StreamBuilder(
                                         stream: promoBloc.promocionStream,
-                                        builder: (context, AsyncSnapshot<List<PromocionModel>> promo) {
+                                        builder: (context,
+                                            AsyncSnapshot<List<PromocionModel>>
+                                                promo) {
                                           if (promo.hasData) {
                                             if (promo.data!.length > 0) {
                                               var promos = promo.data!;
                                               return SliverToBoxAdapter(
                                                 child: Container(
-                                                    height: ScreenUtil().setHeight(150),
+                                                    height: ScreenUtil()
+                                                        .setHeight(150),
                                                     child: Container(
-                                                      padding: EdgeInsets.symmetric(
-                                                        vertical: ScreenUtil().setHeight(10),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        vertical: ScreenUtil()
+                                                            .setHeight(10),
                                                       ),
-                                                      height: ScreenUtil().setHeight(150),
-                                                      child: CarouselSlider.builder(
-                                                        itemCount: promos.length,
-                                                        itemBuilder: (context, x, y) {
+                                                      height: ScreenUtil()
+                                                          .setHeight(150),
+                                                      child: CarouselSlider
+                                                          .builder(
+                                                        itemCount:
+                                                            promos.length,
+                                                        itemBuilder:
+                                                            (context, x, y) {
                                                           return InkWell(
                                                             onTap: () {
-                                                              _onTapPromo(context, promos[x]);
+                                                              _onTapPromo(
+                                                                  context,
+                                                                  promos[x]);
                                                             },
                                                             child: ClipRRect(
-                                                              borderRadius: BorderRadius.circular(10.0),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
                                                               child: Stack(
                                                                 children: [
                                                                   CachedNetworkImage(
-                                                                    placeholder: (context, url) => Container(
-                                                                      width: double.infinity,
-                                                                      height: double.infinity,
-                                                                      child: CupertinoActivityIndicator(),
+                                                                    placeholder:
+                                                                        (context,
+                                                                                url) =>
+                                                                            Container(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height: double
+                                                                          .infinity,
+                                                                      child:
+                                                                          CupertinoActivityIndicator(),
                                                                     ),
-                                                                    errorWidget: (context, url, error) => Container(
-                                                                      width: double.infinity,
-                                                                      height: double.infinity,
-                                                                      child: Center(
-                                                                        child: Icon(Icons.error),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        Container(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height: double
+                                                                          .infinity,
+                                                                      child:
+                                                                          Center(
+                                                                        child: Icon(
+                                                                            Icons.error),
                                                                       ),
                                                                     ),
-                                                                    imageUrl: '$apiBaseURL/${promos[x].imagenPromo}',
-                                                                    imageBuilder: (context, imageProvider) => Container(
-                                                                      decoration: BoxDecoration(
-                                                                        image: DecorationImage(
-                                                                          image: imageProvider,
-                                                                          fit: BoxFit.cover,
+                                                                    imageUrl:
+                                                                        '$apiBaseURL/${promos[x].imagenPromo}',
+                                                                    imageBuilder:
+                                                                        (context,
+                                                                                imageProvider) =>
+                                                                            Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        image:
+                                                                            DecorationImage(
+                                                                          image:
+                                                                              imageProvider,
+                                                                          fit: BoxFit
+                                                                              .cover,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -121,30 +159,46 @@ class PruebaInicio extends StatelessWidget {
                                                           );
                                                         },
                                                         options: CarouselOptions(
-                                                            height: ScreenUtil().setHeight(552),
-                                                            onPageChanged: (index, page) {},
-                                                            enlargeCenterPage: true,
+                                                            height: ScreenUtil()
+                                                                .setHeight(552),
+                                                            onPageChanged:
+                                                                (index,
+                                                                    page) {},
+                                                            enlargeCenterPage:
+                                                                true,
                                                             autoPlay: true,
-                                                            autoPlayCurve: Curves.fastOutSlowIn,
-                                                            autoPlayInterval: Duration(seconds: 6),
-                                                            autoPlayAnimationDuration: Duration(milliseconds: 2000),
-                                                            viewportFraction: .8),
+                                                            autoPlayCurve: Curves
+                                                                .fastOutSlowIn,
+                                                            autoPlayInterval:
+                                                                Duration(
+                                                                    seconds: 6),
+                                                            autoPlayAnimationDuration:
+                                                                Duration(
+                                                                    milliseconds:
+                                                                        2000),
+                                                            viewportFraction:
+                                                                .8),
                                                       ),
                                                     )),
                                               );
                                             } else {
                                               return SliverToBoxAdapter(
                                                 child: Container(
-                                                  height: ScreenUtil().setHeight(60),
-                                                  child: Center(child: Text('No existen promociones')),
+                                                  height: ScreenUtil()
+                                                      .setHeight(60),
+                                                  child: Center(
+                                                      child: Text(
+                                                          'No existen promociones')),
                                                 ),
                                               );
                                             }
                                           } else {
                                             return SliverToBoxAdapter(
                                               child: Container(
-                                                height: ScreenUtil().setHeight(60),
-                                                child: CupertinoActivityIndicator(),
+                                                height:
+                                                    ScreenUtil().setHeight(60),
+                                                child:
+                                                    CupertinoActivityIndicator(),
                                               ),
                                             );
                                           }
@@ -156,14 +210,20 @@ class PruebaInicio extends StatelessWidget {
                                           scrollDirection: Axis.horizontal,
                                           itemCount: cats.data!.length,
                                           itemBuilder: (_, index) {
-                                            return itemChoice(cats.data![index], index, categoriasBloc, _controller);
+                                            return itemChoice(
+                                                cats.data![index],
+                                                index,
+                                                categoriasBloc,
+                                                _controller);
                                           },
                                         ),
                                       ),
                                     ),
                                     StreamBuilder(
                                       stream: categoriasBloc.productosStream,
-                                      builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+                                      builder: (context,
+                                          AsyncSnapshot<List<ProductoModel>>
+                                              snapshot) {
                                         if (snapshot.hasData) {
                                           if (snapshot.data!.length > 0) {
                                             return SliverPadding(
@@ -172,27 +232,48 @@ class PruebaInicio extends StatelessWidget {
                                                 right: 0,
                                               ),
                                               sliver: SliverList(
-                                                delegate: SliverChildBuilderDelegate(
-                                                  (BuildContext context, int index) {
+                                                delegate:
+                                                    SliverChildBuilderDelegate(
+                                                  (BuildContext context,
+                                                      int index) {
                                                     return GridView.builder(
-                                                      physics: NeverScrollableScrollPhysics(),
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
                                                       shrinkWrap: true,
                                                       padding: EdgeInsets.only(
-                                                        left: ScreenUtil().setWidth(5),
-                                                        right: ScreenUtil().setWidth(5),
-                                                        bottom: ScreenUtil().setHeight(15),
+                                                        left: ScreenUtil()
+                                                            .setWidth(5),
+                                                        right: ScreenUtil()
+                                                            .setWidth(5),
+                                                        bottom: ScreenUtil()
+                                                            .setHeight(15),
                                                       ),
-                                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                      gridDelegate:
+                                                          SliverGridDelegateWithFixedCrossAxisCount(
                                                         childAspectRatio: .78,
                                                         crossAxisCount: 2,
-                                                        mainAxisSpacing: responsive.hp(2),
-                                                        crossAxisSpacing: responsive.wp(3),
+                                                        mainAxisSpacing:
+                                                            responsive.hp(2),
+                                                        crossAxisSpacing:
+                                                            responsive.wp(3),
                                                       ),
-                                                      itemCount: snapshot.data!.length,
-                                                      itemBuilder: (context, i) {
-                                                        var valorHero = math.Random().nextDouble() * i;
-                                                        return LayoutBuilder(builder: (context, constrain) {
-                                                          return itemProduct(context, snapshot.data![i], valorHero, constrain.maxHeight);
+                                                      itemCount:
+                                                          snapshot.data!.length,
+                                                      itemBuilder:
+                                                          (context, i) {
+                                                        var valorHero = math
+                                                                    .Random()
+                                                                .nextDouble() *
+                                                            i;
+                                                        return LayoutBuilder(
+                                                            builder: (context,
+                                                                constrain) {
+                                                          return itemProduct(
+                                                              context,
+                                                              snapshot.data![i],
+                                                              valorHero,
+                                                              constrain
+                                                                  .maxHeight);
                                                         });
                                                       },
                                                     );
@@ -204,16 +285,20 @@ class PruebaInicio extends StatelessWidget {
                                           } else {
                                             return SliverToBoxAdapter(
                                               child: Container(
-                                                height: ScreenUtil().setHeight(60),
-                                                child: Text('No existen productos'),
+                                                height:
+                                                    ScreenUtil().setHeight(60),
+                                                child: Text(
+                                                    'No existen productos'),
                                               ),
                                             );
                                           }
                                         } else {
                                           return SliverToBoxAdapter(
                                             child: Container(
-                                              height: ScreenUtil().setHeight(60),
-                                              child: CupertinoActivityIndicator(),
+                                              height:
+                                                  ScreenUtil().setHeight(60),
+                                              child:
+                                                  CupertinoActivityIndicator(),
                                             ),
                                           );
                                         }
@@ -223,7 +308,8 @@ class PruebaInicio extends StatelessWidget {
                                 );
                               } else {
                                 return Center(
-                                  child: Text('Sin productos para esta categoría'),
+                                  child:
+                                      Text('Sin productos para esta categoría'),
                                 );
                               }
                             } else {
@@ -244,7 +330,8 @@ class PruebaInicio extends StatelessWidget {
                   ),
                   ValueListenableBuilder(
                       valueListenable: provider.cargando,
-                      builder: (BuildContext context, bool data, Widget? child) {
+                      builder:
+                          (BuildContext context, bool data, Widget? child) {
                         return (data)
                             ? Container(
                                 color: Colors.black.withOpacity(.4),
@@ -269,7 +356,9 @@ class PruebaInicio extends StatelessWidget {
                                       width: double.infinity,
                                       child: StreamBuilder(
                                         stream: alertasBloc.alertsDayStream,
-                                        builder: (context, AsyncSnapshot<List<AlertModel>> alerts) {
+                                        builder: (context,
+                                            AsyncSnapshot<List<AlertModel>>
+                                                alerts) {
                                           if (alerts.hasData) {
                                             if (alerts.data!.length > 0) {
                                               return Container(
@@ -278,22 +367,33 @@ class PruebaInicio extends StatelessWidget {
                                                     bottom: responsive.hp(3),
                                                   ),
                                                   shrinkWrap: true,
-                                                  physics: ClampingScrollPhysics(),
+                                                  physics:
+                                                      ClampingScrollPhysics(),
                                                   itemCount: 2,
                                                   itemBuilder: (context, x) {
                                                     if (x == 0) {
                                                       return Padding(
-                                                        padding: EdgeInsets.symmetric(
-                                                          horizontal: responsive.wp(3),
-                                                          vertical: responsive.hp(2),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal:
+                                                              responsive.wp(3),
+                                                          vertical:
+                                                              responsive.hp(2),
                                                         ),
                                                         child: Text(
                                                           'Pendientes para el dia de hoy ${alerts.data![x].alertDate}',
-                                                          style: GoogleFonts.poppins(
-                                                            fontSize: ScreenUtil().setSp(16),
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                            fontSize:
+                                                                ScreenUtil()
+                                                                    .setSp(16),
                                                             color: Colors.black,
-                                                            fontWeight: FontWeight.w400,
-                                                            letterSpacing: ScreenUtil().setSp(0.016),
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            letterSpacing:
+                                                                ScreenUtil()
+                                                                    .setSp(
+                                                                        0.016),
                                                           ),
                                                         ),
                                                       );
@@ -301,12 +401,19 @@ class PruebaInicio extends StatelessWidget {
 
                                                     return Container(
                                                       child: ListView.builder(
-                                                        padding: EdgeInsets.all(0),
+                                                        padding:
+                                                            EdgeInsets.all(0),
                                                         shrinkWrap: true,
-                                                        physics: ClampingScrollPhysics(),
-                                                        itemCount: alerts.data!.length,
-                                                        itemBuilder: (context, i) {
-                                                          return _itemAlerta(context, alerts.data![i], responsive);
+                                                        physics:
+                                                            ClampingScrollPhysics(),
+                                                        itemCount:
+                                                            alerts.data!.length,
+                                                        itemBuilder:
+                                                            (context, i) {
+                                                          return _itemAlerta(
+                                                              context,
+                                                              alerts.data![i],
+                                                              responsive);
                                                         },
                                                       ),
                                                     );
@@ -319,13 +426,16 @@ class PruebaInicio extends StatelessWidget {
                                                 children: [
                                                   Container(
                                                     height: responsive.hp(30),
-                                                    child: Lottie.asset('assets/Json/lion.json'),
+                                                    child: Lottie.asset(
+                                                        'assets/Json/lion.json'),
                                                   ),
                                                   Text(
                                                     'No tiene pendientes hoy',
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: ScreenUtil().setSp(18),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: ScreenUtil()
+                                                          .setSp(18),
                                                     ),
                                                   )
                                                 ],
@@ -336,13 +446,15 @@ class PruebaInicio extends StatelessWidget {
                                               children: [
                                                 Container(
                                                   height: responsive.hp(30),
-                                                  child: Lottie.asset('assets/Json/lion.json'),
+                                                  child: Lottie.asset(
+                                                      'assets/Json/lion.json'),
                                                 ),
                                                 Text(
                                                   'No tiene pendientes hoy',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: ScreenUtil().setSp(18),
+                                                    fontSize:
+                                                        ScreenUtil().setSp(18),
                                                   ),
                                                 )
                                               ],
@@ -359,7 +471,10 @@ class PruebaInicio extends StatelessWidget {
                                           provider.setIndex(false);
                                         },
                                         child: Container(
-                                          transform: Matrix4.translationValues(responsive.ip(1), -responsive.ip(1.3), 0),
+                                          transform: Matrix4.translationValues(
+                                              responsive.ip(1),
+                                              -responsive.ip(1.3),
+                                              0),
                                           child: CircleAvatar(
                                             radius: responsive.ip(2),
                                             child: Icon(Icons.close),
@@ -381,7 +496,8 @@ class PruebaInicio extends StatelessWidget {
     );
   }
 
-  Widget _itemAlerta(BuildContext context, AlertModel alerta, Responsive responsive) {
+  Widget _itemAlerta(
+      BuildContext context, AlertModel alerta, Responsive responsive) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -392,7 +508,8 @@ class PruebaInicio extends StatelessWidget {
                 idAlert: alerta.idAlert,
               );
             },
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               var begin = Offset(0.0, 1.0);
               var end = Offset.zero;
               var curve = Curves.ease;
@@ -492,20 +609,24 @@ class PruebaInicio extends StatelessWidget {
     );
   }
 
-  Widget itemChoice(CategoriaModel categoria, int index, ProductosBloc bloc, Controller _controller) {
+  Widget itemChoice(CategoriaModel categoria, int index, ProductosBloc bloc,
+      Controller _controller) {
     return AnimatedBuilder(
         animation: _controller,
         builder: (_, s) {
           return InkWell(
             onTap: () {
-              bloc.obtenerProductosByIdCategoria(categoria.idCategoria.toString());
+              bloc.obtenerProductosByIdCategoria(
+                  categoria.idCategoria.toString());
               _controller.changeIndex(index);
             },
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: colorPrimary),
                 borderRadius: BorderRadius.circular(10),
-                color: (_controller.index == index) ? colorPrimary : Colors.transparent,
+                color: (_controller.index == index)
+                    ? colorPrimary
+                    : Colors.transparent,
               ),
               margin: EdgeInsets.symmetric(
                 horizontal: ScreenUtil().setWidth(8),
@@ -518,7 +639,9 @@ class PruebaInicio extends StatelessWidget {
               child: Text(
                 '${categoria.nombreCategoria}',
                 style: TextStyle(
-                  color: (_controller.index == index) ? Colors.white : Colors.black,
+                  color: (_controller.index == index)
+                      ? Colors.white
+                      : Colors.black,
                   fontWeight: FontWeight.w500,
                   fontSize: ScreenUtil().setSp(11),
                 ),
@@ -608,7 +731,8 @@ class PruebaInicio extends StatelessWidget {
     }
   }
 
-  Widget itemProduct(BuildContext context, ProductoModel producto, var valorHero, double height) {
+  Widget itemProduct(BuildContext context, ProductoModel producto,
+      var valorHero, double height) {
     var precio = double.parse('${producto.precioProducto}');
     var valorPrecio = double.parse(
       (precio).toStringAsFixed(1),
@@ -623,7 +747,8 @@ class PruebaInicio extends StatelessWidget {
                 idProducto: producto.idProducto.toString(),
               );
             },
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               var begin = Offset(0.0, 1.0);
               var end = Offset.zero;
               var curve = Curves.ease;
@@ -676,17 +801,24 @@ class PruebaInicio extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         PageRouteBuilder(
-                                          pageBuilder: (context, animation, secondaryAnimation) {
+                                          pageBuilder: (context, animation,
+                                              secondaryAnimation) {
                                             return DetalleProducto(
-                                              idProducto: producto.idProducto.toString(),
+                                              idProducto: producto.idProducto
+                                                  .toString(),
                                             );
                                           },
-                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          transitionsBuilder: (context,
+                                              animation,
+                                              secondaryAnimation,
+                                              child) {
                                             var begin = Offset(0.0, 1.0);
                                             var end = Offset.zero;
                                             var curve = Curves.ease;
 
-                                            var tween = Tween(begin: begin, end: end).chain(
+                                            var tween =
+                                                Tween(begin: begin, end: end)
+                                                    .chain(
                                               CurveTween(curve: curve),
                                             );
 
@@ -700,27 +832,36 @@ class PruebaInicio extends StatelessWidget {
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                         child: Stack(
                                           children: [
                                             CachedNetworkImage(
-                                              placeholder: (context, url) => Container(
+                                              placeholder: (context, url) =>
+                                                  Container(
                                                 width: double.infinity,
                                                 height: double.infinity,
-                                                child: CupertinoActivityIndicator(),
+                                                child:
+                                                    CupertinoActivityIndicator(),
                                               ),
-                                              errorWidget: (context, url, error) => Container(
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Container(
                                                 width: double.infinity,
                                                 height: double.infinity,
                                                 child: Center(
                                                   child: Icon(Icons.error),
                                                 ),
                                               ),
-                                              imageUrl: '$apiBaseURL/${producto.galery![x].file}',
-                                              imageBuilder: (context, imageProvider) => Container(
+                                              imageUrl:
+                                                  '$apiBaseURL/${producto.galery![x].file}',
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
                                                 decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                     image: imageProvider,
@@ -742,7 +883,8 @@ class PruebaInicio extends StatelessWidget {
                                     autoPlay: true,
                                     autoPlayCurve: Curves.fastOutSlowIn,
                                     autoPlayInterval: Duration(seconds: 6),
-                                    autoPlayAnimationDuration: Duration(milliseconds: 2000),
+                                    autoPlayAnimationDuration:
+                                        Duration(milliseconds: 2000),
                                     viewportFraction: 1),
                               )
                             : Container(
@@ -754,20 +896,25 @@ class PruebaInicio extends StatelessWidget {
                                   child: Stack(
                                     children: [
                                       CachedNetworkImage(
-                                        placeholder: (context, url) => Container(
+                                        placeholder: (context, url) =>
+                                            Container(
                                           width: double.infinity,
                                           height: double.infinity,
                                           child: CupertinoActivityIndicator(),
                                         ),
-                                        errorWidget: (context, url, error) => Container(
+                                        errorWidget: (context, url, error) =>
+                                            Container(
                                           width: double.infinity,
                                           height: double.infinity,
                                           child: Center(
                                             child: Icon(Icons.error),
                                           ),
                                         ),
-                                        imageUrl: '$apiBaseURL/${producto.galery![0].file}',
-                                        imageBuilder: (context, imageProvider) => Container(
+                                        imageUrl:
+                                            '$apiBaseURL/${producto.galery![0].file}',
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
                                               image: imageProvider,
@@ -794,15 +941,18 @@ class PruebaInicio extends StatelessWidget {
                                       height: double.infinity,
                                       child: CupertinoActivityIndicator(),
                                     ),
-                                    errorWidget: (context, url, error) => Container(
+                                    errorWidget: (context, url, error) =>
+                                        Container(
                                       width: double.infinity,
                                       height: double.infinity,
                                       child: Center(
                                         child: Icon(Icons.error),
                                       ),
                                     ),
-                                    imageUrl: '$apiBaseURL/${producto.fotoProducto}',
-                                    imageBuilder: (context, imageProvider) => Container(
+                                    imageUrl:
+                                        '$apiBaseURL/${producto.fotoProducto}',
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: imageProvider,
@@ -965,10 +1115,12 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) {
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
                                 return InfoUser();
                               },
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
                                 var begin = Offset(0.0, 1.0);
                                 var end = Offset.zero;
                                 var curve = Curves.ease;
@@ -994,7 +1146,10 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                                 placeholder: (context, url) => Container(
                                   width: double.infinity,
                                   height: double.infinity,
-                                  child: Image(image: AssetImage('assets/img/profile.png'), fit: BoxFit.cover),
+                                  child: Image(
+                                      image:
+                                          AssetImage('assets/img/profile.png'),
+                                      fit: BoxFit.cover),
                                 ),
                                 errorWidget: (context, url, error) => Container(
                                   child: Container(
@@ -1006,8 +1161,10 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                                     ),
                                   ),
                                 ),
-                                imageUrl: '$apiBaseURL/${widget.user.userImage}',
-                                imageBuilder: (context, imageProvider) => Container(
+                                imageUrl:
+                                    '$apiBaseURL/${widget.user.userImage}',
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
                                   decoration: BoxDecoration(
                                     //border: Border.all(color: Colors.red, width: ScreenUtil().setWidth(3)),
                                     shape: BoxShape.circle,
@@ -1040,7 +1197,8 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil().setWidth(16)),
                     child: InkWell(
                       onTap: () {
                         // Navigator.push(
@@ -1091,7 +1249,8 @@ class _CustomHeaderPrincipalState extends State<CustomHeaderPrincipal> {
                         pageBuilder: (context, animation, secondaryAnimation) {
                           return BusquedaProducto();
                         },
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           var begin = Offset(0.0, 1.0);
                           var end = Offset.zero;
                           var curve = Curves.ease;

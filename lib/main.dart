@@ -10,6 +10,7 @@ import 'package:royal_prestige/src/pages/Alertas/search_cliente.dart';
 import 'package:royal_prestige/src/pages/Compras/search_product.dart';
 import 'package:royal_prestige/src/pages/busqueda_de_producto.dart';
 import 'package:royal_prestige/src/pages/home.dart';
+import 'package:royal_prestige/src/pages/home_screen.dart';
 import 'package:royal_prestige/src/pages/login.dart';
 import 'package:royal_prestige/src/pages/splash.dart';
 import 'package:royal_prestige/src/pages/tabs/documentosPage.dart';
@@ -28,7 +29,9 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
     runApp(MyApp());
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+  },
+      (error, stack) =>
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
 class MyApp extends StatefulWidget {
@@ -98,7 +101,9 @@ class _MyAppState extends State<MyApp> {
           builder: (BuildContext context, Widget? child) {
             final MediaQueryData data = MediaQuery.of(context);
             return MediaQuery(
-              data: data.copyWith(textScaleFactor: data.textScaleFactor > 2.0 ? 1.2 : data.textScaleFactor),
+              data: data.copyWith(
+                  textScaleFactor:
+                      data.textScaleFactor > 2.0 ? 1.2 : data.textScaleFactor),
               child: child!,
             );
           },
@@ -111,14 +116,15 @@ class _MyAppState extends State<MyApp> {
             Locale('es'),
             Locale('es', 'ES'),
           ],
-          localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
+          localeResolutionCallback:
+              (Locale? locale, Iterable<Locale> supportedLocales) {
             return locale;
           },
           initialRoute: 'splash',
           routes: {
             'splash': (BuildContext context) => const Splash(),
             'login': (BuildContext context) => const Login(),
-            'home': (BuildContext context) => const HomePage(),
+            'home': (BuildContext context) => const HomeScreen(),
           },
         ),
       )),

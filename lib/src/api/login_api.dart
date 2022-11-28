@@ -41,6 +41,11 @@ class LoginApi {
           await percentBD.insertarPercent(percent);
         }
 
+        StorageManager.saveData(
+            'tabCliente', decodedData['result']['taps']['tap_cliente']);
+        StorageManager.saveData(
+            'tabAgenda', decodedData['result']['taps']['tap_agenda']);
+
         final cuotaApi = CuotaApi();
 
         await cuotaApi.getCuotas();
@@ -51,7 +56,8 @@ class LoginApi {
         StorageManager.saveData('userImage', decodedData['data']['u_i']);
         StorageManager.saveData('personName', decodedData['data']['p_n']);
         StorageManager.saveData('personSurname', decodedData['data']['p_p']);
-        StorageManager.saveData('personSecondSurname', decodedData['data']['p_m']);
+        StorageManager.saveData(
+            'personSecondSurname', decodedData['data']['p_m']);
         StorageManager.saveData('personDNI', decodedData['data']['dni']);
         StorageManager.saveData('idRoleUser', decodedData['data']['ru']);
         StorageManager.saveData('personCargo', decodedData['data']['u_c']);
@@ -131,20 +137,38 @@ class LoginApi {
       ApiModel loginModel = ApiModel();
       loginModel.code = code.toString();
       if (code == 1) {
-        StorageManager.saveData('idUser', decodedData['respuesta']['datos_usuario']['id_usuario']);
-        StorageManager.saveData('idPerson', decodedData['respuesta']['datos_usuario']['id_persona']);
-        StorageManager.saveData('userNickname', decodedData['respuesta']['datos_usuario']['usuario_nickname']);
-        StorageManager.saveData('userEmail', decodedData['respuesta']['datos_usuario']['usuario_email']);
-        StorageManager.saveData('userImage', decodedData['respuesta']['datos_usuario']['usuario_imagen']);
-        StorageManager.saveData('personName', decodedData['respuesta']['datos_usuario']['persona_nombre']);
-        StorageManager.saveData('personSurname', decodedData['respuesta']['datos_usuario']['persona_apellido_paterno']);
-        StorageManager.saveData('personSecondSurname', decodedData['respuesta']['datos_usuario']['persona_apellido_materno']);
-        StorageManager.saveData('personDNI', decodedData['respuesta']['datos_usuario']['persona_dni']);
-        StorageManager.saveData('idRoleUser', decodedData['respuesta']['datos_usuario']['id_rol']);
-        StorageManager.saveData('personCargo', decodedData['respuesta']['datos_usuario']['usuario_cargo']);
-        StorageManager.saveData('roleName', decodedData['respuesta']['datos_usuario']['rol_nombre']);
-        StorageManager.saveData('userCodigo', decodedData['respuesta']['datos_usuario']['usuario_codigo']);
-        StorageManager.saveData('frase', decodedData['respuesta']['frase']['configuracion_texto']);
+        StorageManager.saveData(
+            'idUser', decodedData['respuesta']['datos_usuario']['id_usuario']);
+        StorageManager.saveData('idPerson',
+            decodedData['respuesta']['datos_usuario']['id_persona']);
+        StorageManager.saveData('userNickname',
+            decodedData['respuesta']['datos_usuario']['usuario_nickname']);
+        StorageManager.saveData('userEmail',
+            decodedData['respuesta']['datos_usuario']['usuario_email']);
+        StorageManager.saveData('userImage',
+            decodedData['respuesta']['datos_usuario']['usuario_imagen']);
+        StorageManager.saveData('personName',
+            decodedData['respuesta']['datos_usuario']['persona_nombre']);
+        StorageManager.saveData(
+            'personSurname',
+            decodedData['respuesta']['datos_usuario']
+                ['persona_apellido_paterno']);
+        StorageManager.saveData(
+            'personSecondSurname',
+            decodedData['respuesta']['datos_usuario']
+                ['persona_apellido_materno']);
+        StorageManager.saveData('personDNI',
+            decodedData['respuesta']['datos_usuario']['persona_dni']);
+        StorageManager.saveData(
+            'idRoleUser', decodedData['respuesta']['datos_usuario']['id_rol']);
+        StorageManager.saveData('personCargo',
+            decodedData['respuesta']['datos_usuario']['usuario_cargo']);
+        StorageManager.saveData('roleName',
+            decodedData['respuesta']['datos_usuario']['rol_nombre']);
+        StorageManager.saveData('userCodigo',
+            decodedData['respuesta']['datos_usuario']['usuario_codigo']);
+        StorageManager.saveData(
+            'frase', decodedData['respuesta']['frase']['configuracion_texto']);
       }
       return loginModel;
     } catch (e) {
