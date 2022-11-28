@@ -101,7 +101,7 @@
     <integer name="cancel_button_image_alpha">127</integer>
     <integer name="google_play_services_version">12451000</integer>
     <integer name="status_bar_notification_info_maxnum">999</integer>
-    <string name="com.crashlytics.android.build_id" ns1:ignore="UnusedResources,TypographyDashes" translatable="false">71e61dca7b844e67bf00b01c6fd8664c</string>
+    <string name="com.crashlytics.android.build_id" ns1:ignore="UnusedResources,TypographyDashes" translatable="false">1928488446ca4d56b20959acf519bb5a</string>
     <string name="common_google_play_services_unknown_issue"><ns2:g id="app_name">%1$s</ns2:g> is having trouble with Google Play services. Please try again.</string>
     <string name="default_web_client_id" translatable="false">485848979629-1ej0mhndopl6tkqjkge114jg8lptfi90.apps.googleusercontent.com</string>
     <string name="gcm_defaultSenderId" translatable="false">485848979629</string>
